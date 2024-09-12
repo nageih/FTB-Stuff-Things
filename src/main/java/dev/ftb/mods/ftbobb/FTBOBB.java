@@ -13,7 +13,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
 @Mod(FTBOBB.MODID)
 public class FTBOBB {
-    public static final String MODID = "examplemod";
+    public static final String MODID = "ftbobb";
 
     private static final Logger LOGGER = LogUtils.getLogger();
 

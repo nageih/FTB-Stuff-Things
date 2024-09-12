@@ -113,11 +113,11 @@ public class SluiceBlock extends Block implements EntityBlock {
         return true;
     }
 
-    @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (state.getValue(PART) == Part.FUNNEL) {
-            return InteractionResult.PASS;
-        }
+//    @Override
+//    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+//        if (state.getValue(PART) == Part.FUNNEL) {
+//            return InteractionResult.PASS;
+//        }
 
 //        ItemStack itemStack = player.getItemInHand(hand);
 //        BlockEntity tileEntity = world.getBlockEntity(pos);
@@ -187,9 +187,9 @@ public class SluiceBlock extends Block implements EntityBlock {
 //
 //            return InteractionResult.SUCCESS;
 //        }
-
-        return InteractionResult.SUCCESS;
-    }
+//
+//        return InteractionResult.SUCCESS;
+//    }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -254,16 +254,16 @@ public class SluiceBlock extends Block implements EntityBlock {
             if (state.getValue(PART) != Part.FUNNEL) {
                 BlockEntity tileEntity = world.getBlockEntity(pos);
 
-                if (tileEntity instanceof SluiceBlockEntity) {
-                    SluiceBlockEntity sluice = (SluiceBlockEntity) tileEntity;
-                    popResource(world, pos, sluice.inventory.getStackInSlot(0));
-                    world.updateNeighbourForOutputSignal(pos, this);
-
-                    // Drop the upgrade inventory
-                    for (int i = 0; i < sluice.upgradeInventory.getSlots(); i++) {
-                        popResource(world, pos, sluice.upgradeInventory.getStackInSlot(i));
-                    }
-                }
+//                if (tileEntity instanceof SluiceBlockEntity) {
+//                    SluiceBlockEntity sluice = (SluiceBlockEntity) tileEntity;
+//                    popResource(world, pos, sluice.inventory.getStackInSlot(0));
+//                    world.updateNeighbourForOutputSignal(pos, this);
+//
+//                    // Drop the upgrade inventory
+//                    for (int i = 0; i < sluice.upgradeInventory.getSlots(); i++) {
+//                        popResource(world, pos, sluice.upgradeInventory.getStackInSlot(i));
+//                    }
+//                }
 
                 world.removeBlock(endPos, false);
                 popResource(world, pos, state.getValue(MESH).getItemStack());
@@ -353,23 +353,23 @@ public class SluiceBlock extends Block implements EntityBlock {
 
     public static class SluiceBlockItem extends BlockItem {
         public SluiceBlockItem(Block block) {
-            super(block, new Item.Properties().tab(FTBSluice.group));
+            super(block, new Item.Properties());
         }
-
-        @Override
-        public CompoundTag getShareTag(ItemStack stack) {
-            if (getBlock() == BlocksRegistry.NETHERITE_SLUICE.get() || getBlock() == BlocksRegistry.EMPOWERED_SLUICE.get()) {
-                if (!stack.getOrCreateTag().contains("BlockEntityTag")) {
-                    CompoundTag tag = new CompoundTag();
-                    CompoundTag energy = new CompoundTag();
-                    energy.putInt("energy", 0);
-                    tag.put("Energy", energy);
-
-                    stack.getOrCreateTag().put("BlockEntityTag", tag);
-                }
-            }
-            return super.getShareTag(stack);
-        }
+//
+//        @Override
+//        public CompoundTag getShareTag(ItemStack stack) {
+//            if (getBlock() == BlocksRegistry.NETHERITE_SLUICE.get() || getBlock() == BlocksRegistry.EMPOWERED_SLUICE.get()) {
+//                if (!stack.getOrCreateTag().contains("BlockEntityTag")) {
+//                    CompoundTag tag = new CompoundTag();
+//                    CompoundTag energy = new CompoundTag();
+//                    energy.putInt("energy", 0);
+//                    tag.put("Energy", energy);
+//
+//                    stack.getOrCreateTag().put("BlockEntityTag", tag);
+//                }
+//            }
+//            return super.getShareTag(stack);
+//        }
     }
 
     public enum Part implements StringRepresentable {
