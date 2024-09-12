@@ -17,7 +17,7 @@ public class ContentRegistry {
     private static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, FTBOBB.MODID);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATIVE_TAB = CREATIVE_MODE_TABS.register("obb_tab", () -> CreativeModeTab.builder()
-            .title(Component.translatable("itemGroup.examplemod"))
+            .title(Component.translatable("ftbobb.itemGroup.tab"))
             .icon(() -> new ItemStack(Items.GOLD_BLOCK))
             .displayItems((parameters, output) -> {
 
