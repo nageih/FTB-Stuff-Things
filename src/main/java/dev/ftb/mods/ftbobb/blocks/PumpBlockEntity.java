@@ -1,12 +1,11 @@
 package dev.ftb.mods.ftbobb.blocks;
 
+import dev.ftb.mods.ftbobb.capabilities.PublicReadOnlyFluidTank;
 import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
@@ -15,17 +14,17 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public class PumpBlockEntity extends BlockEntity {
@@ -146,14 +145,14 @@ public class PumpBlockEntity extends BlockEntity {
         }
 
         // Give it water!
-//        FluidCap tank = ((SluiceBlockEntity) blockEntity).tank;
-//        if (tank.getFluidAmount() < tank.getCapacity()) {
-//            int i = tank.internalFill(new FluidStack(this.creative ? this.creativeFluid : Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
-//            if (i > 0) {
-//                didFill = true;
-//            }
-//            blockEntity.setChanged();
-//        }
+        PublicReadOnlyFluidTank tank = ((SluiceBlockEntity) blockEntity).getFluidTank();
+        if (tank.getFluidAmount() < tank.getCapacity()) {
+            int i = tank.internalFill(new FluidStack(this.creative ? this.creativeFluid : Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+            if (i > 0) {
+                didFill = true;
+            }
+            blockEntity.setChanged();
+        }
 
         return didFill;
     }

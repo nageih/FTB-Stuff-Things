@@ -4,6 +4,8 @@ import dev.ftb.mods.ftbobb.client.FTBOBBClient;
 import dev.ftb.mods.ftbobb.registry.*;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -31,6 +33,7 @@ public class FTBOBB {
         ComponentsRegistry.init(modEventBus);
 
         modEventBus.addListener(this::clientReady);
+        modEventBus.addListener(this::registerCapabilities);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -40,6 +43,14 @@ public class FTBOBB {
 
     private void clientReady(final FMLClientSetupEvent event) {
         FTBOBBClient.INSTANCE.init();
+    }
+
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                BlockEntitiesRegistry.OAK_SLUICE.get(),
+                (blockEntity, side) -> blockEntity.getFluidTank()
+        );
     }
 
     public static ResourceLocation id(String path) {
