@@ -3,12 +3,12 @@ package dev.ftb.mods.ftbobb.data;
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.blocks.PumpBlock;
 import dev.ftb.mods.ftbobb.blocks.SluiceBlock;
+import dev.ftb.mods.ftbobb.client.model.TubeModel;
 import dev.ftb.mods.ftbobb.items.MeshType;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
-import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
+import net.neoforged.neoforge.client.model.generators.*;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
@@ -48,6 +48,17 @@ public class BlockStatesGenerators extends BlockStateProvider {
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_60"))).rotationY(dirsRot2[d]).addModel().condition(PumpBlock.ON_OFF, true).condition(HORIZONTAL_FACING, dirs[d]).condition(PumpBlock.PROGRESS, PumpBlock.Progress.SIXTY);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_80"))).rotationY(dirsRot2[d]).addModel().condition(PumpBlock.ON_OFF, true).condition(HORIZONTAL_FACING, dirs[d]).condition(PumpBlock.PROGRESS, PumpBlock.Progress.EIGHTY);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_100"))).rotationY(dirsRot2[d]).addModel().condition(PumpBlock.ON_OFF, true).condition(HORIZONTAL_FACING, dirs[d]).condition(PumpBlock.PROGRESS, PumpBlock.Progress.HUNDRED);
+        }
+
+        TubeLoaderBuilder tlb = models().getBuilder("block/tube").customLoader(TubeLoaderBuilder::new);
+        simpleBlock(BlocksRegistry.TUBE.get(), tlb.end());
+
+        models().withExistingParent("block/tube_inv", FTBOBB.id("block/tube_base"));
+    }
+
+    private static class TubeLoaderBuilder extends CustomLoaderBuilder<BlockModelBuilder> {
+        public TubeLoaderBuilder(BlockModelBuilder parent, ExistingFileHelper existingFileHelper) {
+            super(TubeModel.Loader.ID, parent, existingFileHelper, false);
         }
     }
 }

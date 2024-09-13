@@ -4,6 +4,7 @@ import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class I18nGenerator extends LanguageProvider {
@@ -21,6 +22,8 @@ public class I18nGenerator extends LanguageProvider {
         addBlock(BlocksRegistry.NETHERITE_SLUICE, "Netherite Sluice");
 
         addBlock(BlocksRegistry.PUMP, "Pump");
+
+        addBlock(BlocksRegistry.TUBE, "Tube");
 
         addItem(ItemsRegistry.CLOTH_MESH, "Cloth Mesh");
         addItem(ItemsRegistry.IRON_MESH, "Iron Mesh");

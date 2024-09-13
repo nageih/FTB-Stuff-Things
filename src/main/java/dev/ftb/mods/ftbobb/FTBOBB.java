@@ -1,19 +1,19 @@
 package dev.ftb.mods.ftbobb;
 
+import com.mojang.logging.LogUtils;
+import dev.ftb.mods.ftbobb.client.ClientSetup;
 import dev.ftb.mods.ftbobb.client.FTBOBBClient;
 import dev.ftb.mods.ftbobb.registry.*;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import org.slf4j.Logger;
-
-import com.mojang.logging.LogUtils;
-
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import org.slf4j.Logger;
 
 @Mod(FTBOBB.MODID)
 public class FTBOBB {
@@ -23,6 +23,10 @@ public class FTBOBB {
 
     public FTBOBB(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
+
+        if (FMLEnvironment.dist.isClient()) {
+            ClientSetup.onModConstruction(modEventBus);
+        }
 
         Config.init();
 

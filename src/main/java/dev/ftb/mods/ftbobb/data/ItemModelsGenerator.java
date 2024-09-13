@@ -16,5 +16,7 @@ public class ItemModelsGenerator extends ItemModelProvider {
     protected void registerModels() {
         String path = BlocksRegistry.PUMP.getKey().location().getPath();
         this.getBuilder(path).parent(new ModelFile.UncheckedModelFile(this.modLoc("block/" + path + "_on")));
+
+        withExistingParent("tube", FTBOBB.id("block/tube_inv"));
     }
 }

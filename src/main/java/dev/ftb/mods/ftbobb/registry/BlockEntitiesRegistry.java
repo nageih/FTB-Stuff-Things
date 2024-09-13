@@ -3,6 +3,7 @@ package dev.ftb.mods.ftbobb.registry;
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.blocks.PumpBlockEntity;
 import dev.ftb.mods.ftbobb.blocks.SluiceBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.TubeBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -18,6 +19,8 @@ public class BlockEntitiesRegistry {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SluiceBlockEntity.Netherite>> NETHERITE_SLUICE = BLOCK_ENTITIES.register("netherite_sluice", () -> BlockEntityType.Builder.of(SluiceBlockEntity.Netherite::new, BlocksRegistry.NETHERITE_SLUICE.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PumpBlockEntity>> PUMP = BLOCK_ENTITIES.register("pump", () -> BlockEntityType.Builder.of(PumpBlockEntity::new, BlocksRegistry.PUMP.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TubeBlockEntity>> TUBE = BLOCK_ENTITIES.register("tube", () -> BlockEntityType.Builder.of(TubeBlockEntity::new, BlocksRegistry.TUBE.get()).build(null));
 
     public static void init(IEventBus bus) {
         BLOCK_ENTITIES.register(bus);
