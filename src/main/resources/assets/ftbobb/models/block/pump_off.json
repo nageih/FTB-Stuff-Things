@@ -7,6 +7,7 @@
 		"details": "ftbobb:block/pump_details",
 		"gear": "ftbobb:block/pump_gear_off"
 	},
+	"render_type": "cutout",
 	"elements": [
 		{
 			"name": "body",
@@ -474,4 +475,4 @@
 			"scale": [0.5, 0.5, 0.5]
 		}
 	}
-}
+},

@@ -34,6 +34,7 @@ neoForge {
         client {
             client()
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            programArguments.addAll '--width=1920', '--height=1080'
         }
 
         server {

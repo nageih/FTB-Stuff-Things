@@ -39,14 +39,14 @@ public class PumpBlockEntityRender implements BlockEntityRenderer<PumpBlockEntit
         stack.mulPose(Axis.YP.rotation((float) ((Math.PI / 2) - (float) v)));
 
         Font font = Minecraft.getInstance().font;
-        font.drawInBatch(pump.creative ? "∞" : "Time left", 0, (pump.creativeItem != null && pump.creative) ? -10 : -5, 0xFFFFFFFF, false, stack.last().pose(), renderer, Font.DisplayMode.NORMAL, 0x000000, light);
+        font.drawInBatch(pump.creative ? "∞" : "Time left", 0, (pump.creativeItem != null && pump.creative) ? -10 : -5, 0xFFFFFF, false, stack.last().pose(), renderer, Font.DisplayMode.SEE_THROUGH, 0x68000000, light);
 //        Screen.drawCenteredString(stack, Minecraft.getInstance().font, pump.creative ? "∞" : "Time left", 0, (pump.creativeItem != null && pump.creative) ? -10 : -5, 0xFFFFFFFF);
 //        ResourceLocation registryName = pump.creativeFluid.getRegistryName();
 //        if (pump.creative && registryName != null) {
 //            Screen.drawCenteredString(stack, Minecraft.getInstance().font, ForgeI18n.parseMessage("fluid." + (registryName.getNamespace().equals("minecraft") ? "ftbsluice" : registryName.getNamespace()) + "." + registryName.getPath()), 0, 0, 0xFFFFFFFF);
 //            Screen.drawCenteredString(stack, Minecraft.getInstance().font, pump.creativeItem != null ? pump.creativeItem.getDescription() : new TextComponent("Not item"), 0, 10, 0xFFFFFFFF);
 //        } else {
-            font.drawInBatch(getTimeString(pump.timeLeft), 0, 5, 0xFFFFFFFF, false, stack.last().pose(), renderer, Font.DisplayMode.NORMAL, 0x000000, light);
+            font.drawInBatch(getTimeString(pump.timeLeft), 0, 5, 0xFFFFFF, false, stack.last().pose(), renderer, Font.DisplayMode.SEE_THROUGH, 0x68000000, light);
 //        }
 
         stack.popPose();
