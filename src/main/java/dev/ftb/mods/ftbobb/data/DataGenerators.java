@@ -18,6 +18,7 @@ public class DataGenerators {
         if (event.includeClient()) {
             generator.addProvider(true, new I18nGenerator(packOutput));
             generator.addProvider(true, new BlockStatesGenerators(packOutput, existingFileHelper));
+            generator.addProvider(true, new ItemModelsGenerator(packOutput, existingFileHelper));
         }
     }
 }

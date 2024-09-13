@@ -3,14 +3,11 @@ package dev.ftb.mods.ftbobb.blocks;
 import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig;
 import dev.ftb.mods.ftbobb.items.MeshType;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
-import dev.ftb.mods.ftbobb.registry.TilesRegistry;
+import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -27,7 +24,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -35,7 +31,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
@@ -332,17 +327,17 @@ public class SluiceBlock extends Block implements EntityBlock {
         Block block = blockState.getBlock();
 
         if (block == BlocksRegistry.OAK_SLUICE.get()) {
-            return TilesRegistry.OAK_SLUICE.get().create(blockPos, blockState);
+            return BlockEntitiesRegistry.OAK_SLUICE.get().create(blockPos, blockState);
         } else if (block == BlocksRegistry.IRON_SLUICE.get()) {
-            return TilesRegistry.IRON_SLUICE.get().create(blockPos, blockState);
+            return BlockEntitiesRegistry.IRON_SLUICE.get().create(blockPos, blockState);
         } else if (block == BlocksRegistry.DIAMOND_SLUICE.get()) {
-            return TilesRegistry.DIAMOND_SLUICE.get().create(blockPos, blockState);
+            return BlockEntitiesRegistry.DIAMOND_SLUICE.get().create(blockPos, blockState);
         }
 //        else if (state.getBlock() == BlocksRegistry.EMPOWERED_SLUICE.get()) {
 //            return SluiceBlockEntities.EMPOWERED_SLUICE.get().create(blockPos, blockState);
 //        }
 
-        return TilesRegistry.NETHERITE_SLUICE.get().create(blockPos, blockState);
+        return BlockEntitiesRegistry.NETHERITE_SLUICE.get().create(blockPos, blockState);
     }
 
     @Nullable

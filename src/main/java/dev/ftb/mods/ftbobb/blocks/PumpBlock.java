@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbobb.blocks;
 
 import dev.ftb.mods.ftbobb.registry.ContentRegistry;
-import dev.ftb.mods.ftbobb.registry.TilesRegistry;
+import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -164,7 +164,7 @@ public class PumpBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return TilesRegistry.PUMP.get().create(blockPos, blockState);
+        return BlockEntitiesRegistry.PUMP.get().create(blockPos, blockState);
     }
 
     public static void computeStateForProgress(BlockState state, BlockPos pos, Level level, int timeLeft) {

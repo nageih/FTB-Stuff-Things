@@ -1,25 +1,24 @@
 package dev.ftb.mods.ftbobb.blocks;
 
-import dev.ftb.mods.ftbobb.registry.TilesRegistry;
+import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -31,14 +30,14 @@ public class PumpBlockEntity extends BlockEntity {
     private int checkTimeout = 0;
     private boolean foundValidBlocks = false;
     private int lastTick = 0;
-    boolean creative = false;
-    Fluid creativeFluid = Fluids.WATER;
-    Item creativeItem = null;
+    public boolean creative = false;
+    public Fluid creativeFluid = Fluids.WATER;
+    public Item creativeItem = null;
 
     private Set<BlockPos> targetBlocks = new HashSet<>();
 
     public PumpBlockEntity(BlockPos pos, BlockState state) {
-        super(TilesRegistry.PUMP.get(), pos, state);
+        super(BlockEntitiesRegistry.PUMP.get(), pos, state);
     }
 
 //    @Override
@@ -154,62 +153,62 @@ public class PumpBlockEntity extends BlockEntity {
         return this.targetBlocks;
     }
 
-//    @Override
-//    public CompoundTag save(CompoundTag compound) {
-//        compound.putInt("time_left", this.timeLeft);
-//        compound.putBoolean("is_creative", this.creative);
-//
-//        if (this.creativeFluid != Fluids.WATER) {
-//            compound.putString("creative_fluid", Objects.requireNonNull(this.creativeFluid.getRegistryName()).toString());
-//        }
-//
-//        if (this.creativeItem != null) {
-//            compound.putString("creative_item", Objects.requireNonNull(this.creativeItem.getRegistryName()).toString());
-//        }
-//
-//        return super.save(compound);
-//    }
-//
-//    @Override
-//    public void load(BlockState state, CompoundTag compound) {
-//        this.timeLeft = compound.getInt("time_left");
-//        this.creative = compound.getBoolean("is_creative");
-//
-//        if (compound.contains("creative_fluid")) {
-//            Fluid creativeFluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(compound.getString("creative_fluid")));
-//            this.creativeFluid = creativeFluid == null ? Fluids.WATER : creativeFluid;
-//        }
-//
-//        if (compound.contains("creative_item")) {
-//            this.creativeItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(compound.getString("creative_item")));
-//        }
-//
-//        super.load(state, compound);
-//    }
+    @Override
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
+        compound.putInt("time_left", this.timeLeft);
+        compound.putBoolean("is_creative", this.creative);
 
-//    @Override
-//    public AABB getRenderBoundingBox() {
-//        return new AABB(this.getBlockPos()).inflate(1);
-//    }
+        if (this.creativeFluid != Fluids.WATER) {
+            ResourceLocation key = BuiltInRegistries.FLUID.getKey(this.creativeFluid);
+            compound.putString("creative_fluid", key.toString());
+        }
 
-//    @Override
-//    public CompoundTag getUpdateTag() {
-//        return this.save(new CompoundTag());
-//    }
+        if (this.creativeItem != null) {
+            ResourceLocation key = BuiltInRegistries.ITEM.getKey(this.creativeItem);
+            compound.putString("creative_item", key.toString());
+        }
+    }
 
-//    @Override
-//    public void handleUpdateTag(BlockState state, CompoundTag tag) {
-//        this.load(state, tag);
-//    }
+    @Override
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
+        this.timeLeft = compound.getInt("time_left");
+        this.creative = compound.getBoolean("is_creative");
 
-//    @Nullable
-//    @Override
-//    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-//        return new ClientboundBlockEntityDataPacket(this.getBlockPos(), 0, this.save(new CompoundTag()));
-//    }
+        if (compound.contains("creative_fluid")) {
+            ResourceLocation creativeFluidFromReg = ResourceLocation.tryParse(compound.getString("creative_fluid"));
+            if (creativeFluidFromReg != null) {
+                this.creativeFluid = BuiltInRegistries.FLUID.get(creativeFluidFromReg);
+            }
+        }
 
-//    @Override
-//    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-//        this.load(this.getBlockState(), pkt.getTag());
-//    }
+        if (compound.contains("creative_item")) {
+            ResourceLocation creativeItemFromReg = ResourceLocation.tryParse(compound.getString("creative_item"));
+            if (creativeItemFromReg != null) {
+                this.creativeItem = BuiltInRegistries.ITEM.get(creativeItemFromReg);
+            }
+        }
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        var data = new CompoundTag();
+        this.saveAdditional(data, registries);
+        return data;
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        this.loadAdditional(tag, lookupProvider);
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        this.loadAdditional(pkt.getTag(), lookupProvider);
+    }
 }

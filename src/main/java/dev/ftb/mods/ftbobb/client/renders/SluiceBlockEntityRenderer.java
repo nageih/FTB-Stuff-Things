@@ -1,25 +1,13 @@
 package dev.ftb.mods.ftbobb.client.renders;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import dev.ftb.mods.ftbobb.blocks.SluiceBlockEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.fluids.FluidStack;
-import org.joml.Matrix4f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
-public class SluiceRenderer implements BlockEntityRenderer<SluiceBlockEntity> {
-    public SluiceRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
+public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBlockEntity> {
+    public SluiceBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
