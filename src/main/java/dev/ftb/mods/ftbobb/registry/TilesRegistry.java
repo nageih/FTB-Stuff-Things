@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbobb.registry;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
+import dev.ftb.mods.ftbobb.blocks.PumpBlockEntity;
 import dev.ftb.mods.ftbobb.blocks.SluiceBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -15,6 +16,8 @@ public class TilesRegistry {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SluiceBlockEntity.Iron>> IRON_SLUICE = TILES.register("iron_sluice", () -> BlockEntityType.Builder.of(SluiceBlockEntity.Iron::new, BlocksRegistry.IRON_SLUICE.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SluiceBlockEntity.Diamond>> DIAMOND_SLUICE = TILES.register("diamond_sluice", () -> BlockEntityType.Builder.of(SluiceBlockEntity.Diamond::new, BlocksRegistry.DIAMOND_SLUICE.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SluiceBlockEntity.Netherite>> NETHERITE_SLUICE = TILES.register("netherite_sluice", () -> BlockEntityType.Builder.of(SluiceBlockEntity.Netherite::new, BlocksRegistry.NETHERITE_SLUICE.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PumpBlockEntity>> PUMP = TILES.register("pump", () -> BlockEntityType.Builder.of(PumpBlockEntity::new, BlocksRegistry.PUMP.get()).build(null));
 
     public static void init(IEventBus bus) {
         TILES.register(bus);

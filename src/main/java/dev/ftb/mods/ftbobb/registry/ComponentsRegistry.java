@@ -2,7 +2,6 @@ package dev.ftb.mods.ftbobb.registry;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;

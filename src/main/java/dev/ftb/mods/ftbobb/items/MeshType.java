@@ -23,11 +23,10 @@ public enum MeshType implements StringRepresentable {
     CLOTH("cloth", ItemsRegistry.CLOTH_MESH, () -> Tags.Items.STRINGS),
     IRON("iron", ItemsRegistry.IRON_MESH, () -> Tags.Items.INGOTS_IRON),
     GOLD("gold", ItemsRegistry.GOLD_MESH, () -> Tags.Items.INGOTS_GOLD),
-    DIAMOND("diamond", ItemsRegistry.DIAMOND_MESH, () -> Tags.Items.GEMS_DIAMOND),
-    BLAZING("blazing", ItemsRegistry.BLAZING_MESH, () -> Tags.Items.INGOTS_NETHERITE);
+    DIAMOND("diamond", ItemsRegistry.DIAMOND_MESH, () -> Tags.Items.GEMS_DIAMOND);
 
     public static final MeshType[] VALUES = values();
-    public static final List<MeshType> NON_EMPTY_VALUES = Arrays.stream(VALUES).filter(e -> e == EMPTY).toList();
+    public static final List<MeshType> NON_EMPTY_VALUES = Arrays.stream(VALUES).filter(e -> e != EMPTY).toList();
     public static final Map<String, MeshType> MAP = new HashMap<>();
 
     static {
