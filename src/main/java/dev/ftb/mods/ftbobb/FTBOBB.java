@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import dev.ftb.mods.ftbobb.client.ClientSetup;
 import dev.ftb.mods.ftbobb.client.FTBOBBClient;
 import dev.ftb.mods.ftbobb.registry.*;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -33,6 +34,7 @@ public class FTBOBB {
         BlocksRegistry.init(modEventBus);
         ItemsRegistry.init(modEventBus);
         BlockEntitiesRegistry.init(modEventBus);
+        RecipesRegistry.init(modEventBus);
         ContentRegistry.init(modEventBus);
         ComponentsRegistry.init(modEventBus);
 
@@ -54,6 +56,12 @@ public class FTBOBB {
                 Capabilities.FluidHandler.BLOCK,
                 BlockEntitiesRegistry.OAK_SLUICE.get(),
                 (blockEntity, side) -> blockEntity.getFluidTank()
+        );
+
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                BlockEntitiesRegistry.JAR.get(),
+                (blockEntity, side) -> side == Direction.UP ? blockEntity.getFluidTank() : null
         );
     }
 

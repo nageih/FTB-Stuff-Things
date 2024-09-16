@@ -18,5 +18,7 @@ public class ItemModelsGenerator extends ItemModelProvider {
         this.getBuilder(path).parent(new ModelFile.UncheckedModelFile(this.modLoc("block/" + path + "_on")));
 
         withExistingParent("tube", FTBOBB.id("block/tube_inv"));
+        withExistingParent("jar", FTBOBB.id("block/jar"));
+        withExistingParent("tempered_jar", FTBOBB.id("block/tempered_jar_none"));
     }
 }

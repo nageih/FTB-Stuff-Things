@@ -24,7 +24,10 @@ public class ItemsRegistry {
     public static final DeferredItem<BlockItem> NETHERITE_SLUICE = ITEMS.register("netherite_sluice", () -> new BlockItem(BlocksRegistry.NETHERITE_SLUICE.get(), new Item.Properties()));
 
     public static final DeferredItem<BlockItem> PUMP = ITEMS.register("pump", () -> new BlockItem(BlocksRegistry.PUMP.get(), new Item.Properties()));
+
     public static final DeferredItem<BlockItem> TUBE = ITEMS.register("tube", () -> new BlockItem(BlocksRegistry.TUBE.get(), new Item.Properties()));
+    public static final DeferredItem<BlockItem> JAR = ITEMS.register("jar", () -> new BlockItem(BlocksRegistry.JAR.get(), new Item.Properties()));
+    public static final DeferredItem<BlockItem> TEMPERED_JAR = ITEMS.register("tempered_jar", () -> new BlockItem(BlocksRegistry.TEMPERED_JAR.get(), new Item.Properties()));
     //#endregion
 
     public static void init(IEventBus bus) {

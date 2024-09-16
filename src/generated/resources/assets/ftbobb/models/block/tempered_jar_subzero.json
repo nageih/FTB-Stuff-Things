@@ -1,0 +1,9 @@
+{
+  "parent": "ftbobb:block/jar_base",
+  "textures": {
+    "cover": "ftbobb:block/cast_iron_jar_cover",
+    "glass_bottom": "ftbobb:block/jar_glass_bottom_subzero",
+    "glass_side": "ftbobb:block/jar_glass_side_subzero",
+    "glass_top": "ftbobb:block/jar_glass_tempered_top"
+  }
+}

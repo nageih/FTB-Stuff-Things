@@ -8,7 +8,7 @@ import static net.minecraft.core.Direction.*;
 import static net.minecraft.core.Direction.EAST;
 
 public class DirectionUtil {
-    // since this is private in Direction...
+    // since Direction.VALUES is private...
     public static final Direction[] VALUES = new Direction[] {
             DOWN, UP, NORTH, SOUTH, WEST, EAST
     };
@@ -28,11 +28,9 @@ public class DirectionUtil {
         BlockPos offset = to.subtract(from);
         if (offset.getX() == 0 && offset.getY() == 0) {
             return offset.getZ() == -1 ? NORTH : offset.getZ() == 1 ? SOUTH : null;
-        }
-        if (offset.getX() == 0 && offset.getZ() == 0) {
+        } else if (offset.getX() == 0 && offset.getZ() == 0) {
             return offset.getY() == -1 ? DOWN : offset.getY() == 1 ? UP : null;
-        }
-        if (offset.getY() == 0 && offset.getZ() == 0) {
+        } else if (offset.getY() == 0 && offset.getZ() == 0) {
             return offset.getX() == -1 ? WEST : offset.getX() == 1 ? EAST : null;
         }
         return null;

@@ -14,14 +14,13 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class TubeBlockEntity extends BlockEntity {
+public class TubeBlockEntity extends BlockEntity implements ITubeConnectable {
     public static final ModelProperty<Integer> CONNECTION_PROPERTY = new ModelProperty<>();
 
     private int sidesClosed = 0;    // toggleable by player clicking with empty hand
@@ -111,10 +110,7 @@ public class TubeBlockEntity extends BlockEntity {
         int prevSidesConnected = sidesConnected;
         BlockPos pos1 = getBlockPos().relative(dir);
         Direction dir1 = dir.getOpposite();
-        boolean connectable = !isSideClosed(dir) &&
-                (level.getCapability(Capabilities.ItemHandler.BLOCK, pos1, dir1) != null
-                        || level.getCapability(Capabilities.FluidHandler.BLOCK, pos1, dir1) != null
-                        || level.getBlockEntity(pos1) instanceof TubeBlockEntity tube && !tube.isSideClosed(dir1));
+        boolean connectable = !isSideClosed(dir) && ITubeConnectable.canConnect(level, pos1, dir1);
         sidesConnected = DirectionUtil.setDirectionBit(sidesConnected, dir, connectable);
 
         if (sidesConnected != prevSidesConnected) {
@@ -139,5 +135,10 @@ public class TubeBlockEntity extends BlockEntity {
             setChanged();
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
+    }
+
+    @Override
+    public boolean isSideTubeConnectable(Direction side) {
+        return !isSideClosed(side);
     }
 }

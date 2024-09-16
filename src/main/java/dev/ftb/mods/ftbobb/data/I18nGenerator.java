@@ -24,6 +24,8 @@ public class I18nGenerator extends LanguageProvider {
         addBlock(BlocksRegistry.PUMP, "Pump");
 
         addBlock(BlocksRegistry.TUBE, "Tube");
+        addBlock(BlocksRegistry.JAR, "Glass Jar");
+        addBlock(BlocksRegistry.TEMPERED_JAR, "Tempered Glass Jar");
 
         addItem(ItemsRegistry.CLOTH_MESH, "Cloth Mesh");
         addItem(ItemsRegistry.IRON_MESH, "Iron Mesh");

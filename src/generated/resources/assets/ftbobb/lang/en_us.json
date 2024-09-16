@@ -1,9 +1,11 @@
 {
   "block.ftbobb.diamond_sluice": "Diamond Sluice",
   "block.ftbobb.iron_sluice": "Iron Sluice",
+  "block.ftbobb.jar": "Glass Jar",
   "block.ftbobb.netherite_sluice": "Netherite Sluice",
   "block.ftbobb.oak_sluice": "Oak Sluice",
   "block.ftbobb.pump": "Pump",
+  "block.ftbobb.tempered_jar": "Tempered Glass Jar",
   "block.ftbobb.tube": "Tube",
   "ftbobb.itemGroup.tab": "FTB Ocean Building Blocks",
   "item.ftbobb.cloth_mesh": "Cloth Mesh",

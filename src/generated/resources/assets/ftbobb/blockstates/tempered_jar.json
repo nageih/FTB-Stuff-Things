@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "active=false,temperature=high": {
+      "model": "ftbobb:block/tempered_jar_high"
+    },
+    "active=false,temperature=low": {
+      "model": "ftbobb:block/tempered_jar_low"
+    },
+    "active=false,temperature=none": {
+      "model": "ftbobb:block/tempered_jar_none"
+    },
+    "active=false,temperature=subzero": {
+      "model": "ftbobb:block/tempered_jar_subzero"
+    },
+    "active=true,temperature=high": {
+      "model": "ftbobb:block/tempered_jar_high"
+    },
+    "active=true,temperature=low": {
+      "model": "ftbobb:block/tempered_jar_low"
+    },
+    "active=true,temperature=none": {
+      "model": "ftbobb:block/tempered_jar_none"
+    },
+    "active=true,temperature=subzero": {
+      "model": "ftbobb:block/tempered_jar_subzero"
+    }
+  }
+}

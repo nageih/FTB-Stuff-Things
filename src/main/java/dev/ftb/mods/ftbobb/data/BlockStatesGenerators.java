@@ -3,9 +3,11 @@ package dev.ftb.mods.ftbobb.data;
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.blocks.PumpBlock;
 import dev.ftb.mods.ftbobb.blocks.SluiceBlock;
+import dev.ftb.mods.ftbobb.blocks.TemperedJarBlock;
 import dev.ftb.mods.ftbobb.client.model.TubeModel;
 import dev.ftb.mods.ftbobb.items.MeshType;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
+import dev.ftb.mods.ftbobb.temperature.Temperature;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.*;
@@ -54,6 +56,20 @@ public class BlockStatesGenerators extends BlockStateProvider {
         simpleBlock(BlocksRegistry.TUBE.get(), tlb.end());
 
         models().withExistingParent("block/tube_inv", FTBOBB.id("block/tube_base"));
+
+        ModelFile jarModel = models().withExistingParent("block/jar", FTBOBB.id("block/jar_base"));
+        simpleBlock(BlocksRegistry.JAR.get(), jarModel);
+
+        getVariantBuilder(BlocksRegistry.TEMPERED_JAR.get()).forAllStates(state -> {
+            Temperature temp = state.getValue(TemperedJarBlock.TEMPERATURE);
+            return ConfiguredModel.builder().modelFile(
+                    models().withExistingParent("tempered_jar_" + temp.getSerializedName(), modLoc("block/jar_base"))
+                            .texture("cover", modLoc("block/cast_iron_jar_cover"))
+                            .texture("glass_side", modLoc("block/jar_glass_side_" + temp.getSerializedName()))
+                            .texture("glass_top", modLoc("block/jar_glass_tempered_top"))
+                            .texture("glass_bottom", modLoc("block/jar_glass_bottom_" + temp.getSerializedName()))
+            ).build();
+        });
     }
 
     private static class TubeLoaderBuilder extends CustomLoaderBuilder<BlockModelBuilder> {
