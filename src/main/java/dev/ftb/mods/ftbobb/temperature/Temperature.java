@@ -14,14 +14,11 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * @author LatvianModder
- */
 public enum Temperature implements StringRepresentable {
-	NONE("none", new DustParticleOptions(new Vector3f(0.9F, 0.9F, 0.9F), 1F), 0.1F),
-	LOW("low", ParticleTypes.FLAME, 0.1F),
-	HIGH("high", ParticleTypes.SOUL_FIRE_FLAME, 0.1F),
-	SUBZERO("subzero", ParticleTypes.END_ROD, 0.3F);
+	NORMAL("normal", new DustParticleOptions(new Vector3f(0.9F, 0.9F, 0.9F), 1F), 0.1F),
+	HOT("hot", ParticleTypes.FLAME, 0.1F),
+	SUPERHEATED("superheated", ParticleTypes.SOUL_FIRE_FLAME, 0.1F),
+	CHILLED("chilled", ParticleTypes.END_ROD, 0.3F);
 
 	public static final Temperature[] VALUES = values();
 	public static final Map<String, Temperature> MAP = Arrays.stream(VALUES).collect(Collectors.toMap(t -> t.id, t -> t));
@@ -38,7 +35,7 @@ public enum Temperature implements StringRepresentable {
 		this.particleOptions = particleOptions;
 		this.particleOffset = particleOffset;
 
-		name = Component.translatable("ftbjarmod.temperature." + this.id);
+		name = Component.translatable(FTBOBB.MODID + ".temperature." + this.id);
 		texture = FTBOBB.id("textures/gui/temperature/" + this.id + ".png");
 		icon = Icon.getIcon(texture);
 	}
@@ -61,7 +58,7 @@ public enum Temperature implements StringRepresentable {
 	}
 
 	public static Temperature byName(String name) {
-		return MAP.getOrDefault(name.toLowerCase(), NONE);
+		return MAP.getOrDefault(name.toLowerCase(), NORMAL);
 	}
 
 }

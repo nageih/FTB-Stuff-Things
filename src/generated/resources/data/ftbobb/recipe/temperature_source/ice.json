@@ -1,0 +1,6 @@
+{
+  "type": "ftbobb:temperature_source",
+  "blockstate": "minecraft:ice",
+  "efficiency": 0.25,
+  "temperature": "chilled"
+}

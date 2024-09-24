@@ -1,0 +1,5 @@
+{
+  "type": "ftbobb:temperature_source",
+  "blockstate": "minecraft:magma_block",
+  "temperature": "hot"
+}

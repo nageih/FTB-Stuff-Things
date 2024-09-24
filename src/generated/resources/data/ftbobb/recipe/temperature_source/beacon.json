@@ -1,0 +1,6 @@
+{
+  "type": "ftbobb:temperature_source",
+  "blockstate": "minecraft:beacon",
+  "efficiency": 4.0,
+  "temperature": "superheated"
+}

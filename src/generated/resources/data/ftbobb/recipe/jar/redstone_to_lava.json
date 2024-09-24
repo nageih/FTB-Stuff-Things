@@ -1,0 +1,22 @@
+{
+  "type": "ftbobb:jar",
+  "input_fluids": [
+    {
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "input_items": [
+    {
+      "count": 1,
+      "tag": "c:dusts/redstone"
+    }
+  ],
+  "output_fluids": [
+    {
+      "amount": 1000,
+      "id": "minecraft:lava"
+    }
+  ],
+  "output_items": []
+}

@@ -1,0 +1,6 @@
+{
+  "type": "ftbobb:temperature_source",
+  "blockstate": "ftbobb:blue_magma_block",
+  "efficiency": 4.0,
+  "temperature": "superheated"
+}

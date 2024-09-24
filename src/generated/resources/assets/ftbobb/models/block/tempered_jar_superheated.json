@@ -2,8 +2,8 @@
   "parent": "ftbobb:block/jar_base",
   "textures": {
     "cover": "ftbobb:block/cast_iron_jar_cover",
-    "glass_bottom": "ftbobb:block/jar_glass_bottom_low",
-    "glass_side": "ftbobb:block/jar_glass_side_low",
+    "glass_bottom": "ftbobb:block/jar_glass_bottom_superheated",
+    "glass_side": "ftbobb:block/jar_glass_side_superheated",
     "glass_top": "ftbobb:block/jar_glass_tempered_top"
   }
 }

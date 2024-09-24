@@ -1,0 +1,6 @@
+{
+  "type": "ftbobb:temperature_source",
+  "blockstate": "minecraft:campfire[facing=north,lit=true,signal_fire=false,waterlogged=false]",
+  "efficiency": 0.5,
+  "temperature": "hot"
+}

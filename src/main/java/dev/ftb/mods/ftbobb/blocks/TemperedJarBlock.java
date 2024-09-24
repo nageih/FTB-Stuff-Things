@@ -5,6 +5,8 @@ import dev.ftb.mods.ftbobb.temperature.Temperature;
 import dev.ftb.mods.ftbobb.temperature.TemperatureAndEfficiency;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -14,6 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -28,7 +32,7 @@ public class TemperedJarBlock extends JarBlock {
     public TemperedJarBlock() {
         super();
 
-        registerDefaultState(getStateDefinition().any().setValue(TEMPERATURE, Temperature.NONE).setValue(ACTIVE, false));
+        registerDefaultState(getStateDefinition().any().setValue(TEMPERATURE, Temperature.NORMAL).setValue(ACTIVE, false));
     }
 
     @Override
@@ -50,12 +54,23 @@ public class TemperedJarBlock extends JarBlock {
         return defaultBlockState().setValue(TEMPERATURE, tempEff.temperature());
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return (level1, blockPos, blockState, be) -> {
+            if (be instanceof TemperedJarBlockEntity jar && level1 instanceof ServerLevel serverLevel) {
+                jar.serverTick(serverLevel);
+            }
+        };
+    }
+
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        if (direction == Direction.DOWN) {
-            if (level.getBlockEntity(pos) instanceof TemperedJarBlockEntity jar) {
-                jar.clearCache();
+        if (level.getBlockEntity(pos) instanceof TemperedJarBlockEntity jar) {
+            if (direction == Direction.DOWN) {
+                jar.clearCachedData();
             }
+            jar.onNeighbourChange(direction, neighborPos);
         }
 
         return direction == Direction.DOWN && level instanceof Level l ?
@@ -71,25 +86,14 @@ public class TemperedJarBlock extends JarBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        if (!level.isClientSide()) {
-            BlockEntity entity = level.getBlockEntity(pos);
-
-            if (entity instanceof TemperedJarBlockEntity jar) {
-                player.openMenu(jar, buf -> {
-                    buf.writeBlockPos(pos);
-                    jar.writeRecipeId(buf);
-                });
-//                NetworkHooks.openGui((ServerPlayer) player, new MenuProvider() {
-//                    @Override
-//                    public Component getDisplayName() {
-//                        return new TranslatableComponent("block.ftbjarmod.tempered_jar");
-//                    }
-//
-//                    @Override
-//                    public AbstractContainerMenu createMenu(int id, Inventory playerInv, Player player1) {
-//                        return new JarMenu(id, playerInv, (TemperedJarBlockEntity) entity, (TemperedJarBlockEntity) entity);
-//                    }
-//                }, buf -> ((TemperedJarBlockEntity) entity).writeMenu(player, buf));
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof TemperedJarBlockEntity jar) {
+            if (!player.isShiftKeyDown()) {
+                if (!jar.onRightClick(player, hand, stack)) {
+                    player.openMenu(jar, buf -> {
+                        buf.writeBlockPos(pos);
+                        buf.writeOptional(jar.getCurrentRecipeId(), FriendlyByteBuf::writeResourceLocation);
+                    });
+                }
             }
         }
 

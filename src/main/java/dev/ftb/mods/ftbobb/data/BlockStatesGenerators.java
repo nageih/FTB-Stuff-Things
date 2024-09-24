@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbobb.data;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
+import dev.ftb.mods.ftbobb.blocks.AutoProcessingBlock;
 import dev.ftb.mods.ftbobb.blocks.PumpBlock;
 import dev.ftb.mods.ftbobb.blocks.SluiceBlock;
 import dev.ftb.mods.ftbobb.blocks.TemperedJarBlock;
@@ -8,11 +9,15 @@ import dev.ftb.mods.ftbobb.client.model.TubeModel;
 import dev.ftb.mods.ftbobb.items.MeshType;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
+import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.*;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
+
+import java.util.EnumMap;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -55,9 +60,14 @@ public class BlockStatesGenerators extends BlockStateProvider {
         TubeLoaderBuilder tlb = models().getBuilder("block/tube").customLoader(TubeLoaderBuilder::new);
         simpleBlock(BlocksRegistry.TUBE.get(), tlb.end());
 
-        models().withExistingParent("block/tube_inv", FTBOBB.id("block/tube_base"));
+        simpleBlock(BlocksRegistry.BLUE_MAGMA_BLOCK.get());
+        simpleBlock(BlocksRegistry.CREATIVE_LOW_TEMPERATURE_SOURCE.get());
+        simpleBlock(BlocksRegistry.CREATIVE_HIGH_TEMPERATURE_SOURCE.get());
+        simpleBlock(BlocksRegistry.CREATIVE_SUBZERO_TEMPERATURE_SOURCE.get());
 
-        ModelFile jarModel = models().withExistingParent("block/jar", FTBOBB.id("block/jar_base"));
+        models().withExistingParent("block/tube_inv", modLoc("block/tube_base"));
+
+        ModelFile jarModel = models().withExistingParent("block/jar", modLoc("block/jar_base"));
         simpleBlock(BlocksRegistry.JAR.get(), jarModel);
 
         getVariantBuilder(BlocksRegistry.TEMPERED_JAR.get()).forAllStates(state -> {
@@ -69,6 +79,24 @@ public class BlockStatesGenerators extends BlockStateProvider {
                             .texture("glass_top", modLoc("block/jar_glass_tempered_top"))
                             .texture("glass_bottom", modLoc("block/jar_glass_bottom_" + temp.getSerializedName()))
             ).build();
+        });
+
+        EnumMap<Direction, IntIntPair> rots = Util.make(new EnumMap<>(Direction.class), map -> {
+            map.put(Direction.UP, IntIntPair.of(180, 0));
+            map.put(Direction.NORTH, IntIntPair.of(90, 180));
+            map.put(Direction.SOUTH, IntIntPair.of(90, 0));
+            map.put(Direction.WEST, IntIntPair.of(90, 90));
+            map.put(Direction.EAST, IntIntPair.of(90, 270));
+        });
+
+        MultiPartBlockStateBuilder apBuilder = getMultipartBuilder(BlocksRegistry.AUTO_PROCESSING_BLOCK.get());
+        apBuilder.part().modelFile(models().getExistingFile(modLoc("block/auto_processing_block"))).addModel();
+        AutoProcessingBlock.CONN_PROPS.forEach((dir, prop) -> {
+            apBuilder.part().modelFile(models().getExistingFile(modLoc("block/tube_base")))
+                    .rotationX(rots.get(dir).firstInt())
+                    .rotationY(rots.get(dir).secondInt())
+                    .addModel()
+                    .condition(prop, true);
         });
     }
 

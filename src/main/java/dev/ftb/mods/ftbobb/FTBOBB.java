@@ -2,25 +2,34 @@ package dev.ftb.mods.ftbobb;
 
 import com.mojang.logging.LogUtils;
 import dev.ftb.mods.ftbobb.client.ClientSetup;
-import dev.ftb.mods.ftbobb.client.FTBOBBClient;
+import dev.ftb.mods.ftbobb.recipes.RecipeCaches;
 import dev.ftb.mods.ftbobb.registry.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import org.slf4j.Logger;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @Mod(FTBOBB.MODID)
 public class FTBOBB {
     public static final String MODID = "ftbobb";
 
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public FTBOBB(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
@@ -38,17 +47,14 @@ public class FTBOBB {
         ContentRegistry.init(modEventBus);
         ComponentsRegistry.init(modEventBus);
 
-        modEventBus.addListener(this::clientReady);
         modEventBus.addListener(this::registerCapabilities);
+
+        NeoForge.EVENT_BUS.addListener(this::addReloadListeners);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
-    }
-
-    private void clientReady(final FMLClientSetupEvent event) {
-        FTBOBBClient.INSTANCE.init();
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -61,11 +67,28 @@ public class FTBOBB {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 BlockEntitiesRegistry.JAR.get(),
-                (blockEntity, side) -> side == Direction.UP ? blockEntity.getFluidTank() : null
+                (blockEntity, side) -> blockEntity.getFluidHandler()
         );
+
+        event.registerItem(
+                Capabilities.FluidHandler.ITEM,
+                (stack, ctx) -> new FluidHandlerItemStack(ComponentsRegistry.STORED_FLUID, stack, FluidType.BUCKET_VOLUME),
+                ItemsRegistry.FLUID_CAPSULE
+        );
+    }
+
+    private void addReloadListeners(AddReloadListenerEvent event) {
+        event.addListener(new CacheReloadListener());
     }
 
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    }
+
+    public static class CacheReloadListener implements PreparableReloadListener {
+        @Override
+        public CompletableFuture<Void> reload(PreparationBarrier stage, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
+            return CompletableFuture.runAsync(RecipeCaches::clearAll, gameExecutor).thenCompose(stage::wait);
+        }
     }
 }

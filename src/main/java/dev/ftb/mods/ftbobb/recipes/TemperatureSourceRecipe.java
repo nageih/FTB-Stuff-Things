@@ -123,11 +123,11 @@ public class TemperatureSourceRecipe implements Recipe<NoInventory> {
             this.codec = RecordCodecBuilder.mapCodec(builder -> builder.group(
                     BLOCKSTATE_STRING_CODEC.fieldOf("blockstate")
                             .forGetter(TemperatureSourceRecipe::getBlockState),
-                    StringRepresentable.fromEnum(Temperature::values).optionalFieldOf("temperature", Temperature.NONE)
+                    StringRepresentable.fromEnum(Temperature::values).optionalFieldOf("temperature", Temperature.NORMAL)
                             .forGetter(TemperatureSourceRecipe::getTemperature),
                     Codec.DOUBLE.optionalFieldOf("efficiency", 1.0)
                             .forGetter(TemperatureSourceRecipe::getEfficiency),
-                    ItemStack.OPTIONAL_CODEC.fieldOf("item")
+                    ItemStack.OPTIONAL_CODEC.optionalFieldOf("item", ItemStack.EMPTY)
                             .forGetter(TemperatureSourceRecipe::getStack),
                     Codec.BOOL.optionalFieldOf("hide_from_jei", false)
                             .forGetter(TemperatureSourceRecipe::hideFromJEI)

@@ -1,0 +1,22 @@
+{
+  "type": "ftbobb:jar",
+  "input_fluids": [
+    {
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    },
+    {
+      "amount": 1000,
+      "fluid": "minecraft:lava"
+    }
+  ],
+  "input_items": [],
+  "output_fluids": [],
+  "output_items": [
+    {
+      "count": 1,
+      "id": "minecraft:obsidian"
+    }
+  ],
+  "time": 60
+}

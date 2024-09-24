@@ -15,10 +15,10 @@ public class DataGenerators {
         PackOutput packOutput = generator.getPackOutput();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
-        if (event.includeClient()) {
-            generator.addProvider(true, new I18nGenerator(packOutput));
-            generator.addProvider(true, new BlockStatesGenerators(packOutput, existingFileHelper));
-            generator.addProvider(true, new ItemModelsGenerator(packOutput, existingFileHelper));
-        }
+        generator.addProvider(event.includeClient(), new I18nGenerator(packOutput));
+        generator.addProvider(event.includeClient(), new BlockStatesGenerators(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new ItemModelsGenerator(packOutput, existingFileHelper));
+
+        generator.addProvider(event.includeServer(), new RecipesGenerator(packOutput, event.getLookupProvider()));
     }
 }

@@ -1,0 +1,5 @@
+{
+  "type": "ftbobb:temperature_source",
+  "blockstate": "minecraft:glowstone",
+  "efficiency": 1.25
+}

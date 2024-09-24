@@ -56,7 +56,11 @@ public class JarBlockEntity extends BlockEntity implements ITubeConnectable {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    public IFluidHandler getFluidTank() {
+    public IFluidHandler getFluidHandler() {
+        return tank;
+    }
+
+    public FluidTank getTank() {
         return tank;
     }
 

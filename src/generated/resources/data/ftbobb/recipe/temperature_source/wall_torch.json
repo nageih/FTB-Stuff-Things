@@ -1,0 +1,6 @@
+{
+  "type": "ftbobb:temperature_source",
+  "blockstate": "minecraft:wall_torch[facing=north]",
+  "efficiency": 0.25,
+  "temperature": "hot"
+}

@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public record TemperatureAndEfficiency(Temperature temperature, double efficiency) {
-	public static final TemperatureAndEfficiency DEFAULT = new TemperatureAndEfficiency(Temperature.NONE, 1D);
+	public static final TemperatureAndEfficiency DEFAULT = new TemperatureAndEfficiency(Temperature.NORMAL, 1D);
 
 	public static TemperatureAndEfficiency fromLevel(Level level, BlockPos pos) {
 		BlockState state = level.getBlockState(pos);

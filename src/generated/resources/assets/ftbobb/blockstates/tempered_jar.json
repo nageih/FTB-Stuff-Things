@@ -1,28 +1,28 @@
 {
   "variants": {
-    "active=false,temperature=high": {
-      "model": "ftbobb:block/tempered_jar_high"
+    "active=false,temperature=chilled": {
+      "model": "ftbobb:block/tempered_jar_chilled"
     },
-    "active=false,temperature=low": {
-      "model": "ftbobb:block/tempered_jar_low"
+    "active=false,temperature=hot": {
+      "model": "ftbobb:block/tempered_jar_hot"
     },
-    "active=false,temperature=none": {
-      "model": "ftbobb:block/tempered_jar_none"
+    "active=false,temperature=normal": {
+      "model": "ftbobb:block/tempered_jar_normal"
     },
-    "active=false,temperature=subzero": {
-      "model": "ftbobb:block/tempered_jar_subzero"
+    "active=false,temperature=superheated": {
+      "model": "ftbobb:block/tempered_jar_superheated"
     },
-    "active=true,temperature=high": {
-      "model": "ftbobb:block/tempered_jar_high"
+    "active=true,temperature=chilled": {
+      "model": "ftbobb:block/tempered_jar_chilled"
     },
-    "active=true,temperature=low": {
-      "model": "ftbobb:block/tempered_jar_low"
+    "active=true,temperature=hot": {
+      "model": "ftbobb:block/tempered_jar_hot"
     },
-    "active=true,temperature=none": {
-      "model": "ftbobb:block/tempered_jar_none"
+    "active=true,temperature=normal": {
+      "model": "ftbobb:block/tempered_jar_normal"
     },
-    "active=true,temperature=subzero": {
-      "model": "ftbobb:block/tempered_jar_subzero"
+    "active=true,temperature=superheated": {
+      "model": "ftbobb:block/tempered_jar_superheated"
     }
   }
 }

@@ -1,0 +1,11 @@
+{
+  "type": "ftbobb:temperature_source",
+  "blockstate": "minecraft:stone",
+  "item": {
+    "components": {
+      "minecraft:custom_name": "{\"translate\":\"ftbobb.any_block\"}"
+    },
+    "count": 1,
+    "id": "minecraft:stone"
+  }
+}

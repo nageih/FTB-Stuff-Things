@@ -1,0 +1,6 @@
+{
+  "type": "ftbobb:temperature_source",
+  "blockstate": "ftbobb:creative_low_temperature_source",
+  "efficiency": 100.0,
+  "temperature": "hot"
+}

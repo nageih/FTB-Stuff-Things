@@ -1,0 +1,5 @@
+{
+  "type": "ftbobb:temperature_source",
+  "blockstate": "minecraft:respawn_anchor[charges=0]",
+  "efficiency": 8.0
+}
