@@ -15,7 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class TemperedJarMenu extends AbstractContainerMenu {
-    public static final int PLAYER_INV_Y = 137;
+    public static final int PLAYER_INV_Y = 132;
     public static final int INPUT_ITEMS_Y = 36;
 
     private final TemperedJarBlockEntity jar;

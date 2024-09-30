@@ -1,7 +1,8 @@
 package dev.ftb.mods.ftbobb.blocks;
 
-import dev.ftb.mods.ftbobb.registry.ContentRegistry;
 import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
+import dev.ftb.mods.ftbobb.registry.ContentRegistry;
+import dev.ftb.mods.ftbobb.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -30,15 +31,12 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.stream.Stream;
 
 public class PumpBlock extends Block implements EntityBlock {
     public enum Progress implements StringRepresentable {
@@ -60,10 +58,28 @@ public class PumpBlock extends Block implements EntityBlock {
         }
     }
 
-    private static final VoxelShape NORTH = Stream.of(Block.box(0, 0, 0, 16, 10, 16), Block.box(3, 10, 6, 13, 13, 9), Block.box(6, 10, 0, 10, 12, 2), Block.box(0, 15, 8, 16, 16, 16), Block.box(1, 10, 9, 15, 15, 15), Block.box(0, 10, 15, 1, 15, 16), Block.box(0, 10, 8, 1, 15, 9), Block.box(15, 10, 8, 16, 15, 9), Block.box(15, 10, 15, 16, 15, 16), Block.box(2.5, 4, 3, 13.5, 15, 5), Block.box(7, 9, 2, 9, 11, 6)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
-    private static final VoxelShape EAST = Stream.of(Block.box(0, 0, 0, 16, 10, 16), Block.box(7, 10, 3, 10, 13, 13), Block.box(14, 10, 6, 16, 12, 10), Block.box(0, 15, 0, 8, 16, 16), Block.box(1, 10, 1, 7, 15, 15), Block.box(0, 10, 0, 1, 15, 1), Block.box(7, 10, 0, 8, 15, 1), Block.box(7, 10, 15, 8, 15, 16), Block.box(0, 10, 15, 1, 15, 16), Block.box(11, 4, 2.5, 13, 15, 13.5), Block.box(10, 9, 7, 14, 11, 9)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
-    private static final VoxelShape SOUTH = Stream.of(Block.box(0, 0, 0, 16, 10, 16), Block.box(3, 10, 7, 13, 13, 10), Block.box(6, 10, 14, 10, 12, 16), Block.box(0, 15, 0, 16, 16, 8), Block.box(1, 10, 1, 15, 15, 7), Block.box(15, 10, 0, 16, 15, 1), Block.box(15, 10, 7, 16, 15, 8), Block.box(0, 10, 7, 1, 15, 8), Block.box(0, 10, 0, 1, 15, 1), Block.box(2.5, 4, 11, 13.5, 15, 13), Block.box(7, 9, 10, 9, 11, 14)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
-    private static final VoxelShape WEST = Stream.of(Block.box(0, 0, 0, 16, 10, 16), Block.box(6, 10, 3, 9, 13, 13), Block.box(0, 10, 6, 2, 12, 10), Block.box(8, 15, 0, 16, 16, 16), Block.box(9, 10, 1, 15, 15, 15), Block.box(15, 10, 15, 16, 15, 16), Block.box(8, 10, 15, 9, 15, 16), Block.box(8, 10, 0, 9, 15, 1), Block.box(15, 10, 0, 16, 15, 1), Block.box(3, 4, 2.5, 5, 15, 13.5), Block.box(2, 9, 7, 6, 11, 9)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+    private static final VoxelShape NORTH = VoxelShapeUtils.or(
+            box(0, 0, 0, 16, 10, 16),
+            box(3, 10, 6, 13, 13, 9),
+            box(6, 10, 0, 10, 12, 2),
+            box(0, 15, 8, 16, 16, 16),
+            box(1, 10, 9, 15, 15, 15),
+            box(0, 10, 15, 1, 15, 16),
+            box(0, 10, 8, 1, 15, 9),
+            box(15, 10, 8, 16, 15, 9),
+            box(15, 10, 15, 16, 15, 16),
+            box(2.5, 4, 3, 13.5, 15, 5),
+            box(7, 9, 2, 9, 11, 6)
+    );
+    private static final VoxelShape EAST = VoxelShapeUtils.rotateY(NORTH, 90);
+    private static final VoxelShape SOUTH = VoxelShapeUtils.rotateY(EAST, 90);
+    private static final VoxelShape WEST = VoxelShapeUtils.rotateY(SOUTH, 90);
+
+    //Stream.of(box(0, 0, 0, 16, 10, 16), box(7, 10, 3, 10, 13, 13), box(14, 10, 6, 16, 12, 10), box(0, 15, 0, 8, 16, 16), box(1, 10, 1, 7, 15, 15), box(0, 10, 0, 1, 15, 1), box(7, 10, 0, 8, 15, 1), box(7, 10, 15, 8, 15, 16), box(0, 10, 15, 1, 15, 16), box(11, 4, 2.5, 13, 15, 13.5), box(10, 9, 7, 14, 11, 9)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
+//    private static final VoxelShape SOUTH = Stream.of(box(0, 0, 0, 16, 10, 16), box(3, 10, 7, 13, 13, 10), box(6, 10, 14, 10, 12, 16), box(0, 15, 0, 16, 16, 8), box(1, 10, 1, 15, 15, 7), box(15, 10, 0, 16, 15, 1), box(15, 10, 7, 16, 15, 8), box(0, 10, 7, 1, 15, 8), box(0, 10, 0, 1, 15, 1), box(2.5, 4, 11, 13.5, 15, 13), box(7, 9, 10, 9, 11, 14)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+//
+//    private static final VoxelShape WEST = Stream.of(box(0, 0, 0, 16, 10, 16), box(6, 10, 3, 9, 13, 13), box(0, 10, 6, 2, 12, 10), box(8, 15, 0, 16, 16, 16), box(9, 10, 1, 15, 15, 15), box(15, 10, 15, 16, 15, 16), box(8, 10, 15, 9, 15, 16), box(8, 10, 0, 9, 15, 1), box(15, 10, 0, 16, 15, 1), box(3, 4, 2.5, 5, 15, 13.5), box(2, 9, 7, 6, 11, 9)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public static final DamageSource STATIC_ELECTRIC = new DamageSource(ContentRegistry.STATIC_ELECTRIC_DAMAGE_TYPE);
 

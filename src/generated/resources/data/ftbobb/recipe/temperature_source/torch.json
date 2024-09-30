@@ -1,6 +1,10 @@
 {
   "type": "ftbobb:temperature_source",
   "blockstate": "minecraft:torch",
+  "display_item": {
+    "count": 1,
+    "id": "minecraft:torch"
+  },
   "efficiency": 0.25,
   "temperature": "hot"
 }

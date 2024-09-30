@@ -1,12 +1,19 @@
 package dev.ftb.mods.ftbobb.blocks;
 
+import dev.ftb.mods.ftbobb.registry.ComponentsRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
+import dev.ftb.mods.ftbobb.util.MiscUtil;
+import dev.ftb.mods.ftbobb.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -16,20 +23,20 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.stream.Stream;
+import java.util.List;
 
-public class JarBlock extends Block implements EntityBlock {
-    public static final VoxelShape SHAPE = Stream.of(
+public class JarBlock extends Block implements EntityBlock, SerializableComponentsProvider {
+    public static final VoxelShape SHAPE = VoxelShapeUtils.or(
             box(3, 0, 3, 13, 13, 13),
             box(6, 13, 6, 10, 14, 10),
             box(5, 14, 5, 11, 16, 11)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+    );
 
     public JarBlock() {
         super(Properties.of().sound(SoundType.BONE_BLOCK).strength(0.6F).noOcclusion());
@@ -86,5 +93,20 @@ public class JarBlock extends Block implements EntityBlock {
         }
 
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    @Override
+    public void addSerializableComponents(List<DataComponentType<?>> list) {
+        list.add(ComponentsRegistry.STORED_FLUID.get());
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+
+        FluidStack content = stack.getOrDefault(ComponentsRegistry.STORED_FLUID, SimpleFluidContent.EMPTY).copy();
+        if (!content.isEmpty()) {
+            tooltipComponents.add(MiscUtil.makeFluidStackDesc(content));
+        }
     }
 }

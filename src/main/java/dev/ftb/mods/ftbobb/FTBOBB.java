@@ -2,9 +2,9 @@ package dev.ftb.mods.ftbobb;
 
 import com.mojang.logging.LogUtils;
 import dev.ftb.mods.ftbobb.client.ClientSetup;
+import dev.ftb.mods.ftbobb.items.FluidCapsuleItem;
 import dev.ftb.mods.ftbobb.recipes.RecipeCaches;
 import dev.ftb.mods.ftbobb.registry.*;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -18,8 +18,6 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import org.slf4j.Logger;
 
 import java.util.concurrent.CompletableFuture;
@@ -72,7 +70,7 @@ public class FTBOBB {
 
         event.registerItem(
                 Capabilities.FluidHandler.ITEM,
-                (stack, ctx) -> new FluidHandlerItemStack(ComponentsRegistry.STORED_FLUID, stack, FluidType.BUCKET_VOLUME),
+                (stack, ctx) -> new FluidCapsuleItem.FluidHandler(stack),
                 ItemsRegistry.FLUID_CAPSULE
         );
     }

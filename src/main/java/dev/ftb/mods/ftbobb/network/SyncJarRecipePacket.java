@@ -17,8 +17,8 @@ import java.util.Optional;
  * Received on: CLIENT<br>
  * Sent by server to update the GUI when the current recipe changes.
  *
- * @param pos
- * @param recipeId
+ * @param pos jar blockpos
+ * @param recipeId the new recipe ID
  */
 public record SyncJarRecipePacket(BlockPos pos, Optional<ResourceLocation> recipeId) implements CustomPacketPayload {
     public static final Type<SyncJarRecipePacket> TYPE = new Type<>(FTBOBB.id("sync_jar_recipe"));

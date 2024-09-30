@@ -8,11 +8,15 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public enum StartJarCraftingPacket implements CustomPacketPayload {
+/**
+ * Received on: SERVER<br>
+ * Sent by client when Mix/Stop button is pressed on the jar GUI
+ */
+public enum ToggleJarCraftingPacket implements CustomPacketPayload {
     INSTANCE;
 
-    public static final Type<StartJarCraftingPacket> TYPE = new Type<>(FTBOBB.id("start_jar_crafting"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, StartJarCraftingPacket> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final Type<ToggleJarCraftingPacket> TYPE = new Type<>(FTBOBB.id("start_jar_crafting"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ToggleJarCraftingPacket> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -23,7 +27,7 @@ public enum StartJarCraftingPacket implements CustomPacketPayload {
         PacketDistributor.sendToServer(INSTANCE);
     }
 
-    public static void handleData(StartJarCraftingPacket packet, IPayloadContext context) {
+    public static void handleData(ToggleJarCraftingPacket ignored, IPayloadContext context) {
         if (context.player().containerMenu instanceof TemperedJarMenu menu) {
             menu.getJar().toggleCrafting();
         }

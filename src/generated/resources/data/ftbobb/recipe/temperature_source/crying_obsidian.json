@@ -1,5 +1,9 @@
 {
   "type": "ftbobb:temperature_source",
   "blockstate": "minecraft:crying_obsidian",
+  "display_item": {
+    "count": 1,
+    "id": "minecraft:crying_obsidian"
+  },
   "efficiency": 3.0
 }

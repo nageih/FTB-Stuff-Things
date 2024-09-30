@@ -1,6 +1,8 @@
 package dev.ftb.mods.ftbobb.registry;
 
+import com.mojang.serialization.MapCodec;
 import dev.ftb.mods.ftbobb.FTBOBB;
+import dev.ftb.mods.ftbobb.recipes.DevEnvironmentCondition;
 import dev.ftb.mods.ftbobb.screens.TemperedJarMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -11,10 +13,12 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.function.Supplier;
 
@@ -33,18 +37,33 @@ public class ContentRegistry {
                 }
             }).build());
 
+    //-----------------------------------------------
+
     private static final DeferredRegister<DamageType> DAMAGE_TYPES = DeferredRegister.create(Registries.DAMAGE_TYPE, FTBOBB.MODID);
 
     public static final DeferredHolder<DamageType, DamageType> STATIC_ELECTRIC_DAMAGE_TYPE = DAMAGE_TYPES.register("static_electric", () -> new DamageType("static_electric", 0.0F));
+
+    //-----------------------------------------------
 
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, FTBOBB.MODID);
 
     public static final Supplier<MenuType<TemperedJarMenu>> TEMPERED_JAR_MENU = registerMenu("tempered_jar", TemperedJarMenu::fromNetwork);
 
+    //-----------------------------------------------
+
+    public static final DeferredRegister<MapCodec<? extends ICondition>> CONDITIONS
+            = DeferredRegister.create(NeoForgeRegistries.CONDITION_SERIALIZERS, FTBOBB.MODID);
+
+    public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<DevEnvironmentCondition>> DEV_ENVIRONMENT
+            = CONDITIONS.register("dev_environment", () -> DevEnvironmentCondition.CODEC);
+
+    //-----------------------------------------------
+
     public static void init(IEventBus bus) {
         CREATIVE_MODE_TABS.register(bus);
         DAMAGE_TYPES.register(bus);
         MENU_TYPES.register(bus);
+        CONDITIONS.register(bus);
     }
 
     private static <C extends AbstractContainerMenu, T extends MenuType<C>> Supplier<T> registerMenu(String name, IContainerFactory<? extends C> f) {

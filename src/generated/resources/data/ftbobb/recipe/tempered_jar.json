@@ -3,14 +3,14 @@
   "category": "misc",
   "key": {
     "G": {
-      "item": "minecraft:glass"
+      "item": "ftbobb:tempered_glass"
     },
     "I": {
-      "item": "minecraft:iron_ingot"
+      "item": "ftbobb:cast_iron_ingot"
     }
   },
   "pattern": [
-    " I ",
+    "GIG",
     "G G",
     "GGG"
   ],

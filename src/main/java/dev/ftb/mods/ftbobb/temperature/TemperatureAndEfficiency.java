@@ -4,7 +4,9 @@ import dev.ftb.mods.ftbobb.recipes.JarRecipe;
 import dev.ftb.mods.ftbobb.recipes.NoInventory;
 import dev.ftb.mods.ftbobb.recipes.TemperatureSourceRecipe;
 import dev.ftb.mods.ftbobb.registry.RecipesRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -27,5 +29,11 @@ public record TemperatureAndEfficiency(Temperature temperature, double efficienc
 
 	public int getRecipeTime(JarRecipe recipe) {
 		return Mth.clamp((int) (recipe.getTime() / efficiency), 1, Short.MAX_VALUE);
+	}
+
+	public Component formatEfficiency() {
+		int eff = (int) (efficiency() * 100);
+		ChatFormatting color = eff == 100 ? ChatFormatting.YELLOW : eff > 100 ? ChatFormatting.GREEN : ChatFormatting.GOLD;
+		return Component.literal(eff + "%").withStyle(color);
 	}
 }

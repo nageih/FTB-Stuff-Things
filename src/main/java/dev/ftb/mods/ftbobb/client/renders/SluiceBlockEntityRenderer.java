@@ -1,24 +1,20 @@
 package dev.ftb.mods.ftbobb.client.renders;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.ftb.mods.ftbobb.blocks.SluiceBlockEntity;
-import dev.ftb.mods.ftbobb.capabilities.PublicReadOnlyFluidTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.joml.Matrix4f;
@@ -59,7 +55,7 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
         Minecraft mc = Minecraft.getInstance();
         FluidStack fluid = te.getFluidTank().getFluid();
 
-        VertexConsumer builder = renderer.getBuffer(RenderType.translucent());
+        VertexConsumer builder = renderer.getBuffer(RenderType.entityTranslucentCull(InventoryMenu.BLOCK_ATLAS));
 
         IClientFluidTypeExtensions renderProps = IClientFluidTypeExtensions.of(fluid.getFluid());
         ResourceLocation texture = renderProps.getFlowingTexture(fluid);
@@ -73,10 +69,10 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
 
         float y1 = .5F;
 
-        float u0top = sprite.getU(3F);
-        float v0top = sprite.getV(3F);
-        float u1top = sprite.getU(13F);
-        float v1top = sprite.getV(13F);
+        float u0top = sprite.getU(3F / 16F);
+        float v0top = sprite.getV(3F / 16F);
+        float u1top = sprite.getU(13F / 16F);
+        float v1top = sprite.getV(13F / 16F);
 
         Direction value = te.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
         float v = value.toYRot();
@@ -123,5 +119,10 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
         res[2] = color >> 8  & 0xff;
         res[3] = color       & 0xff;
         return res;
+    }
+
+    @Override
+    public AABB getRenderBoundingBox(SluiceBlockEntity blockEntity) {
+        return new AABB(blockEntity.getBlockPos()).inflate(1);
     }
 }

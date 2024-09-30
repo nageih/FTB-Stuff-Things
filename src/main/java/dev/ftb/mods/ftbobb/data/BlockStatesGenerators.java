@@ -61,9 +61,11 @@ public class BlockStatesGenerators extends BlockStateProvider {
         simpleBlock(BlocksRegistry.TUBE.get(), tlb.end());
 
         simpleBlock(BlocksRegistry.BLUE_MAGMA_BLOCK.get());
-        simpleBlock(BlocksRegistry.CREATIVE_LOW_TEMPERATURE_SOURCE.get());
-        simpleBlock(BlocksRegistry.CREATIVE_HIGH_TEMPERATURE_SOURCE.get());
-        simpleBlock(BlocksRegistry.CREATIVE_SUBZERO_TEMPERATURE_SOURCE.get());
+        simpleBlock(BlocksRegistry.CREATIVE_HOT_TEMPERATURE_SOURCE.get());
+        simpleBlock(BlocksRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE.get());
+        simpleBlock(BlocksRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE.get());
+
+        simpleBlock(BlocksRegistry.CAST_IRON_BLOCK.get());
 
         models().withExistingParent("block/tube_inv", modLoc("block/tube_base"));
 

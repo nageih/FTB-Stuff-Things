@@ -1,0 +1,18 @@
+{
+  "values": [
+    "ftbobb:oak_sluice",
+    "ftbobb:iron_sluice",
+    "ftbobb:diamond_sluice",
+    "ftbobb:netherite_sluice",
+    "ftbobb:pump",
+    "ftbobb:tube",
+    "ftbobb:jar",
+    "ftbobb:tempered_jar",
+    "ftbobb:auto_processing_block",
+    "ftbobb:blue_magma_block",
+    "ftbobb:creative_low_temperature_source",
+    "ftbobb:creative_high_temperature_source",
+    "ftbobb:creative_subzero_temperature_source",
+    "ftbobb:cast_iron_block"
+  ]
+}

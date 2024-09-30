@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class JarRecipe implements Recipe<NoInventory> {
+public class JarRecipe implements Recipe<NoInventory>, Comparable<JarRecipe> {
 	private final Temperature temperature;
 	private final int time;
 	private final List<SizedIngredient> inputItems;
@@ -81,12 +81,12 @@ public class JarRecipe implements Recipe<NoInventory> {
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return RecipesRegistry.JAR_SERIALIZER.get();
+		return RecipesRegistry.TEMPERED_JAR_SERIALIZER.get();
 	}
 
 	@Override
 	public RecipeType<?> getType() {
-		return RecipesRegistry.JAR_TYPE.get();
+		return RecipesRegistry.TEMPERED_JAR_TYPE.get();
 	}
 
 	public Temperature getTemperature() {
@@ -196,7 +196,7 @@ public class JarRecipe implements Recipe<NoInventory> {
 				}
 			}
 		}
-		if (matched < inputItems.size()) return false;
+		if (matched != inputItems.size()) return false;
 
 		matched = 0;
 		for (SizedFluidIngredient inputFluid : inputFluids) {
@@ -207,7 +207,18 @@ public class JarRecipe implements Recipe<NoInventory> {
 				}
 			}
 		}
-		return matched >= inputFluids.size();
+		return matched == inputFluids.size();
+	}
+
+	public int inputIngredientCount() {
+		return inputFluids.size() + inputItems.size();
+	}
+
+	@Override
+	public int compareTo(@NotNull JarRecipe o) {
+		// compare by temperature, then by number of input ingredients
+		int c = getTemperature().compareTo(o.getTemperature());
+        return c == 0 ? Integer.compare(o.inputIngredientCount(), inputIngredientCount()) : c;
 	}
 
 	public interface IFactory<T extends JarRecipe> {
@@ -259,7 +270,7 @@ public class JarRecipe implements Recipe<NoInventory> {
 			if (recipe.getOutputItems().isEmpty() && recipe.getOutputFluids().isEmpty()) {
 				return DataResult.error(() -> "at least one of output_items & output_fluids must be non-empty!");
 			}
-			if (recipe.getInputItems().size() + recipe.getInputFluids().size() > 3) {
+			if (recipe.inputIngredientCount() > 3) {
 				return DataResult.error(() -> "must be 1-3 item & fluid inputs combined!");
 			}
 			if (recipe.getOutputItems().size() + recipe.getOutputFluids().size() > 3) {

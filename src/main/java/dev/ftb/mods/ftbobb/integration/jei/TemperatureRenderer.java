@@ -25,5 +25,6 @@ public enum TemperatureRenderer implements IIngredientRenderer<Temperature> {
     @Override
     public void getTooltip(ITooltipBuilder tooltip, Temperature ingredient, TooltipFlag tooltipFlag) {
         tooltip.add(ingredient.getName());
+        tooltip.add(Component.translatable("ftbobb.temperature_source"));
     }
 }

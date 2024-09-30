@@ -32,8 +32,14 @@ public class ItemModelsGenerator extends ItemModelProvider {
         withExistingParent("creative_low_temperature_source", modLoc("block/creative_low_temperature_source"));
         withExistingParent("creative_high_temperature_source", modLoc("block/creative_high_temperature_source"));
         withExistingParent("creative_subzero_temperature_source", modLoc("block/creative_subzero_temperature_source"));
+        withExistingParent("cast_iron_block", modLoc("block/cast_iron_block"));
 
         simpleItem(ItemsRegistry.FLUID_CAPSULE, "item/fluid_container_base", "item/fluid_container_overlay");
+
+        simpleItem(ItemsRegistry.CAST_IRON_GEAR, "item/cast_iron_gear");
+        simpleItem(ItemsRegistry.CAST_IRON_INGOT, "item/cast_iron_ingot");
+        simpleItem(ItemsRegistry.CAST_IRON_NUGGET, "item/cast_iron_nugget");
+        simpleItem(ItemsRegistry.TEMPERED_GLASS, "item/tempered_glass");
     }
 
     private ItemModelBuilder simpleItem(DeferredItem<? extends Item> item, String... textures) {

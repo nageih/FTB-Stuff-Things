@@ -18,8 +18,7 @@ public class NetworkHandler {
         registrar.playToClient(SyncJarRecipePacket.TYPE, SyncJarRecipePacket.STREAM_CODEC, SyncJarRecipePacket::handleData);
 
         // serverbound
-        registrar.playToServer(StartJarCraftingPacket.TYPE, StartJarCraftingPacket.STREAM_CODEC, StartJarCraftingPacket::handleData);
-
+        registrar.playToServer(ToggleJarCraftingPacket.TYPE, ToggleJarCraftingPacket.STREAM_CODEC, ToggleJarCraftingPacket::handleData);
 
         // bidirectional
     }

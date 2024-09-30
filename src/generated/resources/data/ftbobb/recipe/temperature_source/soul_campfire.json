@@ -1,6 +1,10 @@
 {
   "type": "ftbobb:temperature_source",
-  "blockstate": "minecraft:soul_campfire[facing=north,lit=true,signal_fire=false,waterlogged=false]",
+  "blockstate": "minecraft:soul_campfire[lit=true]",
+  "display_item": {
+    "count": 1,
+    "id": "minecraft:soul_campfire"
+  },
   "efficiency": 0.5,
   "temperature": "superheated"
 }

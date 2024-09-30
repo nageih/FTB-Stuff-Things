@@ -21,9 +21,9 @@ public class RecipesRegistry {
 
     // ---------------------------------------------
 
-    public static final Supplier<RecipeType<JarRecipe>> JAR_TYPE
+    public static final Supplier<RecipeType<JarRecipe>> TEMPERED_JAR_TYPE
             = registerType("jar", FTBOBBRecipeType::new);
-    public static final Supplier<RecipeSerializer<JarRecipe>> JAR_SERIALIZER
+    public static final Supplier<RecipeSerializer<JarRecipe>> TEMPERED_JAR_SERIALIZER
             = RECIPE_SERIALIZERS.register("jar", () -> new JarRecipe.Serializer<>(JarRecipe::new));
 
     public static final Supplier<RecipeType<TemperatureSourceRecipe>> TEMPERATURE_SOURCE_TYPE

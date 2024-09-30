@@ -3,16 +3,18 @@ package dev.ftb.mods.ftbobb.screens;
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.blocks.TemperedJarBlockEntity;
 import dev.ftb.mods.ftbobb.client.GuiUtil;
-import dev.ftb.mods.ftbobb.network.StartJarCraftingPacket;
+import dev.ftb.mods.ftbobb.network.ToggleJarCraftingPacket;
 import dev.ftb.mods.ftbobb.temperature.TemperatureAndEfficiency;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
@@ -22,14 +24,18 @@ import java.util.Optional;
 
 public class TemperedJarScreen extends AbstractContainerScreen<TemperedJarMenu> {
     private static final ResourceLocation TEXTURE = FTBOBB.id("textures/gui/tempered_jar.png");
-    private static final Rect2i FLUID_AREA = new Rect2i(55, 29, 48, 72);
+    private static final ResourceLocation CRAFTING_ICON = FTBOBB.id("textures/gui/crafting_icon.png");
+
+    public static final Rect2i FLUID_AREA = new Rect2i(55, 30, 48, 76);
+    public static final Rect2i TEMPERATURE_AREA = new Rect2i(55 + FLUID_AREA.getWidth() / 2 - 8, 30 + FLUID_AREA.getHeight() + 5, 16, 16);
+    public static final Rect2i JEI_AREA = new Rect2i(132, 75, 16, 16);
 
     private Button startButton;
 
     public TemperedJarScreen(TemperedJarMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
-        imageHeight = 218;
+        imageHeight = 214;
         inventoryLabelY = 125;
     }
 
@@ -37,7 +43,7 @@ public class TemperedJarScreen extends AbstractContainerScreen<TemperedJarMenu> 
     protected void init() {
         super.init();
 
-        startButton = Button.builder(Component.translatable("ftbobb.start_mix"), b -> StartJarCraftingPacket.sendToServer())
+        startButton = Button.builder(Component.translatable("ftbobb.start_mix"), b -> ToggleJarCraftingPacket.sendToServer())
                 .size(56, 20)
                 .pos(leftPos + 112, topPos + 40)
                 .build();
@@ -48,8 +54,9 @@ public class TemperedJarScreen extends AbstractContainerScreen<TemperedJarMenu> 
     protected void containerTick() {
         super.containerTick();
 
-        startButton.active = menu.getJar().getProcessingTime() > 0;
-        startButton.setMessage(Component.translatable(menu.getJar().getRemainingTime() >= 0 ? "ftbobb.stop_mix" : "ftbobb.start_mix"));
+        TemperedJarBlockEntity.JarStatus status = menu.getJar().getStatus();
+        startButton.active = status == TemperedJarBlockEntity.JarStatus.READY || status == TemperedJarBlockEntity.JarStatus.CRAFTING;
+        startButton.setMessage(Component.translatable(menu.getJar().getRemainingTime() > 0 ? "ftbobb.stop_mix" : "ftbobb.start_mix"));
     }
 
     @Override
@@ -62,27 +69,52 @@ public class TemperedJarScreen extends AbstractContainerScreen<TemperedJarMenu> 
         int maxY = topPos + FLUID_AREA.getY() + FLUID_AREA.getHeight();
 
         guiGraphics.fill(minX, minY, maxX, maxY, 0xFF8B8B8B);
-        guiGraphics.blit(TEXTURE, minX - 4, minY - 13, 176, 0, 56, 90);
+        guiGraphics.blit(TEXTURE, minX - 4, minY - 13, 176, 0, 56, 94);
+        guiGraphics.blit(CRAFTING_ICON, leftPos + JEI_AREA.getX(), topPos + JEI_AREA.getY(), 0, 0, 16, 16, 16, 16);
 
         renderTemperatureIndicator(guiGraphics, mouseX, mouseY, minX, maxY);
         renderFluids(guiGraphics, mouseX, mouseY);
         renderProgressBar(guiGraphics);
+        renderStatusInfo(guiGraphics, mouseX, mouseY);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderTemperatureIndicator(GuiGraphics guiGraphics, int mouseX, int mouseY, int xPos, int yPos) {
-        Rect2i tempIndicator = new Rect2i(xPos + (FLUID_AREA.getWidth() - 16) / 2, yPos + 6, 16, 16);
         TemperatureAndEfficiency temp = menu.getJar().getTemperature();
         guiGraphics.blit(temp.temperature().getTexture(),
-                tempIndicator.getX(), tempIndicator.getY(),
+                leftPos + TEMPERATURE_AREA.getX(), topPos + TEMPERATURE_AREA.getY(),
                 0, 0, 16, 16, 16, 16);
-        if (tempIndicator.contains(mouseX, mouseY)) {
-            List<Component> list = List.of(
-                    Component.translatable("ftbobb.temperature", temp.temperature().getName()),
-                    Component.translatable("ftbobb.efficiency", (int) (temp.efficiency() * 100))
-            );
-            guiGraphics.renderTooltip(font, list, Optional.empty(), mouseX, mouseY);
+
+        if (!ModList.get().isLoaded("jei")) {
+            // when JEI is loaded, it handles the tooltip here, since it's also used for the "Show Recipes" action
+            if (TEMPERATURE_AREA.contains(mouseX - leftPos, mouseY - topPos)) {
+                List<Component> list = List.of(
+                        Component.translatable("ftbobb.temperature", temp.temperature().getName()),
+                        Component.translatable("ftbobb.efficiency", temp.formatEfficiency())
+                );
+                guiGraphics.renderTooltip(font, list, Optional.empty(), mouseX, mouseY);
+            }
+        }
+    }
+
+    private void renderStatusInfo(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        if (startButton.isHovered()) {
+            List<Component> outputs = new ArrayList<>();
+            outputs.add(getMenu().getJar().getStatus().displayString());
+            getMenu().getJar().getCurrentRecipe().ifPresent(holder -> {
+                outputs.add(Component.translatable("ftbobb.making"));
+                holder.value().getOutputItems().forEach(stack -> outputs.add(
+                        Component.literal("• ").append(stack.getCount() + " x ").append(stack.getHoverName()))
+                );
+                holder.value().getOutputFluids().forEach(stack -> outputs.add(
+                        Component.literal("• ").append(stack.getAmount() + "mB ").append(stack.getHoverName()))
+                );
+                if (Minecraft.getInstance().options.advancedItemTooltips) {
+                    outputs.add(Component.literal("Recipe: " + holder.id()).withStyle(ChatFormatting.DARK_GRAY));
+                }
+            });
+            guiGraphics.renderTooltip(font, outputs, Optional.empty(), mouseX, mouseY);
         }
     }
 
@@ -90,7 +122,7 @@ public class TemperedJarScreen extends AbstractContainerScreen<TemperedJarMenu> 
         int remaining = menu.getJar().getRemainingTime();
         int total = menu.getJar().getProcessingTime();
 
-        if (remaining >= 0 && total > 0) {
+        if (menu.getJar().getStatus() == TemperedJarBlockEntity.JarStatus.CRAFTING && total > 0) {
             int x1 = startButton.getX();
             int x2 = startButton.getX() + startButton.getWidth();
             int y1 = startButton.getY() + startButton.getHeight() + 2;

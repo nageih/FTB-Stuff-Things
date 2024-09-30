@@ -5,20 +5,23 @@ import dev.ftb.mods.ftbobb.items.FluidCapsuleItem;
 import dev.ftb.mods.ftbobb.network.SyncJarContentsPacket;
 import dev.ftb.mods.ftbobb.network.SyncJarRecipePacket;
 import dev.ftb.mods.ftbobb.recipes.JarRecipe;
-import dev.ftb.mods.ftbobb.recipes.NoInventory;
 import dev.ftb.mods.ftbobb.recipes.RecipeCaches;
 import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
+import dev.ftb.mods.ftbobb.registry.ComponentsRegistry;
 import dev.ftb.mods.ftbobb.registry.RecipesRegistry;
 import dev.ftb.mods.ftbobb.screens.TemperedJarMenu;
 import dev.ftb.mods.ftbobb.temperature.TemperatureAndEfficiency;
 import dev.ftb.mods.ftbobb.util.DirectionUtil;
+import dev.ftb.mods.ftbobb.util.MiscUtil;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -27,6 +30,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -45,6 +49,7 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
@@ -62,7 +67,9 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
     private static final ResourceLocation NO_RECIPE = FTBOBB.id("_none_");
     public static final int STOPPED = -1;
 
-    private boolean checkRecipe = true;
+    private boolean needRecipeSearch = true;
+    private final Lazy<InputResourceLocator> inputResourceLocator = Lazy.of(InputResourceLocator::new);
+    private String pendingRecipeId = "";
     @Nullable private RecipeHolder<JarRecipe> currentRecipe;
     private final Lazy<Boolean> autoProcessing = Lazy.of(this::checkForAutoProcessor);
     private final Lazy<TemperatureAndEfficiency> temperature = Lazy.of(this::checkForTemperature);
@@ -72,8 +79,10 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
     private final JarFluidHandler fluidHandler = new JarFluidHandler();
     private final JarContainerData containerData = new JarContainerData();
     private boolean syncNeeded;
+    private long lastItemFluidSync = 0L;
     private final Map<Direction, BlockCapabilityCache<IItemHandler, Direction>> itemOutputs = new EnumMap<>(Direction.class);
     private final Map<Direction, BlockCapabilityCache<IFluidHandler, Direction>> fluidOutputs = new EnumMap<>(Direction.class);
+    private JarStatus status = JarStatus.NO_RECIPE;
 
     public TemperedJarBlockEntity(BlockPos pos, BlockState blockState) {
         super(BlockEntitiesRegistry.TEMPERED_JAR.get(), pos, blockState);
@@ -85,7 +94,8 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
 
         tag.put("Items", itemHandler.serializeNBT(registries));
         tag.put("Tanks", fluidHandler.serializeNBT(registries));
-        tag.putInt("remaining", remainingTime);
+        tag.putInt("Remaining", remainingTime);
+        if (currentRecipe != null) tag.putString("Recipe", currentRecipe.id().toString());
     }
 
     @Override
@@ -94,9 +104,8 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
 
         itemHandler.deserializeNBT(registries, tag.getCompound("Items"));
         fluidHandler.deserializeNBT(registries, tag.getCompound("Tanks"));
-        remainingTime = tag.getInt("remaining");
-        currentRecipe = null;
-        checkRecipe = true;
+        remainingTime = tag.getInt("Remaining");
+        pendingRecipeId = tag.getString("Recipe");  // see onLoad() for recipe init
     }
 
     @Override
@@ -104,15 +113,6 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         // server-side, chunk loading
         return Util.make(new CompoundTag(), tag -> saveAdditional(tag, registries));
     }
-
-//    @Nullable
-//    @Override
-//    public Packet<ClientGamePacketListener> getUpdatePacket() {
-////        if (getLevel() instanceof ServerLevel serverLevel) {
-////            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()), SyncJarFluidsPacket.forJar(this));
-////        }
-//        return null;  // prevents vanilla update packet being sent
-//    }
 
     @Override
     public Component getDisplayName() {
@@ -125,75 +125,115 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         return new TemperedJarMenu(containerId, playerInventory, getBlockPos());
     }
 
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+
+        List<SimpleFluidContent> list = componentInput.getOrDefault(ComponentsRegistry.FLUID_TANKS, List.of());
+        for (int i = 0; i < list.size() && i < fluidHandler.tanks.size(); i++) {
+            fluidHandler.tanks.get(i).setFluid(list.get(i).copy());
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        List<SimpleFluidContent> list = fluidHandler.tanks.stream()
+                .filter(tank -> !tank.isEmpty())
+                .map(tank -> SimpleFluidContent.copyOf(tank.getFluid()))
+                .toList();
+        if (!list.isEmpty()) components.set(ComponentsRegistry.FLUID_TANKS, list);
+    }
+
     public JarContainerData getContainerData() {
         return containerData;
     }
 
+    @Override
+    public void onLoad() {
+        super.onLoad();
+
+        if (!pendingRecipeId.isEmpty()) {
+            getLevel().getRecipeManager().byKey(ResourceLocation.parse(pendingRecipeId)).ifPresent(r -> {
+                if (r.value() instanceof JarRecipe) {
+                    //noinspection unchecked
+                    currentRecipe = (RecipeHolder<JarRecipe>) r;
+                }
+            });
+            pendingRecipeId = "";
+        }
+    }
+
     public void serverTick(ServerLevel serverLevel) {
-        if (syncNeeded) {
-            // TODO possibly limit sync rate here for performance reasons
+        if (syncNeeded && serverLevel.getGameTime() - lastItemFluidSync > 10L) {
+            // don't sync items & fluids more than once every 10 ticks for performance reasons
             PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()), SyncJarContentsPacket.wholeJar(this));
             syncNeeded = false;
+            lastItemFluidSync = serverLevel.getGameTime();
         }
 
-        if (checkRecipe) {
+        if (needRecipeSearch) {
             ResourceLocation prevId = currentRecipe == null ? NO_RECIPE : currentRecipe.id();
             currentRecipe = RecipeCaches.TEMPERED_JAR.getCachedRecipe(this::searchForRecipe, this::genIngredientHash)
                     .orElse(null);
+            setChanged();
             ResourceLocation newId = currentRecipe == null ? NO_RECIPE : currentRecipe.id();
 
             processingTime = currentRecipe == null ? 0 : getTemperature().getRecipeTime(currentRecipe.value());
 
             if (!prevId.equals(newId)) {
                 // current recipe has changed! reset any crafting progress
-                remainingTime = hasAutoProcessing() ? processingTime : STOPPED;
+                setRemainingTime(hasAutoProcessing() && processingTime > 0 ? processingTime : STOPPED);
 
                 // update any players who have the GUI open right now
                 SyncJarRecipePacket packet = new SyncJarRecipePacket(getBlockPos(), getCurrentRecipeId());
                 level.players().stream()
                         .filter(p -> p.containerMenu instanceof TemperedJarMenu menu && menu.getJar() == this)
                         .forEach(p -> PacketDistributor.sendToPlayer((ServerPlayer) p, packet));
+
+                inputResourceLocator.invalidate();
             } else {
                 // same recipe, but processing time might have changed if block beneath was replaced
-                remainingTime = Math.min(remainingTime, processingTime);
+                setRemainingTime(Math.min(remainingTime, processingTime));
             }
 
-            checkRecipe = false;
+            needRecipeSearch = false;
         }
 
-        if (currentRecipe != null && remainingTime >= 0) {
-            JarRecipe recipe = currentRecipe.value();
-
-            // we have a valid recipe, but still need to ensure temperature and sufficient input resources...
-            boolean okToCraft = false;
-            int[] itemSlots = new int[0];
-            int[] fluidSlots = new int[0];
-            if (recipe.getTemperature() == getTemperature().temperature()) {
-                itemSlots = locateInputItems(recipe);
-                fluidSlots = locateInputFluids(recipe);
-                if (allInputsFound(itemSlots, fluidSlots)) {
-                    okToCraft = true;
+        if (currentRecipe != null) {
+            if (inputResourceLocator.get().allInputsFound()) {
+                if (remainingTime == STOPPED) {
+                    status = JarStatus.READY;
+                } else {
+                    // run a cycle
+                    status = JarStatus.CRAFTING;
+                    runOneCycle(serverLevel, currentRecipe.value());
                 }
-            }
-
-            if (okToCraft) {
-                // run a cycle
-                runOneCycle(serverLevel, recipe, itemSlots, fluidSlots);
             } else {
-                // either wrong temperature or insufficient inputs; halt the process
-                remainingTime = STOPPED;
+                status = JarStatus.NOT_ENOUGH_RESOURCES;
             }
+        } else {
+            status = JarStatus.NO_RECIPE;
+        }
+
+        boolean active = getBlockState().getValue(TemperedJarBlock.ACTIVE);
+        if (active && status != JarStatus.CRAFTING || !active && status == JarStatus.CRAFTING) {
+            level.setBlock(getBlockPos(), getBlockState().setValue(TemperedJarBlock.ACTIVE, status == JarStatus.CRAFTING), Block.UPDATE_CLIENTS);
         }
     }
 
-    private void runOneCycle(ServerLevel serverLevel, JarRecipe recipe, int[] itemInputSlots, int[] fluidInputSlots) {
-        if (--remainingTime <= 0) {
-            // we _should_ have the resources here at this point (we just checked for this)
+    private void runOneCycle(ServerLevel serverLevel, JarRecipe recipe) {
+        setRemainingTime(remainingTime - 1);
+        if (remainingTime <= 0) {
+            // important to copy these since inputResourceLocator will become null if items extracted
+            int[] itemSlots = inputResourceLocator.get().itemSlots;
+            int[] fluidSlots = inputResourceLocator.get().fluidSlots;
             for (int i = 0; i < recipe.getInputItems().size(); i++) {
-                getInputItemHandler().extractItem(itemInputSlots[i], recipe.getInputItems().get(i).count(), false);
+                getInputItemHandler().extractItem(itemSlots[i], recipe.getInputItems().get(i).count(), false);
             }
             for (int i = 0; i < recipe.getInputFluids().size(); i++) {
-                fluidHandler.tanks.get(fluidInputSlots[i]).drain(recipe.getInputFluids().get(i).amount(), IFluidHandler.FluidAction.EXECUTE);
+                fluidHandler.tanks.get(fluidSlots[i]).drain(recipe.getInputFluids().get(i).amount(), IFluidHandler.FluidAction.EXECUTE);
             }
             syncNeeded = true;
 
@@ -210,18 +250,20 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
                 outputsFull = true;
             }
 
-            remainingTime = !outputsFull && hasAutoProcessing() && recipe.canRepeat() ? processingTime : STOPPED;
+            setRemainingTime(!outputsFull && hasAutoProcessing() && recipe.canRepeat() ? processingTime : STOPPED);
         }
     }
 
     private List<ItemStack> distributeOutputItems(JarRecipe recipe) {
         List<ItemStack> items = recipe.getOutputItems().stream().map(ItemStack::copy).toList();
         List<ItemStack> excessList = new ArrayList<>();
+        boolean anyHandler = false;
         for (Direction dir : DirectionUtil.VALUES) {
             IItemHandler dest = itemOutputs.computeIfAbsent(dir, k ->
                             BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) getLevel(), getBlockPos().relative(dir), dir.getOpposite()))
                     .getCapability();
             if (dest != null) {
+                anyHandler = true;
                 for (ItemStack stack : items) {
                     ItemStack excess = ItemHandlerHelper.insertItem(dest, stack, false);
                     if (!excess.isEmpty()) {
@@ -235,17 +277,19 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
                 }
             }
         }
-        return excessList;
+        return anyHandler ? excessList : items;
     }
 
     private List<FluidStack> distributeOutputFluids(JarRecipe recipe) {
         List<FluidStack> fluids = recipe.getOutputFluids().stream().map(FluidStack::copy).toList();
         List<FluidStack> excessList = new ArrayList<>();
+        boolean anyHandler = false;
         for (Direction dir : DirectionUtil.VALUES) {
             IFluidHandler dest = fluidOutputs.computeIfAbsent(dir, k ->
                             BlockCapabilityCache.create(Capabilities.FluidHandler.BLOCK, (ServerLevel) getLevel(), getBlockPos().relative(dir), dir.getOpposite()))
                     .getCapability();
             if (dest != null) {
+                anyHandler = true;
                 for (FluidStack stack : fluids) {
                     int filled = dest.fill(stack, IFluidHandler.FluidAction.EXECUTE);
                     if (filled < stack.getAmount()) {
@@ -259,56 +303,16 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
                 }
             }
         }
-        return excessList;
-    }
-
-    private boolean allInputsFound(int[] itemSlots, int[] fluidSlots) {
-        return Arrays.stream(itemSlots).noneMatch(itemSlot -> itemSlot < 0)
-                && Arrays.stream(fluidSlots).noneMatch(fluidSlot -> fluidSlot < 0);
-    }
-
-    private int[] locateInputItems(JarRecipe value) {
-        BitSet slotsChecked = new BitSet(3);
-        int[] itemSlots = new int[value.getInputItems().size()];
-        Arrays.fill(itemSlots, -1);
-
-        List<SizedIngredient> inputItems = value.getInputItems();
-        for (int ingrIdx = 0; ingrIdx < inputItems.size(); ingrIdx++) {
-            SizedIngredient ingr = inputItems.get(ingrIdx);
-            for (int slotIdx = 0; slotIdx < itemHandler.getSlots(); slotIdx++) {
-                if (!slotsChecked.get(slotIdx) && ingr.test(itemHandler.getStackInSlot(slotIdx))) {
-                    slotsChecked.set(slotIdx);
-                    itemSlots[ingrIdx] = slotIdx;
-                }
-            }
-        }
-
-        return itemSlots;
-    }
-
-    private int[] locateInputFluids(JarRecipe recipe) {
-        BitSet slotsChecked = new BitSet(3);
-        int[] fluidSlots = new int[recipe.getInputFluids().size()];
-        Arrays.fill(fluidSlots, -1);
-
-        List<SizedFluidIngredient> inputItems = recipe.getInputFluids();
-        for (int ingrIdx = 0; ingrIdx < inputItems.size(); ingrIdx++) {
-            SizedFluidIngredient ingr = inputItems.get(ingrIdx);
-            for (int slotIdx = 0; slotIdx < fluidHandler.getTanks(); slotIdx++) {
-                if (!slotsChecked.get(slotIdx) && ingr.test(fluidHandler.getFluidInTank(slotIdx))) {
-                    slotsChecked.set(slotIdx);
-                    fluidSlots[ingrIdx] = slotIdx;
-                }
-            }
-        }
-
-        return fluidSlots;
+        return anyHandler ? excessList : fluids;
     }
 
     private Optional<RecipeHolder<JarRecipe>> searchForRecipe() {
-        return getLevel().getRecipeManager().getAllRecipesFor(RecipesRegistry.JAR_TYPE.get()).stream()
+        // Note: we sort recipes with most input ingredients first, because items in the jar which don't match a
+        //   recipe don't necessarily make the recipe invalid. Thus, recipes with more ingredients should be checked
+        //   first to resolve potential ambiguity.
+        return getLevel().getRecipeManager().getAllRecipesFor(RecipesRegistry.TEMPERED_JAR_TYPE.get()).stream()
                 .filter(r -> r.value().test(getTemperature().temperature(), itemHandler, fluidHandler))
-                .findFirst();
+                .min(Comparator.comparing(RecipeHolder::value));
     }
 
     private int genIngredientHash() {
@@ -355,14 +359,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
     public void clearCachedData() {
         temperature.invalidate();
         autoProcessing.invalidate();
-        checkRecipe = true;
-    }
-
-    public void onNeighbourChange(Direction direction, BlockPos neighborPos) {
-//        if (getLevel() instanceof ServerLevel serverLevel) {
-//            itemOutputs.put(direction, BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel, neighborPos, direction.getOpposite()));
-//            fluidOutputs.put(direction, BlockCapabilityCache.create(Capabilities.FluidHandler.BLOCK, serverLevel, neighborPos, direction.getOpposite()));
-//        }
+        needRecipeSearch = true;
     }
 
     private boolean hasAutoProcessing() {
@@ -402,16 +399,21 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
     public void setCurrentRecipeId(@Nullable ResourceLocation newRecipeId) {
         // only called clientside when a SyncJarRecipePacket is received
         if (level.isClientSide) {
-            currentRecipe = level.getRecipeManager().getRecipeFor(RecipesRegistry.JAR_TYPE.get(), NoInventory.INSTANCE, level, newRecipeId)
-                    .orElse(null);
+            //noinspection unchecked
+            currentRecipe = newRecipeId == null ?
+                    null :
+                    (RecipeHolder<JarRecipe>) level.getRecipeManager().byKey(newRecipeId).filter(r -> r.value() instanceof JarRecipe).orElse(null);
         }
     }
 
     public void toggleCrafting() {
-        if (remainingTime < 0 && currentRecipe != null) {
-            remainingTime = processingTime;
-        } else {
-            remainingTime = STOPPED;
+        setRemainingTime(remainingTime < 0 && currentRecipe != null ? processingTime : STOPPED);
+    }
+
+    private void setRemainingTime(int time) {
+        if (time != remainingTime) {
+            remainingTime = time;
+            setChanged();
         }
     }
 
@@ -421,6 +423,18 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
 
     public int getProcessingTime() {
         return processingTime;
+    }
+
+    public JarStatus getStatus() {
+        return status;
+    }
+
+    public Optional<RecipeHolder<JarRecipe>> getCurrentRecipe() {
+        return Optional.ofNullable(currentRecipe);
+    }
+
+    public void dropContentsOnBreak() {
+        Containers.dropContents(getLevel(), getBlockPos(), MiscUtil.getItemsInHandler(getInputItemHandler()));
     }
 
     private class JarItemHandler extends ItemStackHandler {
@@ -434,10 +448,20 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
 
         @Override
         protected void onContentsChanged(int slot) {
-            setChanged();
-            if (!ItemStack.isSameItemSameComponents(prevStack[slot], getStackInSlot(slot))) {
-                checkRecipe = true;
+            if (!level.isClientSide) {
+                setChanged();
+                if (!ItemStack.isSameItemSameComponents(prevStack[slot], getStackInSlot(slot))) {
+                    needRecipeSearch = true;
+                }
+                inputResourceLocator.invalidate();
                 prevStack[slot] = getStackInSlot(slot).copy();
+            }
+        }
+
+        @Override
+        protected void onLoad() {
+            for (int i = 0; i < getSlots(); i++) {
+                prevStack[i] = getStackInSlot(i).copy();
             }
         }
 
@@ -548,20 +572,22 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
             super(TANK_CAPACITY);
         }
 
-//        public JarTank(FluidStack contents) {
-//            super(TANK_CAPACITY);
-//            setFluid(contents);
-//        }
-
         @Override
         protected void onContentsChanged() {
-            super.onContentsChanged();
-
-            setChanged();
-            if (!FluidStack.isSameFluidSameComponents(prevFluid, getFluid())) {
+            if (!level.isClientSide) {
+                setChanged();
+                if (!FluidStack.isSameFluidSameComponents(prevFluid, getFluid())) {
+                    needRecipeSearch = true;
+                }
+                inputResourceLocator.invalidate();
                 prevFluid = getFluid().copy();
-                checkRecipe = true;
             }
+        }
+
+        @Override
+        public void setFluid(FluidStack stack) {
+            prevFluid = getFluid().copy();
+            super.setFluid(stack);
         }
     }
 
@@ -571,6 +597,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
             return switch (index) {
                 case 0 -> processingTime;
                 case 1 -> remainingTime;
+                case 2 -> status.ordinal();
                 default -> throw new IllegalArgumentException("invalid index: " + index);
             };
         }
@@ -579,14 +606,88 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         public void set(int index, int value) {
             switch (index) {
                 case 0 -> processingTime = value;
-                case 1 -> remainingTime = value;
+                case 1 -> setRemainingTime(value);
+                case 2 -> status = JarStatus.values()[value];
                 default -> throw new IllegalArgumentException("invalid index: " + index);
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
+        }
+    }
+
+    /**
+     * Tracks the slots from which the items/fluids for the current recipe can be extracted
+     */
+    private class InputResourceLocator {
+        private int[] itemSlots = new int[] { -1 };
+        private int[] fluidSlots = new int[] { -1 };
+
+        public InputResourceLocator() {
+            locateInputResources();
+        }
+
+        private void locateInputResources() {
+            if (currentRecipe != null) {
+                JarRecipe recipe = currentRecipe.value();
+
+                itemSlots = Util.make(new int[recipe.getInputItems().size()], a -> Arrays.fill(a, -1));
+                BitSet itemSlotsChecked = new BitSet(itemSlots.length);
+                List<SizedIngredient> inputItems = recipe.getInputItems();
+                for (int ingrIdx = 0; ingrIdx < inputItems.size(); ingrIdx++) {
+                    SizedIngredient ingr = inputItems.get(ingrIdx);
+                    for (int slotIdx = 0; slotIdx < itemHandler.getSlots(); slotIdx++) {
+                        if (!itemSlotsChecked.get(slotIdx) && ingr.test(itemHandler.getStackInSlot(slotIdx))) {
+                            itemSlotsChecked.set(slotIdx);
+                            itemSlots[ingrIdx] = slotIdx;
+                        }
+                    }
+                }
+
+                fluidSlots = Util.make(new int[recipe.getInputFluids().size()], a -> Arrays.fill(a, -1));
+                BitSet fluidSlotsChecked = new BitSet(fluidSlots.length);
+                List<SizedFluidIngredient> inputFluids = recipe.getInputFluids();
+                for (int ingrIdx = 0; ingrIdx < inputFluids.size(); ingrIdx++) {
+                    SizedFluidIngredient ingr = inputFluids.get(ingrIdx);
+                    for (int slotIdx = 0; slotIdx < fluidHandler.getTanks(); slotIdx++) {
+                        if (!fluidSlotsChecked.get(slotIdx) && ingr.test(fluidHandler.getFluidInTank(slotIdx))) {
+                            fluidSlotsChecked.set(slotIdx);
+                            fluidSlots[ingrIdx] = slotIdx;
+                        }
+                    }
+                }
+            } else {
+                itemSlots = new int[] { -1 };
+                fluidSlots = new int[] { -1 };
+            }
+        }
+
+        private boolean allInputsFound() {
+            return Arrays.stream(itemSlots).noneMatch(itemSlot -> itemSlot < 0)
+                    && Arrays.stream(fluidSlots).noneMatch(fluidSlot -> fluidSlot < 0);
+        }
+    }
+
+
+    public enum JarStatus {
+        READY("ready", ChatFormatting.DARK_GREEN),
+        CRAFTING("crafting", ChatFormatting.GREEN),
+        NO_RECIPE("no_recipe", ChatFormatting.GOLD),
+        NOT_ENOUGH_RESOURCES("not_enough_resources", ChatFormatting.YELLOW)
+        ;
+
+        private final String id;
+        private final ChatFormatting color;
+
+        JarStatus(String id, ChatFormatting color) {
+            this.id = id;
+            this.color = color;
+        }
+
+        public Component displayString() {
+            return Component.translatable("ftbobb.jar_status." + id).withStyle(color);
         }
     }
 }

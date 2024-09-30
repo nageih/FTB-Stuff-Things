@@ -23,6 +23,11 @@ public class ItemsRegistry {
 
     public static final DeferredItem<FluidCapsuleItem> FLUID_CAPSULE = ITEMS.register("fluid_capsule", FluidCapsuleItem::new);
 
+    public static final DeferredItem<Item> CAST_IRON_INGOT = simpleItem("cast_iron_ingot");
+    public static final DeferredItem<Item> CAST_IRON_NUGGET = simpleItem("cast_iron_nugget");
+    public static final DeferredItem<Item> CAST_IRON_GEAR = simpleItem("cast_iron_gear");
+    public static final DeferredItem<Item> TEMPERED_GLASS = simpleItem("tempered_glass");
+
     //#region Block Items
     public static final DeferredItem<BlockItem> OAK_SLUICE = blockItem("oak_sluice", BlocksRegistry.OAK_SLUICE);
     public static final DeferredItem<BlockItem> IRON_SLUICE = blockItem("iron_sluice", BlocksRegistry.IRON_SLUICE);
@@ -31,6 +36,8 @@ public class ItemsRegistry {
 
     public static final DeferredItem<BlockItem> PUMP = blockItem("pump", BlocksRegistry.PUMP);
 
+    public static final DeferredItem<BlockItem> CAST_IRON_BLOCK = blockItem("cast_iron_block", BlocksRegistry.CAST_IRON_BLOCK);
+
     public static final DeferredItem<BlockItem> TUBE = blockItem("tube", BlocksRegistry.TUBE);
     public static final DeferredItem<BlockItem> JAR = blockItem("jar", BlocksRegistry.JAR);
     public static final DeferredItem<BlockItem> TEMPERED_JAR = blockItem("tempered_jar", BlocksRegistry.TEMPERED_JAR);
@@ -38,12 +45,12 @@ public class ItemsRegistry {
             = blockItem("auto_processing_block", BlocksRegistry.AUTO_PROCESSING_BLOCK);
     public static final DeferredItem<BlockItem> BLUE_MAGMA_BLOCK
             = blockItem("blue_magma_block", BlocksRegistry.BLUE_MAGMA_BLOCK);
-    public static final DeferredItem<BlockItem> CREATIVE_LOW_TEMPERATURE_SOURCE
-            = blockItem("creative_low_temperature_source", BlocksRegistry.CREATIVE_LOW_TEMPERATURE_SOURCE);
-    public static final DeferredItem<BlockItem> CREATIVE_HIGH_TEMPERATURE_SOURCE
-            = blockItem("creative_high_temperature_source", BlocksRegistry.CREATIVE_HIGH_TEMPERATURE_SOURCE);
-    public static final DeferredItem<BlockItem> CREATIVE_SUBZERO_TEMPERATURE_SOURCE
-            = blockItem("creative_subzero_temperature_source", BlocksRegistry.CREATIVE_SUBZERO_TEMPERATURE_SOURCE);
+    public static final DeferredItem<BlockItem> CREATIVE_HOT_TEMPERATURE_SOURCE
+            = blockItem("creative_low_temperature_source", BlocksRegistry.CREATIVE_HOT_TEMPERATURE_SOURCE);
+    public static final DeferredItem<BlockItem> CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE
+            = blockItem("creative_high_temperature_source", BlocksRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE);
+    public static final DeferredItem<BlockItem> CREATIVE_CHILLED_TEMPERATURE_SOURCE
+            = blockItem("creative_subzero_temperature_source", BlocksRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE);
     //#endregion
 
     public static void init(IEventBus bus) {

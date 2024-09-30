@@ -1,7 +1,7 @@
 {
   "type": "ftbobb:temperature_source",
   "blockstate": "minecraft:stone",
-  "item": {
+  "display_item": {
     "components": {
       "minecraft:custom_name": "{\"translate\":\"ftbobb.any_block\"}"
     },

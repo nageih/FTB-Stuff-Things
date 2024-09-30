@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.core.Direction.*;
-import static net.minecraft.core.Direction.EAST;
 
 public class DirectionUtil {
     // since Direction.VALUES is private...

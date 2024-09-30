@@ -7,7 +7,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -107,6 +106,15 @@ public class GuiUtil {
         res[1] = color >> 16 & 0xff;
         res[2] = color >> 8  & 0xff;
         res[3] = color       & 0xff;
+        return res;
+    }
+
+    public static float[] decomposeColorF(int color) {
+        float[] res = new float[4];
+        res[0] = (color >> 24 & 0xff) / 255f;
+        res[1] = (color >> 16 & 0xff) / 255f;
+        res[2] = (color >> 8  & 0xff) / 255f;
+        res[3] = (color       & 0xff) / 255f;
         return res;
     }
 

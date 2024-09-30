@@ -15,6 +15,13 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Received on: CLIENT<br>
+ * Sent by server (not more than once every 10 ticks) when items or fluids in the jar have changed.
+ *
+ * @param jarPos jar blockpos
+ * @param resources list of resources to sync; a slot with an item or fluid stack
+ */
 public record SyncJarContentsPacket(BlockPos jarPos, List<ResourceSlot> resources) implements CustomPacketPayload {
     public static final Type<SyncJarContentsPacket> TYPE = new Type<>(FTBOBB.id("sync_jar_fluids"));
 

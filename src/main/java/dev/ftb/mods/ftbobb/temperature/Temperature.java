@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbobb.temperature;
 
 import dev.ftb.mods.ftblibrary.icon.Icon;
 import dev.ftb.mods.ftbobb.FTBOBB;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -15,10 +16,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum Temperature implements StringRepresentable {
-	NORMAL("normal", new DustParticleOptions(new Vector3f(0.9F, 0.9F, 0.9F), 1F), 0.1F),
-	HOT("hot", ParticleTypes.FLAME, 0.1F),
-	SUPERHEATED("superheated", ParticleTypes.SOUL_FIRE_FLAME, 0.1F),
-	CHILLED("chilled", ParticleTypes.END_ROD, 0.3F);
+	NORMAL("normal", new DustParticleOptions(new Vector3f(0.9F, 0.9F, 0.9F), 1F), 0.1F, ChatFormatting.GRAY),
+	HOT("hot", ParticleTypes.FLAME, 0.1F, ChatFormatting.GOLD),
+	SUPERHEATED("superheated", ParticleTypes.SOUL_FIRE_FLAME, 0.1F, ChatFormatting.AQUA),
+	CHILLED("chilled", ParticleTypes.END_ROD, 0.3F, ChatFormatting.BLUE);
 
 	public static final Temperature[] VALUES = values();
 	public static final Map<String, Temperature> MAP = Arrays.stream(VALUES).collect(Collectors.toMap(t -> t.id, t -> t));
@@ -27,13 +28,15 @@ public enum Temperature implements StringRepresentable {
 	private final Component name;
 	private final ResourceLocation texture;
 	private final Icon icon;
-	public final ParticleOptions particleOptions;
-	public final float particleOffset;
+	private final ParticleOptions particleOptions;
+	private final float particleYOffset;
+	private final ChatFormatting color;
 
-	Temperature(String id, ParticleOptions particleOptions, float particleOffset) {
+	Temperature(String id, ParticleOptions particleOptions, float particleYOffset, ChatFormatting color) {
 		this.id = id;
 		this.particleOptions = particleOptions;
-		this.particleOffset = particleOffset;
+		this.particleYOffset = particleYOffset;
+		this.color = color;
 
 		name = Component.translatable(FTBOBB.MODID + ".temperature." + this.id);
 		texture = FTBOBB.id("textures/gui/temperature/" + this.id + ".png");
@@ -46,7 +49,7 @@ public enum Temperature implements StringRepresentable {
 	}
 
 	public Component getName() {
-		return name;
+		return name.copy().withStyle(color);
 	}
 
 	public ResourceLocation getTexture() {
@@ -61,4 +64,11 @@ public enum Temperature implements StringRepresentable {
 		return MAP.getOrDefault(name.toLowerCase(), NORMAL);
 	}
 
+	public ParticleOptions getParticleOptions() {
+		return particleOptions;
+	}
+
+	public float getParticleYOffset() {
+		return particleYOffset;
+	}
 }

@@ -1,16 +1,24 @@
 package dev.ftb.mods.ftbobb.blocks;
 
+import dev.ftb.mods.ftbobb.registry.ComponentsRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
 import dev.ftb.mods.ftbobb.temperature.TemperatureAndEfficiency;
+import dev.ftb.mods.ftbobb.util.MiscUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -23,7 +31,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class TemperedJarBlock extends JarBlock {
     public static final EnumProperty<Temperature> TEMPERATURE = EnumProperty.create("temperature", Temperature.class);
@@ -67,10 +78,10 @@ public class TemperedJarBlock extends JarBlock {
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         if (level.getBlockEntity(pos) instanceof TemperedJarBlockEntity jar) {
-            if (direction == Direction.DOWN) {
+            if (direction == Direction.DOWN || direction == Direction.UP) {
+                // heat blocks below, autoprocessing block above
                 jar.clearCachedData();
             }
-            jar.onNeighbourChange(direction, neighborPos);
         }
 
         return direction == Direction.DOWN && level instanceof Level l ?
@@ -98,5 +109,45 @@ public class TemperedJarBlock extends JarBlock {
         }
 
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ACTIVE)) {
+            Temperature temperature = state.getValue(TEMPERATURE);
+            for (int i = 0; i < 12; i++) {
+                if (level.random.nextInt(4) == 0) {
+                    float angle = (i / 12F) * Mth.TWO_PI;
+                    double x = pos.getX() + 0.5D + Mth.cos(angle) * 0.25D;
+                    double y = pos.getY() + temperature.getParticleYOffset();
+                    double z = pos.getZ() + 0.5D + Mth.sin(angle) * 0.25D;
+                    level.addParticle(temperature.getParticleOptions(), x, y, z, 0D, 0D, 0D);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void addSerializableComponents(List<DataComponentType<?>> list) {
+        list.add(ComponentsRegistry.FLUID_TANKS.get());
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (state.getBlock() != newState.getBlock()) {
+            if (level.getBlockEntity(pos) instanceof TemperedJarBlockEntity jar) {
+                jar.dropContentsOnBreak();
+            }
+
+            super.onRemove(state, level, pos, newState, movedByPiston);
+        }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+
+        List<SimpleFluidContent> l = stack.getOrDefault(ComponentsRegistry.FLUID_TANKS, List.of());
+        l.forEach(content -> tooltipComponents.add(MiscUtil.makeFluidStackDesc(content.copy())));
     }
 }

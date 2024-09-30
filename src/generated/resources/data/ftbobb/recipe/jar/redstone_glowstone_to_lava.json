@@ -1,0 +1,32 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbobb:dev_environment"
+    }
+  ],
+  "type": "ftbobb:jar",
+  "input_fluids": [
+    {
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "input_items": [
+    {
+      "count": 1,
+      "tag": "c:dusts/redstone"
+    },
+    {
+      "count": 1,
+      "tag": "c:dusts/glowstone"
+    }
+  ],
+  "output_fluids": [
+    {
+      "amount": 2000,
+      "id": "minecraft:lava"
+    }
+  ],
+  "output_items": [],
+  "temperature": "hot"
+}

@@ -53,7 +53,7 @@ public class TemperedJarBlockEntityRenderer implements BlockEntityRenderer<Tempe
         float circleRadius = stacks.size() == 1 ? 0 : 0.17f;
         float degreesPerStack = 360f / stacks.size();
         double ticks = jar.getLevel().getGameTime() + partialTick;
-        float yBob = enoughFluid ? Mth.sin(((float) ticks  / 10) % 360) * 0.01f - 0.1f : 0;
+        float yBob = enoughFluid ? Mth.sin(((float) ticks  / 10) % 360) * 0.01f /*- 0.1f*/ : 0;
         float yRot = (float) (ticks / 2) % 360;
 
         poseStack.translate(0.5, 0.1, 0.5);

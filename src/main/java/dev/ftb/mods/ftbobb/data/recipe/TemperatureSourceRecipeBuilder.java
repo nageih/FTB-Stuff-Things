@@ -2,22 +2,32 @@ package dev.ftb.mods.ftbobb.data.recipe;
 
 import dev.ftb.mods.ftbobb.recipes.TemperatureSourceRecipe;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TemperatureSourceRecipeBuilder extends BaseRecipeBuilder {
-    private final BlockState blockstate;
+    private final String blockstateStr;
     private final Temperature temperature;
     private final double efficiency;
     private ItemStack displayStack = ItemStack.EMPTY;
     private boolean hideFromJEI = false;
 
-    public TemperatureSourceRecipeBuilder(BlockState blockstate, Temperature temperature, double efficiency) {
-        this.blockstate = blockstate;
+    public TemperatureSourceRecipeBuilder(String blockstateStr, Temperature temperature, double efficiency) {
+        this.blockstateStr = blockstateStr;
         this.temperature = temperature;
         this.efficiency = efficiency;
+    }
+
+    public TemperatureSourceRecipeBuilder(BlockState blockstate, Temperature temperature, double efficiency) {
+        this(BlockStateParser.serialize(blockstate), temperature, efficiency);
+    }
+
+    public TemperatureSourceRecipeBuilder(Block block, Temperature temperature, double efficiency) {
+        this(BlockStateParser.serialize(block.defaultBlockState()), temperature, efficiency);
     }
 
     public TemperatureSourceRecipeBuilder withDisplayItem(ItemStack stack) {
@@ -32,6 +42,6 @@ public class TemperatureSourceRecipeBuilder extends BaseRecipeBuilder {
 
     @Override
     public void save(RecipeOutput recipeOutput, ResourceLocation id) {
-        recipeOutput.accept(id, new TemperatureSourceRecipe(blockstate, temperature, efficiency, displayStack, hideFromJEI), null);
+        recipeOutput.accept(id, new TemperatureSourceRecipe(blockstateStr, temperature, efficiency, displayStack, hideFromJEI), null);
     }
 }

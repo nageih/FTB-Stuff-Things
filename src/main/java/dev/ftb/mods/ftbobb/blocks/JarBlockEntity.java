@@ -1,9 +1,11 @@
 package dev.ftb.mods.ftbobb.blocks;
 
 import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
+import dev.ftb.mods.ftbobb.registry.ComponentsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -16,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
@@ -78,6 +81,20 @@ public class JarBlockEntity extends BlockEntity implements ITubeConnectable {
                 player.displayClientMessage(Component.translatable("ftblibrary.mb", tank.getFluidAmount(), tank.getFluid().getHoverName()), true);
             }
         }
+    }
+
+    @Override
+    protected void applyImplicitComponents(BlockEntity.DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+
+        tank.setFluid(componentInput.getOrDefault(ComponentsRegistry.STORED_FLUID, SimpleFluidContent.EMPTY).copy());
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        components.set(ComponentsRegistry.STORED_FLUID, SimpleFluidContent.copyOf(tank.getFluid()));
     }
 
     private class JarFluidTank extends FluidTank {

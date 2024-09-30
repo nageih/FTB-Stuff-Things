@@ -7,10 +7,12 @@ import dev.ftb.mods.ftbobb.client.renders.SluiceBlockEntityRenderer;
 import dev.ftb.mods.ftbobb.client.renders.TemperedJarBlockEntityRenderer;
 import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbobb.registry.ContentRegistry;
+import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import dev.ftb.mods.ftbobb.screens.TemperedJarScreen;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 public class ClientSetup {
@@ -19,6 +21,7 @@ public class ClientSetup {
         modBus.addListener(ClientSetup::registerModelLoaders);
         modBus.addListener(ClientSetup::registerRenderers);
         modBus.addListener(ClientSetup::registerScreens);
+        modBus.addListener(ClientSetup::registerColorHandlers);
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -39,5 +42,13 @@ public class ClientSetup {
 
     private static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ContentRegistry.TEMPERED_JAR_MENU.get(), TemperedJarScreen::new);
+    }
+
+    private static void registerColorHandlers(RegisterColorHandlersEvent.Item event) {
+        event.register((stack, tintIndex) -> switch (tintIndex) {
+            case 0 -> 0xFFFFFFFF;
+            case 1 -> FluidCapsuleColorHandler.getColor(stack);
+            default -> 0xFF000000;
+        }, ItemsRegistry.FLUID_CAPSULE.get());
     }
 }
