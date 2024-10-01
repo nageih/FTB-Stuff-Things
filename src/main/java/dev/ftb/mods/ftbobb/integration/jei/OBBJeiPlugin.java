@@ -56,7 +56,8 @@ public class OBBJeiPlugin implements IModPlugin {
 
         registration.addRecipeCategories(
                 new TemperedJarCategory(),
-                new TemperatureSourceCategory()
+                new TemperatureSourceCategory(),
+                new DripperCategory()
         );
     }
 
@@ -64,6 +65,7 @@ public class OBBJeiPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         addRecipeType(registration, RecipesRegistry.TEMPERED_JAR_TYPE.get(), RecipeTypes.TEMPERED_JAR, TemperedJarCategory::sortRecipes);
         addRecipeType(registration, RecipesRegistry.TEMPERATURE_SOURCE_TYPE.get(), RecipeTypes.TEMPERATURE_SOURCE, TemperatureSourceRecipe::sortRecipes);
+        addRecipeType(registration, RecipesRegistry.DRIP_TYPE.get(), RecipeTypes.DRIPPER);
     }
 
     @Override
@@ -72,6 +74,7 @@ public class OBBJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(ItemsRegistry.CREATIVE_HOT_TEMPERATURE_SOURCE.toStack(), RecipeTypes.TEMPERATURE_SOURCE);
         registration.addRecipeCatalyst(ItemsRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE.toStack(), RecipeTypes.TEMPERATURE_SOURCE);
         registration.addRecipeCatalyst(ItemsRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE.toStack(), RecipeTypes.TEMPERATURE_SOURCE);
+        registration.addRecipeCatalyst(ItemsRegistry.DRIPPER.toStack(), RecipeTypes.DRIPPER);
     }
 
     @Override

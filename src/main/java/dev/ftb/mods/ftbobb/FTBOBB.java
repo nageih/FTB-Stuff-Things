@@ -3,6 +3,7 @@ package dev.ftb.mods.ftbobb;
 import com.mojang.logging.LogUtils;
 import dev.ftb.mods.ftbobb.client.ClientSetup;
 import dev.ftb.mods.ftbobb.items.FluidCapsuleItem;
+import dev.ftb.mods.ftbobb.items.WaterBowlItem;
 import dev.ftb.mods.ftbobb.recipes.RecipeCaches;
 import dev.ftb.mods.ftbobb.registry.*;
 import net.minecraft.resources.ResourceLocation;
@@ -72,6 +73,11 @@ public class FTBOBB {
                 Capabilities.FluidHandler.ITEM,
                 (stack, ctx) -> new FluidCapsuleItem.FluidHandler(stack),
                 ItemsRegistry.FLUID_CAPSULE
+        );
+        event.registerItem(
+                Capabilities.FluidHandler.ITEM,
+                (stack, ctx) -> new WaterBowlItem.WaterBowlFluidHandler(stack),
+                ItemsRegistry.WATER_BOWL
         );
     }
 

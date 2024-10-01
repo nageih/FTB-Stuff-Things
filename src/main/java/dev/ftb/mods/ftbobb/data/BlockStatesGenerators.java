@@ -67,6 +67,9 @@ public class BlockStatesGenerators extends BlockStateProvider {
 
         simpleBlock(BlocksRegistry.CAST_IRON_BLOCK.get());
 
+        ModelFile dripperModel = models().withExistingParent("block/dripper", modLoc("block/dripper_base"));
+        simpleBlock(BlocksRegistry.DRIPPER.get(), dripperModel);
+
         models().withExistingParent("block/tube_inv", modLoc("block/tube_base"));
 
         ModelFile jarModel = models().withExistingParent("block/jar", modLoc("block/jar_base"));

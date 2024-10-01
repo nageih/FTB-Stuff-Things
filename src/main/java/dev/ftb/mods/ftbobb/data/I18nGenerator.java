@@ -31,6 +31,8 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbobb.jar_status.not_enough_resources", "Insufficient Resources");
         add("ftbobb.jar_status.crafting", "Crafting!");
         add("ftbobb.making", "Making:");
+        add("ftbobb.dripper.chance", "Chance: %s%% / sec");
+        add("ftbobb.dripper.consume_on_fail", "Fluid is consumed even on failed attempt");
 
         addBlock(BlocksRegistry.OAK_SLUICE, "Oak Sluice");
         addBlock(BlocksRegistry.IRON_SLUICE, "Iron Sluice");
@@ -38,6 +40,8 @@ public class I18nGenerator extends LanguageProvider {
         addBlock(BlocksRegistry.NETHERITE_SLUICE, "Netherite Sluice");
 
         addBlock(BlocksRegistry.PUMP, "Pump");
+
+        addBlock(BlocksRegistry.DRIPPER, "Dripper");
 
         addBlock(BlocksRegistry.TUBE, "Cast Iron Tube");
         addBlock(BlocksRegistry.JAR, "Glass Jar");
@@ -56,6 +60,7 @@ public class I18nGenerator extends LanguageProvider {
         addItem(ItemsRegistry.DIAMOND_MESH, "Diamond Mesh");
 
         addItem(ItemsRegistry.FLUID_CAPSULE, "Fluid Capsule");
+        addItem(ItemsRegistry.WATER_BOWL, "Water Bowl");
 
         addItem(ItemsRegistry.CAST_IRON_GEAR, "Cast Iron Gear");
         addItem(ItemsRegistry.CAST_IRON_INGOT, "Cast Iron Ingot");

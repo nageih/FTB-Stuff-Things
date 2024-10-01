@@ -6,6 +6,7 @@
   "block.ftbobb.creative_low_temperature_source": "Creative Hot Temperature Source",
   "block.ftbobb.creative_subzero_temperature_source": "Creative Chilled Temperature Source",
   "block.ftbobb.diamond_sluice": "Diamond Sluice",
+  "block.ftbobb.dripper": "Dripper",
   "block.ftbobb.iron_sluice": "Iron Sluice",
   "block.ftbobb.jar": "Glass Jar",
   "block.ftbobb.netherite_sluice": "Netherite Sluice",
@@ -14,6 +15,8 @@
   "block.ftbobb.tempered_jar": "Tempered Glass Jar",
   "block.ftbobb.tube": "Cast Iron Tube",
   "ftbobb.any_block": "Any Block",
+  "ftbobb.dripper.chance": "Chance: %s%% / sec",
+  "ftbobb.dripper.consume_on_fail": "Fluid is consumed even on failed attempt",
   "ftbobb.efficiency": "Efficiency: %s",
   "ftbobb.itemGroup.tab": "FTB Ocean Building Blocks",
   "ftbobb.jar_status.crafting": "Crafting!",
@@ -39,5 +42,6 @@
   "item.ftbobb.fluid_capsule": "Fluid Capsule",
   "item.ftbobb.gold_mesh": "Gold Mesh",
   "item.ftbobb.iron_mesh": "Iron Mesh",
-  "item.ftbobb.tempered_glass": "Tempered Glass"
+  "item.ftbobb.tempered_glass": "Tempered Glass",
+  "item.ftbobb.water_bowl": "Water Bowl"
 }

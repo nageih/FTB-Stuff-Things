@@ -1,0 +1,16 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbobb:dev_environment"
+    }
+  ],
+  "type": "ftbobb:dripper",
+  "chance": 0.1,
+  "consume_fluid_on_fail": true,
+  "fluid": {
+    "amount": 5,
+    "id": "minecraft:water"
+  },
+  "input": "minecraft:sand",
+  "output": "minecraft:clay"
+}

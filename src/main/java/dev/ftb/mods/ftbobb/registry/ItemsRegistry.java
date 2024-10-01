@@ -1,9 +1,11 @@
 package dev.ftb.mods.ftbobb.registry;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
+import dev.ftb.mods.ftbobb.blocks.TemperedJarBlockEntity;
 import dev.ftb.mods.ftbobb.items.FluidCapsuleItem;
 import dev.ftb.mods.ftbobb.items.MeshItem;
 import dev.ftb.mods.ftbobb.items.MeshType;
+import dev.ftb.mods.ftbobb.items.WaterBowlItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -22,6 +24,7 @@ public class ItemsRegistry {
     public static final DeferredItem<MeshItem> DIAMOND_MESH = ITEMS.register("diamond_mesh", () -> new MeshItem(MeshType.DIAMOND));
 
     public static final DeferredItem<FluidCapsuleItem> FLUID_CAPSULE = ITEMS.register("fluid_capsule", FluidCapsuleItem::new);
+    public static final DeferredItem<WaterBowlItem> WATER_BOWL = ITEMS.register("water_bowl", WaterBowlItem::new);
 
     public static final DeferredItem<Item> CAST_IRON_INGOT = simpleItem("cast_iron_ingot");
     public static final DeferredItem<Item> CAST_IRON_NUGGET = simpleItem("cast_iron_nugget");
@@ -35,6 +38,8 @@ public class ItemsRegistry {
     public static final DeferredItem<BlockItem> NETHERITE_SLUICE = blockItem("netherite_sluice", BlocksRegistry.NETHERITE_SLUICE);
 
     public static final DeferredItem<BlockItem> PUMP = blockItem("pump", BlocksRegistry.PUMP);
+
+    public static final DeferredItem<BlockItem> DRIPPER = blockItem("dripper", BlocksRegistry.DRIPPER);
 
     public static final DeferredItem<BlockItem> CAST_IRON_BLOCK = blockItem("cast_iron_block", BlocksRegistry.CAST_IRON_BLOCK);
 
@@ -51,6 +56,7 @@ public class ItemsRegistry {
             = blockItem("creative_high_temperature_source", BlocksRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE);
     public static final DeferredItem<BlockItem> CREATIVE_CHILLED_TEMPERATURE_SOURCE
             = blockItem("creative_subzero_temperature_source", BlocksRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE);
+
     //#endregion
 
     public static void init(IEventBus bus) {

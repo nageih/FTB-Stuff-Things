@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbobb.data;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.FTBOBBTags;
+import dev.ftb.mods.ftbobb.data.recipe.DripperRecipeBuilder;
 import dev.ftb.mods.ftbobb.data.recipe.TemperatureSourceRecipeBuilder;
 import dev.ftb.mods.ftbobb.data.recipe.TemperedJarRecipeBuilder;
 import dev.ftb.mods.ftbobb.recipes.DevEnvironmentCondition;
@@ -9,6 +10,7 @@ import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
 import net.minecraft.Util;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,7 +25,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -95,9 +99,16 @@ public class RecipesGenerator extends RecipeProvider {
                 'L', Items.LAVA_BUCKET,
                 'M', Blocks.MAGMA_BLOCK
         ).save(output);
+        shaped(BlocksRegistry.DRIPPER.get(), Items.STICK,
+                "SPS/SBS",
+                'S', Tags.Items.RODS_WOODEN,
+                'P', ItemTags.WOODEN_SLABS,
+                'B', ItemTags.WOODEN_BUTTONS
+        ).save(output);
 
         temperedJarRecipes(output);
         temperatureSourceRecipes(output);
+        dripperRecipes(output);
     }
 
     private void temperedJarRecipes(RecipeOutput output) {
@@ -188,6 +199,22 @@ public class RecipesGenerator extends RecipeProvider {
                 .save(output, FTBOBB.id("temperature_source/wall_torch"));
     }
 
+    private void dripperRecipes(RecipeOutput output) {
+        new DripperRecipeBuilder(stateStr(Blocks.DIRT), stateStr(Blocks.MUD), new FluidStack(Fluids.WATER, 50))
+                .withChance(0.2)
+                .save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("dripper/dirt_to_mud"));
+        new DripperRecipeBuilder(stateStr(Blocks.IRON_BLOCK), stateStr(Blocks.GOLD_BLOCK), new FluidStack(Fluids.LAVA, 250))
+                .withChance(0.01)
+                .save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("dripper/iron_to_gold"));
+        new DripperRecipeBuilder(stateStr(Blocks.SAND), stateStr(Blocks.CLAY), new FluidStack(Fluids.WATER, 5))
+                .withChance(0.1)
+                .consumeFluidOnFail()
+                .save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("dripper/sand_to_clay"));
+        new DripperRecipeBuilder("minecraft:campfire[lit=false]", "minecraft:campfire[lit=true]", new FluidStack(Fluids.LAVA, 250))
+                .withChance(0.5)
+                .save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("dripper/campfire_lighting"));
+    }
+
     private static RecipeBuilder temperedJar(List<SizedIngredient> itemsIn, List<SizedFluidIngredient> fluidsIn, List<ItemStack> itemsOut, List<FluidStack> fluidsOut, Temperature requiredTemp) {
         return new TemperedJarRecipeBuilder(itemsIn, fluidsIn, itemsOut, fluidsOut, requiredTemp);
     }
@@ -251,5 +278,13 @@ public class RecipesGenerator extends RecipeProvider {
     private static <T extends ItemLike> String safeName(T itemLike) {
         ResourceLocation key = BuiltInRegistries.ITEM.getKey(itemLike.asItem());
         return key.getPath().replace('/', '_');
+    }
+
+    private static String stateStr(BlockState state) {
+        return BlockStateParser.serialize(state);
+    }
+
+    private static String stateStr(Block block) {
+        return BlockStateParser.serialize(block.defaultBlockState());
     }
 }

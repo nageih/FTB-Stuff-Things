@@ -31,6 +31,9 @@ public class BlocksRegistry {
     public static final DeferredBlock<PumpBlock> PUMP
             = BLOCKS.register("pump", PumpBlock::new);
 
+    public static final DeferredBlock<DripperBlock> DRIPPER
+            = BLOCKS.register("dripper", DripperBlock::new);
+
     public static final DeferredBlock<TubeBlock> TUBE
             = BLOCKS.register("tube", TubeBlock::new);
     public static final DeferredBlock<JarBlock> JAR

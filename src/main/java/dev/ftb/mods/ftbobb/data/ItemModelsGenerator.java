@@ -35,6 +35,8 @@ public class ItemModelsGenerator extends ItemModelProvider {
         withExistingParent("cast_iron_block", modLoc("block/cast_iron_block"));
 
         simpleItem(ItemsRegistry.FLUID_CAPSULE, "item/fluid_container_base", "item/fluid_container_overlay");
+        simpleItem(ItemsRegistry.DRIPPER, "item/dripper");
+        simpleItem(ItemsRegistry.WATER_BOWL, "item/water_bowl");
 
         simpleItem(ItemsRegistry.CAST_IRON_GEAR, "item/cast_iron_gear");
         simpleItem(ItemsRegistry.CAST_IRON_INGOT, "item/cast_iron_ingot");

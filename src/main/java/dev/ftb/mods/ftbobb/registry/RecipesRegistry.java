@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbobb.registry;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
+import dev.ftb.mods.ftbobb.recipes.DripperRecipe;
 import dev.ftb.mods.ftbobb.recipes.FTBOBBRecipeType;
 import dev.ftb.mods.ftbobb.recipes.JarRecipe;
 import dev.ftb.mods.ftbobb.recipes.TemperatureSourceRecipe;
@@ -31,6 +32,10 @@ public class RecipesRegistry {
     public static final Supplier<RecipeSerializer<TemperatureSourceRecipe>> TEMPERATURE_SOURCE_SERIALIZER
             = RECIPE_SERIALIZERS.register("temperature_source", () -> new TemperatureSourceRecipe.Serializer<>(TemperatureSourceRecipe::new));
 
+    public static final Supplier<RecipeType<DripperRecipe>> DRIP_TYPE
+            = registerType("dripper", FTBOBBRecipeType::new);
+    public static final Supplier<RecipeSerializer<DripperRecipe>> DRIP_SERIALIZER
+            = RECIPE_SERIALIZERS.register("dripper", () -> new DripperRecipe.Serializer<>(DripperRecipe::new));
 
     // ---------------------------------------------
 

@@ -3,13 +3,11 @@ package dev.ftb.mods.ftbobb.data.recipe;
 import dev.ftb.mods.ftbobb.recipes.TemperatureSourceRecipe;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TemperatureSourceRecipeBuilder extends BaseRecipeBuilder {
+public class TemperatureSourceRecipeBuilder extends BaseRecipeBuilder<TemperatureSourceRecipe> {
     private final String blockstateStr;
     private final Temperature temperature;
     private final double efficiency;
@@ -41,7 +39,7 @@ public class TemperatureSourceRecipeBuilder extends BaseRecipeBuilder {
     }
 
     @Override
-    public void save(RecipeOutput recipeOutput, ResourceLocation id) {
-        recipeOutput.accept(id, new TemperatureSourceRecipe(blockstateStr, temperature, efficiency, displayStack, hideFromJEI), null);
+    protected TemperatureSourceRecipe buildRecipe() {
+        return new TemperatureSourceRecipe(blockstateStr, temperature, efficiency, displayStack, hideFromJEI);
     }
 }
