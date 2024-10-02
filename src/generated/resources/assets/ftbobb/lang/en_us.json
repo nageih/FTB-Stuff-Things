@@ -14,6 +14,7 @@
   "block.ftbobb.pump": "Pump",
   "block.ftbobb.tempered_jar": "Tempered Glass Jar",
   "block.ftbobb.tube": "Cast Iron Tube",
+  "death.attack.static_electric": "%1$s was killed by static electricity",
   "ftbobb.any_block": "Any Block",
   "ftbobb.dripper.chance": "Chance: %s%% / sec",
   "ftbobb.dripper.consume_on_fail": "Fluid is consumed even on failed attempt",

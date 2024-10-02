@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbobb.blocks;
 
 import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbobb.registry.ContentRegistry;
+import dev.ftb.mods.ftbobb.registry.ModDamageSources;
 import dev.ftb.mods.ftbobb.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -35,6 +36,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
@@ -81,8 +83,6 @@ public class PumpBlock extends Block implements EntityBlock {
 //
 //    private static final VoxelShape WEST = Stream.of(box(0, 0, 0, 16, 10, 16), box(6, 10, 3, 9, 13, 13), box(0, 10, 6, 2, 12, 10), box(8, 15, 0, 16, 16, 16), box(9, 10, 1, 15, 15, 15), box(15, 10, 15, 16, 15, 16), box(8, 10, 15, 9, 15, 16), box(8, 10, 0, 9, 15, 1), box(15, 10, 0, 16, 15, 1), box(3, 4, 2.5, 5, 15, 13.5), box(2, 9, 7, 6, 11, 9)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-    public static final DamageSource STATIC_ELECTRIC = new DamageSource(ContentRegistry.STATIC_ELECTRIC_DAMAGE_TYPE);
-
     public static final EnumProperty<Progress> PROGRESS = EnumProperty.create("progress", Progress.class);
     public static final BooleanProperty ON_OFF = BooleanProperty.create("on_off");
 
@@ -97,6 +97,10 @@ public class PumpBlock extends Block implements EntityBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (player instanceof FakePlayer) {
+            return InteractionResult.PASS;
+        }
+
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (!(blockEntity instanceof PumpBlockEntity)) {
             return InteractionResult.PASS;
@@ -114,7 +118,7 @@ public class PumpBlock extends Block implements EntityBlock {
                 computeStateForProgress(state, pos, level, pump.timeLeft);
                 sendTileUpdate(level, pos, state, pump);
             } else {
-                player.hurt(STATIC_ELECTRIC, 2);
+                player.hurt(level.damageSources().source(ModDamageSources.STATIC_ELECTRIC, player), 2);
                 if (player.getHealth() - 2 < 0) {
                     LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(level);
                     if (lightning != null) {

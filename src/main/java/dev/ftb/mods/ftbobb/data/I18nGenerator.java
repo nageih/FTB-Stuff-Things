@@ -34,6 +34,8 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbobb.dripper.chance", "Chance: %s%% / sec");
         add("ftbobb.dripper.consume_on_fail", "Fluid is consumed even on failed attempt");
 
+        add("death.attack.static_electric", "%1$s was killed by static electricity");
+
         addBlock(BlocksRegistry.OAK_SLUICE, "Oak Sluice");
         addBlock(BlocksRegistry.IRON_SLUICE, "Iron Sluice");
         addBlock(BlocksRegistry.DIAMOND_SLUICE, "Diamond Sluice");
