@@ -81,6 +81,8 @@ dependencies {
     // at runtime, use the full JEI jar for NeoForge
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
+    implementation("curse.maven:jade-324717:${jade_curse_id}")
+
     compileOnly("dev.latvian.mods:kubejs-neoforge:${kubejs_version}")
     compileOnly("dev.latvian.mods:rhino:${rhino_version}")
 }
@@ -90,6 +92,12 @@ repositories {
     maven { url "https://modmaven.dev/" } // ModMaven
     maven { url "https://maven.architectury.dev" }
     maven { url "https://maven.latvian.dev/releases" }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

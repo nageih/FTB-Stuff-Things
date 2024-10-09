@@ -26,10 +26,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public class AutoHammerBlockEntity extends BlockEntity {
     private final AutoHammerProperties props;
@@ -40,6 +37,7 @@ public class AutoHammerBlockEntity extends BlockEntity {
     private int displayProgress; // client side only
     private ItemStack processingStack = ItemStack.EMPTY;
     private int timeout = 0;
+    private int maxTimeout;
     private final Deque<ItemStack> overflow = new ArrayDeque<>(); // output items which won't fit into output inv
     private BlockCapabilityCache<IItemHandler, Direction> inputCache;
     private BlockCapabilityCache<IItemHandler, Direction> outputCache;
@@ -210,7 +208,7 @@ public class AutoHammerBlockEntity extends BlockEntity {
     }
 
     private void goOnTimeout(int timeout) {
-        this.timeout = timeout;
+        this.timeout = this.maxTimeout = timeout;
         active = false;
     }
 
@@ -266,6 +264,26 @@ public class AutoHammerBlockEntity extends BlockEntity {
 
     public int getDestroyStage() {
         return (int) ((float) displayProgress / props.getHammerSpeed() * 10f);
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public int getMaxProgress() {
+        return props.getHammerSpeed();
+    }
+
+    public Collection<ItemStack> getOverflow() {
+        return overflow;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public int getMaxTimeout() {
+        return maxTimeout;
     }
 
     public static class Iron extends AutoHammerBlockEntity {

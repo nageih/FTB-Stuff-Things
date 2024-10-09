@@ -36,6 +36,9 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbobb.tooltip.hammers", "Crushes materials down to their core components");
         add("ftbobb.tooltip.energy", "Energy: %s FE");
         add("ftbobb.tooltip.fluid", "Fluid: %smB %s");
+        add("ftbobb.jade.processing", "Processing");
+        add("ftbobb.jade.buffer", "Buffer");
+        add("config.jade.plugin_ftbobb.autohammer", "Autohammer");
         add("block.ftbobb.fusing_machine.tooltip", "Used to fuse items together to produce new results");
         add("block.ftbobb.super_cooler.tooltip", "Used to \"super\"-cool items to produce new results");
 
