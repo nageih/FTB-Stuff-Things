@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbobb.tubes;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.blocks.TubeBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.tube.TubeBlockEntity;
 import dev.ftb.mods.ftbobb.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

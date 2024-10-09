@@ -5,7 +5,7 @@ import dev.ftb.mods.ftbobb.blocks.AbstractMachineBlockEntity;
 import dev.ftb.mods.ftbobb.client.ClientSetup;
 import dev.ftb.mods.ftbobb.items.FluidCapsuleItem;
 import dev.ftb.mods.ftbobb.items.WaterBowlItem;
-import dev.ftb.mods.ftbobb.recipes.RecipeCaches;
+import dev.ftb.mods.ftbobb.crafting.RecipeCaches;
 import dev.ftb.mods.ftbobb.registry.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;

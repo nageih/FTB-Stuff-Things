@@ -2,10 +2,10 @@ package dev.ftb.mods.ftbobb.integration.jei;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.recipes.EnergyComponent;
-import dev.ftb.mods.ftbobb.recipes.FusingMachineRecipe;
+import dev.ftb.mods.ftbobb.crafting.EnergyComponent;
+import dev.ftb.mods.ftbobb.crafting.recipe.FusingMachineRecipe;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
-import dev.ftb.mods.ftbobb.screens.FusingMachineScreen;
+import dev.ftb.mods.ftbobb.client.screens.FusingMachineScreen;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;

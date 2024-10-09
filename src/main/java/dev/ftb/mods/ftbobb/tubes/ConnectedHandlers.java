@@ -1,6 +1,6 @@
 package dev.ftb.mods.ftbobb.tubes;
 
-import dev.ftb.mods.ftbobb.recipes.JarRecipe;
+import dev.ftb.mods.ftbobb.crafting.recipe.JarRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.blocks.TubeBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.tube.TubeBlockEntity;
 import dev.ftb.mods.ftbobb.util.DirectionUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;

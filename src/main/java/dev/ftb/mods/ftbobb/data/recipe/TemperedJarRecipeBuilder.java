@@ -1,6 +1,6 @@
 package dev.ftb.mods.ftbobb.data.recipe;
 
-import dev.ftb.mods.ftbobb.recipes.JarRecipe;
+import dev.ftb.mods.ftbobb.crafting.recipe.JarRecipe;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;

@@ -1,6 +1,5 @@
 package dev.ftb.mods.ftbobb.capabilities;
 
-import dev.ftb.mods.ftbobb.blocks.EmittingStackHandler;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;

@@ -2,7 +2,7 @@ package dev.ftb.mods.ftbobb.client.renders;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.ftb.mods.ftbobb.blocks.PumpBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.pump.PumpBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;

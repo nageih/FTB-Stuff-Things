@@ -2,13 +2,12 @@ package dev.ftb.mods.ftbobb.registry;
 
 import com.mojang.serialization.MapCodec;
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.blocks.FusingMachineMenu;
-import dev.ftb.mods.ftbobb.blocks.SuperCoolerMenu;
+import dev.ftb.mods.ftbobb.blocks.fusingmachine.FusingMachineMenu;
+import dev.ftb.mods.ftbobb.blocks.supercooler.SuperCoolerMenu;
 import dev.ftb.mods.ftbobb.lootmodifiers.CrookModifier;
 import dev.ftb.mods.ftbobb.lootmodifiers.HammerModifier;
-import dev.ftb.mods.ftbobb.recipes.DevEnvironmentCondition;
-import dev.ftb.mods.ftbobb.recipes.SuperCoolerRecipe;
-import dev.ftb.mods.ftbobb.screens.TemperedJarMenu;
+import dev.ftb.mods.ftbobb.crafting.DevEnvironmentCondition;
+import dev.ftb.mods.ftbobb.client.screens.TemperedJarMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageType;

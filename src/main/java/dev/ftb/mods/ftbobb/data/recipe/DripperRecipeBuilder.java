@@ -1,6 +1,6 @@
 package dev.ftb.mods.ftbobb.data.recipe;
 
-import dev.ftb.mods.ftbobb.recipes.DripperRecipe;
+import dev.ftb.mods.ftbobb.crafting.recipe.DripperRecipe;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.Validate;
 

@@ -2,7 +2,7 @@ package dev.ftb.mods.ftbobb.integration.jei;
 
 
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.recipes.DripperRecipe;
+import dev.ftb.mods.ftbobb.crafting.recipe.DripperRecipe;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import mezz.jei.api.constants.VanillaTypes;

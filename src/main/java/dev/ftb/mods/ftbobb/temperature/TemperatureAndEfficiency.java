@@ -1,8 +1,8 @@
 package dev.ftb.mods.ftbobb.temperature;
 
-import dev.ftb.mods.ftbobb.recipes.JarRecipe;
-import dev.ftb.mods.ftbobb.recipes.NoInventory;
-import dev.ftb.mods.ftbobb.recipes.TemperatureSourceRecipe;
+import dev.ftb.mods.ftbobb.crafting.recipe.JarRecipe;
+import dev.ftb.mods.ftbobb.crafting.NoInventory;
+import dev.ftb.mods.ftbobb.crafting.recipe.TemperatureSourceRecipe;
 import dev.ftb.mods.ftbobb.registry.RecipesRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

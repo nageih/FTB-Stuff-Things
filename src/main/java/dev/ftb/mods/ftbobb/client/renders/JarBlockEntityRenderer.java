@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbobb.client.renders;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.ftb.mods.ftbobb.blocks.JarBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.jar.JarBlockEntity;
 import dev.ftb.mods.ftbobb.client.RenderUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

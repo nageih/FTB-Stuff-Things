@@ -4,7 +4,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.ftb.mods.ftbobb.FTBOBBTags;
-import dev.ftb.mods.ftbobb.recipes.ToolsRecipeCache;
+import dev.ftb.mods.ftbobb.crafting.ToolsRecipeCache;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

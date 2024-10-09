@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbobb.data.recipe;
 
-import dev.ftb.mods.ftbobb.recipes.EnergyComponent;
-import dev.ftb.mods.ftbobb.recipes.SuperCoolerRecipe;
+import dev.ftb.mods.ftbobb.crafting.EnergyComponent;
+import dev.ftb.mods.ftbobb.crafting.recipe.SuperCoolerRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;

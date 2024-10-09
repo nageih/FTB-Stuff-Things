@@ -3,8 +3,8 @@ package dev.ftb.mods.ftbobb.data;
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.FTBOBBTags;
 import dev.ftb.mods.ftbobb.data.recipe.*;
-import dev.ftb.mods.ftbobb.recipes.DevEnvironmentCondition;
-import dev.ftb.mods.ftbobb.recipes.ItemWithChance;
+import dev.ftb.mods.ftbobb.crafting.DevEnvironmentCondition;
+import dev.ftb.mods.ftbobb.crafting.ItemWithChance;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
@@ -86,7 +86,7 @@ public class RecipesGenerator extends RecipeProvider {
                 'G', Tags.Items.GLASS_PANES
         ).save(output);
 
-        shaped(BlocksRegistry.AUTO_PROCESSING_BLOCK.get(), ItemsRegistry.TEMPERED_JAR.get(),
+        shaped(BlocksRegistry.JAR_AUTOMATER.get(), ItemsRegistry.TEMPERED_JAR.get(),
                 "CDC/CPC/CHC",
                 'C', ItemsRegistry.CAST_IRON_INGOT.get(),
                 'D', Blocks.DROPPER,

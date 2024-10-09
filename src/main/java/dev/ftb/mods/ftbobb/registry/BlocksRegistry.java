@@ -2,7 +2,18 @@ package dev.ftb.mods.ftbobb.registry;
 
 import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig;
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.blocks.*;
+import dev.ftb.mods.ftbobb.blocks.dripper.DripperBlock;
+import dev.ftb.mods.ftbobb.blocks.fusingmachine.FusingMachineBlock;
+import dev.ftb.mods.ftbobb.blocks.hammer.AutoHammerBlock;
+import dev.ftb.mods.ftbobb.blocks.hammer.AutoHammerProperties;
+import dev.ftb.mods.ftbobb.blocks.jar.CreativeTemperatureSourceBlock;
+import dev.ftb.mods.ftbobb.blocks.jar.JarAutomaterBlock;
+import dev.ftb.mods.ftbobb.blocks.jar.JarBlock;
+import dev.ftb.mods.ftbobb.blocks.jar.TemperedJarBlock;
+import dev.ftb.mods.ftbobb.blocks.pump.PumpBlock;
+import dev.ftb.mods.ftbobb.blocks.sluice.SluiceBlock;
+import dev.ftb.mods.ftbobb.blocks.supercooler.SuperCoolerBlock;
+import dev.ftb.mods.ftbobb.blocks.tube.TubeBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.MagmaBlock;
@@ -54,8 +65,8 @@ public class BlocksRegistry {
             = BLOCKS.register("jar", JarBlock::new);
     public static final DeferredBlock<TemperedJarBlock> TEMPERED_JAR
             = BLOCKS.register("tempered_jar", TemperedJarBlock::new);
-    public static final DeferredBlock<AutoProcessingBlock> AUTO_PROCESSING_BLOCK
-            = BLOCKS.register("auto_processing_block", AutoProcessingBlock::new);
+    public static final DeferredBlock<JarAutomaterBlock> JAR_AUTOMATER
+            = BLOCKS.register("auto_processing_block", JarAutomaterBlock::new);
     public static final DeferredBlock<Block> BLUE_MAGMA_BLOCK
             = BLOCKS.register("blue_magma_block", () -> new MagmaBlock(
             Block.Properties.ofFullCopy(Blocks.STONE)

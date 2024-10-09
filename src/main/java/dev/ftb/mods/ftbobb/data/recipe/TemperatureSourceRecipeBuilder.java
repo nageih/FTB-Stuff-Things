@@ -1,6 +1,6 @@
 package dev.ftb.mods.ftbobb.data.recipe;
 
-import dev.ftb.mods.ftbobb.recipes.TemperatureSourceRecipe;
+import dev.ftb.mods.ftbobb.crafting.recipe.TemperatureSourceRecipe;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.world.item.ItemStack;

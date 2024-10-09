@@ -1,8 +1,15 @@
 package dev.ftb.mods.ftbobb.registry;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.blocks.*;
-import dev.ftb.mods.ftbobb.recipes.FusingMachineRecipe;
+import dev.ftb.mods.ftbobb.blocks.dripper.DripperBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.fusingmachine.FusingMachineBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.hammer.AutoHammerBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.jar.JarBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.jar.TemperedJarBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.pump.PumpBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.sluice.SluiceBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.supercooler.SuperCoolerBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.tube.TubeBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;

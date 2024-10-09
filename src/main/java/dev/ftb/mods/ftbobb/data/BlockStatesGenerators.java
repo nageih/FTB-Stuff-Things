@@ -2,6 +2,10 @@ package dev.ftb.mods.ftbobb.data;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.blocks.*;
+import dev.ftb.mods.ftbobb.blocks.jar.JarAutomaterBlock;
+import dev.ftb.mods.ftbobb.blocks.jar.TemperedJarBlock;
+import dev.ftb.mods.ftbobb.blocks.pump.PumpBlock;
+import dev.ftb.mods.ftbobb.blocks.sluice.SluiceBlock;
 import dev.ftb.mods.ftbobb.client.model.TubeModel;
 import dev.ftb.mods.ftbobb.items.MeshType;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
@@ -155,9 +159,9 @@ public class BlockStatesGenerators extends BlockStateProvider {
             map.put(Direction.WEST, IntIntPair.of(90, 90));
             map.put(Direction.EAST, IntIntPair.of(90, 270));
         });
-        MultiPartBlockStateBuilder apBuilder = getMultipartBuilder(BlocksRegistry.AUTO_PROCESSING_BLOCK.get());
+        MultiPartBlockStateBuilder apBuilder = getMultipartBuilder(BlocksRegistry.JAR_AUTOMATER.get());
         apBuilder.part().modelFile(models().getExistingFile(modLoc("block/auto_processing_block"))).addModel();
-        AutoProcessingBlock.CONN_PROPS.forEach((dir, prop) -> {
+        JarAutomaterBlock.CONN_PROPS.forEach((dir, prop) -> {
             apBuilder.part().modelFile(models().getExistingFile(modLoc("block/tube_base")))
                     .rotationX(rots.get(dir).firstInt())
                     .rotationY(rots.get(dir).secondInt())

@@ -1,7 +1,8 @@
 package dev.ftb.mods.ftbobb.registry;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.recipes.*;
+import dev.ftb.mods.ftbobb.crafting.*;
+import dev.ftb.mods.ftbobb.crafting.recipe.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;

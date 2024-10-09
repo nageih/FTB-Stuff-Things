@@ -1,10 +1,10 @@
 package dev.ftb.mods.ftbobb.integration.jei;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.recipes.JarRecipe;
+import dev.ftb.mods.ftbobb.crafting.recipe.JarRecipe;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
-import dev.ftb.mods.ftbobb.screens.TemperedJarScreen;
+import dev.ftb.mods.ftbobb.client.screens.TemperedJarScreen;
 import dev.ftb.mods.ftbobb.temperature.TemperatureAndEfficiency;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;

@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbobb.integration.jei;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.recipes.HammerRecipe;
+import dev.ftb.mods.ftbobb.crafting.recipe.HammerRecipe;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;

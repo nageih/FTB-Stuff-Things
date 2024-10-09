@@ -1,6 +1,6 @@
 package dev.ftb.mods.ftbobb.data.recipe;
 
-import dev.ftb.mods.ftbobb.recipes.HammerRecipe;
+import dev.ftb.mods.ftbobb.crafting.recipe.HammerRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 

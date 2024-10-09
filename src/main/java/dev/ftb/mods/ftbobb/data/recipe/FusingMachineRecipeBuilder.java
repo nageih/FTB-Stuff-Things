@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbobb.data.recipe;
 
-import dev.ftb.mods.ftbobb.recipes.EnergyComponent;
-import dev.ftb.mods.ftbobb.recipes.FusingMachineRecipe;
+import dev.ftb.mods.ftbobb.crafting.EnergyComponent;
+import dev.ftb.mods.ftbobb.crafting.recipe.FusingMachineRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 

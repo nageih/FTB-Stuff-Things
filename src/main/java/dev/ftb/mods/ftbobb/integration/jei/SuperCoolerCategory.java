@@ -2,10 +2,10 @@ package dev.ftb.mods.ftbobb.integration.jei;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.recipes.EnergyComponent;
-import dev.ftb.mods.ftbobb.recipes.SuperCoolerRecipe;
+import dev.ftb.mods.ftbobb.crafting.EnergyComponent;
+import dev.ftb.mods.ftbobb.crafting.recipe.SuperCoolerRecipe;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
-import dev.ftb.mods.ftbobb.screens.SuperCoolerScreen;
+import dev.ftb.mods.ftbobb.client.screens.SuperCoolerScreen;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;

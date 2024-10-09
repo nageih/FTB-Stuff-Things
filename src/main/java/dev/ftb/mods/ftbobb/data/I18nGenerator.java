@@ -59,7 +59,7 @@ public class I18nGenerator extends LanguageProvider {
         addBlock(BlocksRegistry.TUBE, "Cast Iron Tube");
         addBlock(BlocksRegistry.JAR, "Glass Jar");
         addBlock(BlocksRegistry.TEMPERED_JAR, "Tempered Glass Jar");
-        addBlock(BlocksRegistry.AUTO_PROCESSING_BLOCK, "Jar Auto-Processing Block");
+        addBlock(BlocksRegistry.JAR_AUTOMATER, "Jar Automater");
         addBlock(BlocksRegistry.BLUE_MAGMA_BLOCK, "Blue Magma Block");
         addBlock(BlocksRegistry.CREATIVE_HOT_TEMPERATURE_SOURCE, "Creative Hot Temperature Source");
         addBlock(BlocksRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE, "Creative Superheated Temperature Source");

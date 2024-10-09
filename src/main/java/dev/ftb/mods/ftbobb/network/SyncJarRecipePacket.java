@@ -1,8 +1,8 @@
 package dev.ftb.mods.ftbobb.network;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.blocks.TemperedJarBlockEntity;
-import dev.ftb.mods.ftbobb.screens.TemperedJarMenu;
+import dev.ftb.mods.ftbobb.blocks.jar.TemperedJarBlockEntity;
+import dev.ftb.mods.ftbobb.client.screens.TemperedJarMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

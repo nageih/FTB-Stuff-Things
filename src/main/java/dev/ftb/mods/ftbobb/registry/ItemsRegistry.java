@@ -2,19 +2,12 @@ package dev.ftb.mods.ftbobb.registry;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.items.*;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class ItemsRegistry {
@@ -69,7 +62,7 @@ public class ItemsRegistry {
     public static final DeferredItem<BlockItem> JAR = blockItem("jar", BlocksRegistry.JAR);
     public static final DeferredItem<BlockItem> TEMPERED_JAR = blockItem("tempered_jar", BlocksRegistry.TEMPERED_JAR);
     public static final DeferredItem<BlockItem> AUTO_PROCESSING_BLOCK
-            = blockItem("auto_processing_block", BlocksRegistry.AUTO_PROCESSING_BLOCK);
+            = blockItem("auto_processing_block", BlocksRegistry.JAR_AUTOMATER);
     public static final DeferredItem<BlockItem> BLUE_MAGMA_BLOCK
             = blockItem("blue_magma_block", BlocksRegistry.BLUE_MAGMA_BLOCK);
     public static final DeferredItem<BlockItem> CREATIVE_HOT_TEMPERATURE_SOURCE

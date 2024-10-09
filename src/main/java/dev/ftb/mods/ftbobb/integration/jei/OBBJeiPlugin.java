@@ -1,14 +1,14 @@
 package dev.ftb.mods.ftbobb.integration.jei;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.recipes.IHideableRecipe;
-import dev.ftb.mods.ftbobb.recipes.TemperatureSourceRecipe;
+import dev.ftb.mods.ftbobb.crafting.IHideableRecipe;
+import dev.ftb.mods.ftbobb.crafting.recipe.TemperatureSourceRecipe;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import dev.ftb.mods.ftbobb.registry.RecipesRegistry;
-import dev.ftb.mods.ftbobb.screens.FusingMachineScreen;
-import dev.ftb.mods.ftbobb.screens.SuperCoolerScreen;
-import dev.ftb.mods.ftbobb.screens.TemperedJarScreen;
+import dev.ftb.mods.ftbobb.client.screens.FusingMachineScreen;
+import dev.ftb.mods.ftbobb.client.screens.SuperCoolerScreen;
+import dev.ftb.mods.ftbobb.client.screens.TemperedJarScreen;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;

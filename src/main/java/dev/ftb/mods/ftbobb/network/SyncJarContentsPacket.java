@@ -2,7 +2,7 @@ package dev.ftb.mods.ftbobb.network;
 
 import com.mojang.datafixers.util.Either;
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.blocks.TemperedJarBlockEntity;
+import dev.ftb.mods.ftbobb.blocks.jar.TemperedJarBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
