@@ -34,6 +34,20 @@ public class BlocksRegistry {
     public static final DeferredBlock<DripperBlock> DRIPPER
             = BLOCKS.register("dripper", DripperBlock::new);
 
+    public static final DeferredBlock<AutoHammerBlock> IRON_AUTO_HAMMER
+            = BLOCKS.register("iron_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.IRON));
+    public static final DeferredBlock<AutoHammerBlock> GOLD_AUTO_HAMMER
+            = BLOCKS.register("gold_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.GOLD));
+    public static final DeferredBlock<AutoHammerBlock> DIAMOND_AUTO_HAMMER
+            = BLOCKS.register("diamond_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.DIAMOND));
+    public static final DeferredBlock<AutoHammerBlock> NETHERITE_AUTO_HAMMER
+            = BLOCKS.register("netherite_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.NETHERITE));
+
+    public static final DeferredBlock<FusingMachineBlock> FUSING_MACHINE
+            = BLOCKS.register("fusing_machine", FusingMachineBlock::new);
+    public static final DeferredBlock<SuperCoolerBlock> SUPER_COOLER
+            = BLOCKS.register("super_cooler", SuperCoolerBlock::new);
+
     public static final DeferredBlock<TubeBlock> TUBE
             = BLOCKS.register("tube", TubeBlock::new);
     public static final DeferredBlock<JarBlock> JAR

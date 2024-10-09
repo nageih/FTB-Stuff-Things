@@ -1,0 +1,49 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbobb:dev_environment"
+    }
+  ],
+  "type": "ftbobb:hammer",
+  "input": {
+    "item": "minecraft:cobbled_deepslate"
+  },
+  "results": [
+    {
+      "count": 64,
+      "id": "minecraft:gravel"
+    },
+    {
+      "count": 64,
+      "id": "minecraft:gravel"
+    },
+    {
+      "count": 64,
+      "id": "minecraft:gravel"
+    },
+    {
+      "count": 64,
+      "id": "minecraft:gravel"
+    },
+    {
+      "count": 64,
+      "id": "minecraft:gravel"
+    },
+    {
+      "count": 64,
+      "id": "minecraft:gravel"
+    },
+    {
+      "count": 64,
+      "id": "minecraft:gravel"
+    },
+    {
+      "count": 64,
+      "id": "minecraft:gravel"
+    },
+    {
+      "count": 64,
+      "id": "minecraft:gravel"
+    }
+  ]
+}

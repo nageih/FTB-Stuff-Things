@@ -2,10 +2,9 @@ package dev.ftb.mods.ftbobb.data;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.FTBOBBTags;
-import dev.ftb.mods.ftbobb.data.recipe.DripperRecipeBuilder;
-import dev.ftb.mods.ftbobb.data.recipe.TemperatureSourceRecipeBuilder;
-import dev.ftb.mods.ftbobb.data.recipe.TemperedJarRecipeBuilder;
+import dev.ftb.mods.ftbobb.data.recipe.*;
 import dev.ftb.mods.ftbobb.recipes.DevEnvironmentCondition;
+import dev.ftb.mods.ftbobb.recipes.ItemWithChance;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
@@ -32,6 +31,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import java.util.Arrays;
@@ -109,6 +109,10 @@ public class RecipesGenerator extends RecipeProvider {
         temperedJarRecipes(output);
         temperatureSourceRecipes(output);
         dripperRecipes(output);
+        crookRecipes(output);
+        hammerRecipes(output);
+        fusingMachineRecipes(output);
+        superCoolerRecipes(output);
     }
 
     private void temperedJarRecipes(RecipeOutput output) {
@@ -213,6 +217,70 @@ public class RecipesGenerator extends RecipeProvider {
         new DripperRecipeBuilder("minecraft:campfire[lit=false]", "minecraft:campfire[lit=true]", new FluidStack(Fluids.LAVA, 250))
                 .withChance(0.5)
                 .save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("dripper/campfire_lighting"));
+    }
+
+    private void crookRecipes(RecipeOutput output) {
+        new CrookRecipeBuilder(Ingredient.of(ItemTags.LEAVES), List.of(
+                new ItemWithChance(new ItemStack(Items.GOLD_NUGGET), 0.5),
+                new ItemWithChance(new ItemStack(Items.IRON_NUGGET), 0.5)
+        )).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("crook/nuggets_from_leaves"));
+
+        new CrookRecipeBuilder(Ingredient.of(Blocks.SHORT_GRASS), List.of(
+                new ItemWithChance(new ItemStack(Items.STRING), 0.5)
+        )).keepExistingDrops().save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("crook/string_from_grass"));
+    }
+
+    private void hammerRecipes(RecipeOutput output) {
+        new HammerRecipeBuilder(Ingredient.of(Items.COBBLESTONE), List.of(
+                new ItemStack(Blocks.GRAVEL)
+        )).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("hammer/gravel_from_cobblestone"));
+        new HammerRecipeBuilder(Ingredient.of(Items.GRAVEL), List.of(
+                new ItemStack(Blocks.SAND)
+        )).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("hammer/sand_from_gravel"));
+        new HammerRecipeBuilder(Ingredient.of(Items.COBBLED_DEEPSLATE), List.of(
+                new ItemStack(Blocks.GRAVEL, 64),
+                new ItemStack(Blocks.GRAVEL, 64),
+                new ItemStack(Blocks.GRAVEL, 64),
+                new ItemStack(Blocks.GRAVEL, 64),
+                new ItemStack(Blocks.GRAVEL, 64),
+                new ItemStack(Blocks.GRAVEL, 64),
+                new ItemStack(Blocks.GRAVEL, 64),
+                new ItemStack(Blocks.GRAVEL, 64),
+                new ItemStack(Blocks.GRAVEL, 64)
+        )).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("hammer/gravel_from_deepslate"));
+    }
+
+    private void fusingMachineRecipes(RecipeOutput output) {
+        new FusingMachineRecipeBuilder(
+                List.of(Ingredient.of(Items.COBBLESTONE), Ingredient.of(Items.GRAVEL)),
+                new FluidStack(Fluids.LAVA, 1000),
+                100, 60
+        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("fusing_machine/lava_from_cobble_gravel"));
+        new FusingMachineRecipeBuilder(
+                List.of(Ingredient.of(Items.COBBLESTONE)),
+                new FluidStack(Fluids.LAVA, 250),
+                50, 40
+        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("fusing_machine/lava_from_cobble"));
+        new FusingMachineRecipeBuilder(
+                List.of(Ingredient.of(Items.ICE)),
+                new FluidStack(Fluids.WATER, 1000),
+                5, 20
+        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("fusing_machine/water_from_ice"));
+    }
+
+    private void superCoolerRecipes(RecipeOutput output) {
+        new SuperCoolerRecipeBuilder(
+                List.of(Ingredient.of(ItemTags.SAND), Ingredient.of(Tags.Items.GRAVELS), Ingredient.of(Tags.Items.DYES_WHITE)),
+                SizedFluidIngredient.of(Fluids.WATER, FluidType.BUCKET_VOLUME),
+                50, 20,
+                new ItemStack(Items.WHITE_CONCRETE, 2)
+        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("super_cooler/white_concrete"));
+        new SuperCoolerRecipeBuilder(
+                List.of(Ingredient.of(Items.DIRT)),
+                SizedFluidIngredient.of(Fluids.WATER, 100),
+                25, 40,
+                new ItemStack(Items.MUD)
+        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("super_cooler/mud"));
     }
 
     private static RecipeBuilder temperedJar(List<SizedIngredient> itemsIn, List<SizedFluidIngredient> fluidsIn, List<ItemStack> itemsOut, List<FluidStack> fluidsOut, Temperature requiredTemp) {

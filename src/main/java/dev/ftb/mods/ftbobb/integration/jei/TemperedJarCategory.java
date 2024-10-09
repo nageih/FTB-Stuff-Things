@@ -76,7 +76,7 @@ public class TemperedJarCategory extends BaseOBBCategory<JarRecipe> {
         return jarRecipes.stream().sorted().toList();
     }
 
-    enum TemperedJarContainerHandler implements IGuiContainerHandler<TemperedJarScreen> {
+    enum ContainerHandler implements IGuiContainerHandler<TemperedJarScreen> {
         INSTANCE;
 
         @Override

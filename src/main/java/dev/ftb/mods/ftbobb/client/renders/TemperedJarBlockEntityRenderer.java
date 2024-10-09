@@ -41,7 +41,7 @@ public class TemperedJarBlockEntityRenderer implements BlockEntityRenderer<Tempe
                 poseStack.translate(0.0, yOff * (11.1F / 16F), 0.0);
             }
         }
-        boolean enoughFluid = fluidAmount > 2000;
+        boolean enoughFluidToFloatItems = fluidAmount > 2000;
 
         List<ItemStack> stacks = new ArrayList<>();
         for (int i = 0; i < jar.getInputItemHandler().getSlots(); i++) {
@@ -53,18 +53,17 @@ public class TemperedJarBlockEntityRenderer implements BlockEntityRenderer<Tempe
         float circleRadius = stacks.size() == 1 ? 0 : 0.17f;
         float degreesPerStack = 360f / stacks.size();
         double ticks = jar.getLevel().getGameTime() + partialTick;
-        float yBob = enoughFluid ? Mth.sin(((float) ticks  / 10) % 360) * 0.01f /*- 0.1f*/ : 0;
-        float yRot = (float) (ticks / 2) % 360;
+        float yBob = enoughFluidToFloatItems ? Mth.sin(((float) ticks  / 10) % 360) * 0.01f : 0;
+
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
         poseStack.translate(0.5, 0.1, 0.5);
         for (int i = 0; i < stacks.size(); i++) {
             poseStack.pushPose();
-            poseStack.mulPose(Axis.YP.rotationDegrees(i * degreesPerStack + (enoughFluid ? (float) ticks / 3 % 360 : 0.0f)));
+            poseStack.mulPose(Axis.YP.rotationDegrees(i * degreesPerStack + (enoughFluidToFloatItems ? (float) ticks / 3 % 360 : 0.0f)));
             poseStack.translate(circleRadius, yBob,0);
-//            if (enoughFluid) poseStack.mulPose(Axis.YP.rotationDegrees(yRot / 5));
             poseStack.scale(0.25f, 0.25f, 0.25f);
 
-            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             BakedModel bakedModel = itemRenderer.getModel(stacks.get(i), jar.getLevel(), null, 0);
             itemRenderer.render(stacks.get(i), ItemDisplayContext.FIXED, true, poseStack, bufferSource, packedLight, packedOverlay, bakedModel);
 

@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbobb;
 
 import com.mojang.logging.LogUtils;
+import dev.ftb.mods.ftbobb.blocks.AbstractMachineBlockEntity;
 import dev.ftb.mods.ftbobb.client.ClientSetup;
 import dev.ftb.mods.ftbobb.items.FluidCapsuleItem;
 import dev.ftb.mods.ftbobb.items.WaterBowlItem;
@@ -21,6 +22,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.slf4j.Logger;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -68,6 +70,9 @@ public class FTBOBB {
                 BlockEntitiesRegistry.JAR.get(),
                 (blockEntity, side) -> blockEntity.getFluidHandler()
         );
+
+        List.of(BlockEntitiesRegistry.FUSING_MACHINE, BlockEntitiesRegistry.SUPER_COOLER).forEach(machine ->
+                AbstractMachineBlockEntity.registerCapabilities(event, machine.get()));
 
         event.registerItem(
                 Capabilities.FluidHandler.ITEM,

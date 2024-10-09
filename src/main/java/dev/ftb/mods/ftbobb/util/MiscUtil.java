@@ -1,5 +1,6 @@
 package dev.ftb.mods.ftbobb.util;
 
+import com.mojang.serialization.DataResult;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -23,9 +24,10 @@ public class MiscUtil {
     }
 
     public static Component makeFluidStackDesc(FluidStack stack) {
-        return Component.literal("< ")
-                .append(Component.translatable("ftblibrary.mb", stack.getAmount(), stack.getFluid().getFluidType().getDescription()))
-                .append(" >")
-                .withStyle(ChatFormatting.GRAY);
+        return Component.translatable("ftbobb.tooltip.fluid", stack.getAmount(), stack.getHoverName()).withStyle(ChatFormatting.AQUA);
+    }
+
+    public static DataResult<Double> validateChanceRange(double d) {
+        return d > 0.0 && d <= 1.0 ? DataResult.success(d) : DataResult.error(() -> "must be in range (0.0 -> 1.0]");
     }
 }

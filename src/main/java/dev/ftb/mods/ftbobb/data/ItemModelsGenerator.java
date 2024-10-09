@@ -33,6 +33,10 @@ public class ItemModelsGenerator extends ItemModelProvider {
         withExistingParent("creative_high_temperature_source", modLoc("block/creative_high_temperature_source"));
         withExistingParent("creative_subzero_temperature_source", modLoc("block/creative_subzero_temperature_source"));
         withExistingParent("cast_iron_block", modLoc("block/cast_iron_block"));
+        withExistingParent("iron_auto_hammer", modLoc("block/iron_auto_hammer"));
+        withExistingParent("gold_auto_hammer", modLoc("block/gold_auto_hammer"));
+        withExistingParent("diamond_auto_hammer", modLoc("block/diamond_auto_hammer"));
+        withExistingParent("netherite_auto_hammer", modLoc("block/netherite_auto_hammer"));
 
         simpleItem(ItemsRegistry.FLUID_CAPSULE, "item/fluid_container_base", "item/fluid_container_overlay");
         simpleItem(ItemsRegistry.DRIPPER, "item/dripper");
@@ -42,6 +46,14 @@ public class ItemModelsGenerator extends ItemModelProvider {
         simpleItem(ItemsRegistry.CAST_IRON_INGOT, "item/cast_iron_ingot");
         simpleItem(ItemsRegistry.CAST_IRON_NUGGET, "item/cast_iron_nugget");
         simpleItem(ItemsRegistry.TEMPERED_GLASS, "item/tempered_glass");
+
+        simpleItem(ItemsRegistry.STONE_HAMMER, "item/stone_hammer");
+        simpleItem(ItemsRegistry.IRON_HAMMER, "item/iron_hammer");
+        simpleItem(ItemsRegistry.GOLD_HAMMER, "item/gold_hammer");
+        simpleItem(ItemsRegistry.DIAMOND_HAMMER, "item/diamond_hammer");
+        simpleItem(ItemsRegistry.NETHERITE_HAMMER, "item/netherite_hammer");
+
+        simpleItem(ItemsRegistry.CROOK, "item/stone_crook");
     }
 
     private ItemModelBuilder simpleItem(DeferredItem<? extends Item> item, String... textures) {

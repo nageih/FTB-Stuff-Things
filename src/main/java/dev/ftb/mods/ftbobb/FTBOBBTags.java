@@ -8,6 +8,8 @@ import net.minecraft.world.level.block.Block;
 
 public class FTBOBBTags {
     public static class Blocks {
+        public static final TagKey<Block> MINEABLE_WITH_HAMMER = commonTag("mineable/hammer");
+
         static TagKey<Block> tag(String modid, String name) {
             return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(modid, name));
         }
@@ -26,6 +28,8 @@ public class FTBOBBTags {
         public static final TagKey<Item> NUGGETS_CAST_IRON = commonTag("nuggets/cast_iron");
         public static final TagKey<Item> GEARS = commonTag("gears");
         public static final TagKey<Item> GEARS_CAST_IRON = commonTag("gears/cast_iron");
+        public static final TagKey<Item> HAMMERS = modTag("hammers");
+        public static final TagKey<Item> CROOKS = modTag("crooks");
 
         static TagKey<Item> tag(String modid, String name) {
             return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(modid, name));

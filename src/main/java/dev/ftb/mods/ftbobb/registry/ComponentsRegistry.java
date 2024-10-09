@@ -17,12 +17,15 @@ public class ComponentsRegistry {
     private static final DeferredRegister.DataComponents COMPONENTS
             = DeferredRegister.createDataComponents(FTBOBB.MODID);
 
-    // capsules and basic jars
+    // capsules and machines with one fluid tank
     public static final Supplier<DataComponentType<SimpleFluidContent>> STORED_FLUID
             = register("stored_fluid", SimpleFluidContent.CODEC, SimpleFluidContent.STREAM_CODEC);
     // tempered jars (0 or more tanks)
     public static final Supplier<DataComponentType<List<SimpleFluidContent>>> FLUID_TANKS
             = register("fluid_tanks", SimpleFluidContent.CODEC.listOf(), SimpleFluidContent.STREAM_CODEC.apply(ByteBufCodecs.list()));
+
+    public static final Supplier<DataComponentType<Integer>> STORED_ENERGY
+            = register("energy", Codec.INT, ByteBufCodecs.INT);
 
     public static void init(IEventBus eventBus) {
         COMPONENTS.register(eventBus);

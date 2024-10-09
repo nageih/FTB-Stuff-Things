@@ -33,11 +33,24 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbobb.making", "Making:");
         add("ftbobb.dripper.chance", "Chance: %s%% / sec");
         add("ftbobb.dripper.consume_on_fail", "Fluid is consumed even on failed attempt");
+        add("ftbobb.tooltip.hammers", "Crushes materials down to their core components");
+        add("ftbobb.tooltip.energy", "Energy: %s FE");
+        add("ftbobb.tooltip.fluid", "Fluid: %smB %s");
+        add("block.ftbobb.fusing_machine.tooltip", "Used to fuse items together to produce new results");
+        add("block.ftbobb.super_cooler.tooltip", "Used to \"super\"-cool items to produce new results");
 
         addBlock(BlocksRegistry.OAK_SLUICE, "Oak Sluice");
         addBlock(BlocksRegistry.IRON_SLUICE, "Iron Sluice");
         addBlock(BlocksRegistry.DIAMOND_SLUICE, "Diamond Sluice");
         addBlock(BlocksRegistry.NETHERITE_SLUICE, "Netherite Sluice");
+
+        addBlock(BlocksRegistry.IRON_AUTO_HAMMER, "Iron Auto-Hammer");
+        addBlock(BlocksRegistry.GOLD_AUTO_HAMMER, "Gold Auto-Hammer");
+        addBlock(BlocksRegistry.DIAMOND_AUTO_HAMMER, "Diamond Auto-Hammer");
+        addBlock(BlocksRegistry.NETHERITE_AUTO_HAMMER, "Netherite Auto-Hammer");
+
+        addBlock(BlocksRegistry.FUSING_MACHINE, "SlowMelter 9000");
+        addBlock(BlocksRegistry.SUPER_COOLER, "\"Super\" Cooler");
 
         addBlock(BlocksRegistry.PUMP, "Pump");
 
@@ -66,5 +79,13 @@ public class I18nGenerator extends LanguageProvider {
         addItem(ItemsRegistry.CAST_IRON_INGOT, "Cast Iron Ingot");
         addItem(ItemsRegistry.CAST_IRON_NUGGET, "Cast Iron Nugget");
         addItem(ItemsRegistry.TEMPERED_GLASS, "Tempered Glass");
+
+        addItem(ItemsRegistry.STONE_HAMMER, "Stone Hammer");
+        addItem(ItemsRegistry.IRON_HAMMER, "Iron Hammer");
+        addItem(ItemsRegistry.GOLD_HAMMER, "Gold Hammer");
+        addItem(ItemsRegistry.DIAMOND_HAMMER, "Diamond Hammer");
+        addItem(ItemsRegistry.NETHERITE_HAMMER, "Netherite Hammer");
+
+        addItem(ItemsRegistry.CROOK, "Stone Crook");
     }
 }

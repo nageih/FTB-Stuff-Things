@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbobb.data;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
+import dev.ftb.mods.ftbobb.FTBOBBTags;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -21,6 +22,8 @@ public class BlockTagsGenerator extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        tag(FTBOBBTags.Blocks.MINEABLE_WITH_HAMMER).addTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_SHOVEL);
+
         BlocksRegistry.BLOCKS.getEntries().forEach(entry -> {
             Block block = entry.get();
             if (!(block instanceof LiquidBlock) && !(block instanceof AirBlock)) {

@@ -1,0 +1,31 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbobb:dev_environment"
+    }
+  ],
+  "type": "ftbobb:supercooler",
+  "energy": {
+    "fe_per_tick": 50,
+    "ticks_to_process": 20
+  },
+  "fluid": {
+    "amount": 1000,
+    "fluid": "minecraft:water"
+  },
+  "inputs": [
+    {
+      "tag": "minecraft:sand"
+    },
+    {
+      "tag": "c:gravels"
+    },
+    {
+      "tag": "c:dyes/white"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "id": "minecraft:white_concrete"
+  }
+}

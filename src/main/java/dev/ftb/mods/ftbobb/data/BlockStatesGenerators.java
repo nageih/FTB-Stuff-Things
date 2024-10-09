@@ -1,10 +1,7 @@
 package dev.ftb.mods.ftbobb.data;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.blocks.AutoProcessingBlock;
-import dev.ftb.mods.ftbobb.blocks.PumpBlock;
-import dev.ftb.mods.ftbobb.blocks.SluiceBlock;
-import dev.ftb.mods.ftbobb.blocks.TemperedJarBlock;
+import dev.ftb.mods.ftbobb.blocks.*;
 import dev.ftb.mods.ftbobb.client.model.TubeModel;
 import dev.ftb.mods.ftbobb.items.MeshType;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
@@ -13,11 +10,14 @@ import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.*;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -26,11 +26,19 @@ public class BlockStatesGenerators extends BlockStateProvider {
         super(output, FTBOBB.MODID, exFileHelper);
     }
 
+    private static final List<DirRotation> HORIZONTALS = Util.make(new ArrayList<>(), l -> {
+        l.add(new DirRotation(Direction.NORTH, 0));
+        l.add(new DirRotation(Direction.EAST, 90));
+        l.add(new DirRotation(Direction.SOUTH, 180));
+        l.add(new DirRotation(Direction.WEST, 270));
+    });
+
     @Override
     protected void registerStatesAndModels() {
         Direction[] dirs = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
         int[] dirsRot = {0, 180, 270, 90};
 
+        // Sluices
         for (DeferredBlock<SluiceBlock> block : BlocksRegistry.ALL_SLUICES) {
             String key = block.getKey().location().getPath();
             MultiPartBlockStateBuilder builder = this.getMultipartBuilder(block.get());
@@ -45,36 +53,89 @@ public class BlockStatesGenerators extends BlockStateProvider {
             }
         }
 
+        // Pump
         int[] dirsRot2 = new int[]{90, 270, 0, 180};
         MultiPartBlockStateBuilder builder = this.getMultipartBuilder(BlocksRegistry.PUMP.get());
         for (int d = 0; d < 4; d++) {
-            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_off"))).rotationY(dirsRot2[d]).addModel().condition(PumpBlock.ON_OFF, false).condition(HORIZONTAL_FACING, dirs[d]);
-            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_on"))).rotationY(dirsRot2[d]).addModel().condition(PumpBlock.ON_OFF, true).condition(HORIZONTAL_FACING, dirs[d]);
-            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_20"))).rotationY(dirsRot2[d]).addModel().condition(PumpBlock.ON_OFF, true).condition(HORIZONTAL_FACING, dirs[d]).condition(PumpBlock.PROGRESS, PumpBlock.Progress.TWENTY);
-            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_40"))).rotationY(dirsRot2[d]).addModel().condition(PumpBlock.ON_OFF, true).condition(HORIZONTAL_FACING, dirs[d]).condition(PumpBlock.PROGRESS, PumpBlock.Progress.FORTY);
-            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_60"))).rotationY(dirsRot2[d]).addModel().condition(PumpBlock.ON_OFF, true).condition(HORIZONTAL_FACING, dirs[d]).condition(PumpBlock.PROGRESS, PumpBlock.Progress.SIXTY);
-            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_80"))).rotationY(dirsRot2[d]).addModel().condition(PumpBlock.ON_OFF, true).condition(HORIZONTAL_FACING, dirs[d]).condition(PumpBlock.PROGRESS, PumpBlock.Progress.EIGHTY);
-            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_100"))).rotationY(dirsRot2[d]).addModel().condition(PumpBlock.ON_OFF, true).condition(HORIZONTAL_FACING, dirs[d]).condition(PumpBlock.PROGRESS, PumpBlock.Progress.HUNDRED);
+            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_off")))
+                    .rotationY(dirsRot2[d]).addModel()
+                    .condition(PumpBlock.ON_OFF, false)
+                    .condition(HORIZONTAL_FACING, dirs[d]);
+            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_on")))
+                    .rotationY(dirsRot2[d]).addModel()
+                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(HORIZONTAL_FACING, dirs[d]);
+            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_20")))
+                    .rotationY(dirsRot2[d]).addModel()
+                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(HORIZONTAL_FACING, dirs[d])
+                    .condition(PumpBlock.PROGRESS, PumpBlock.Progress.TWENTY);
+            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_40")))
+                    .rotationY(dirsRot2[d]).addModel()
+                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(HORIZONTAL_FACING, dirs[d])
+                    .condition(PumpBlock.PROGRESS, PumpBlock.Progress.FORTY);
+            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_60")))
+                    .rotationY(dirsRot2[d]).addModel()
+                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(HORIZONTAL_FACING, dirs[d])
+                    .condition(PumpBlock.PROGRESS, PumpBlock.Progress.SIXTY);
+            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_80")))
+                    .rotationY(dirsRot2[d]).addModel()
+                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(HORIZONTAL_FACING, dirs[d])
+                    .condition(PumpBlock.PROGRESS, PumpBlock.Progress.EIGHTY);
+            builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_100")))
+                    .rotationY(dirsRot2[d]).addModel()
+                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(HORIZONTAL_FACING, dirs[d])
+                    .condition(PumpBlock.PROGRESS, PumpBlock.Progress.HUNDRED);
         }
 
+        // Auto Hammers
+        for (var block : List.of(BlocksRegistry.IRON_AUTO_HAMMER, BlocksRegistry.GOLD_AUTO_HAMMER, BlocksRegistry.DIAMOND_AUTO_HAMMER, BlocksRegistry.NETHERITE_AUTO_HAMMER)) {
+            MultiPartBlockStateBuilder b = getMultipartBuilder(block.get());
+            String path = block.getId().getPath();
+            for (DirRotation d : HORIZONTALS) {
+                b.part().modelFile(models().getExistingFile(modLoc("block/" + path)))
+                        .rotationY(d.rotation).addModel()
+                        .condition(AbstractMachineBlock.ACTIVE, false)
+                        .condition(HORIZONTAL_FACING, d.direction);
+                b.part().modelFile(models().getExistingFile(modLoc("block/" + path + "_active")))
+                        .rotationY(d.rotation).addModel()
+                        .condition(AbstractMachineBlock.ACTIVE, true)
+                        .condition(HORIZONTAL_FACING, d.direction);
+            }
+        }
+
+        // Fusing Machine & Super Cooler
+        for (var block: List.of(BlocksRegistry.FUSING_MACHINE, BlocksRegistry.SUPER_COOLER)) {
+            var model = machineModel(block, false);
+            var activeModel = machineModel(block, true);
+            VariantBlockStateBuilder.PartialBlockstate machineBuilder = getVariantBuilder(block.get()).partialState();
+            for (DirRotation d : HORIZONTALS) {
+                machineBuilder.with(HORIZONTAL_FACING, d.direction).with(AbstractMachineBlock.ACTIVE, false)
+                        .setModels(new ConfiguredModel(model, 0, d.rotation, false));
+                machineBuilder.with(HORIZONTAL_FACING, d.direction).with(AbstractMachineBlock.ACTIVE, true)
+                        .setModels(new ConfiguredModel(activeModel, 0, d.rotation, false));
+            }
+            simpleBlockItem(block.get(), model);
+        }
+
+        // Tubes
         TubeLoaderBuilder tlb = models().getBuilder("block/tube").customLoader(TubeLoaderBuilder::new);
         simpleBlock(BlocksRegistry.TUBE.get(), tlb.end());
+        models().withExistingParent("block/tube_inv", modLoc("block/tube_base"));
 
-        simpleBlock(BlocksRegistry.BLUE_MAGMA_BLOCK.get());
-        simpleBlock(BlocksRegistry.CREATIVE_HOT_TEMPERATURE_SOURCE.get());
-        simpleBlock(BlocksRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE.get());
-        simpleBlock(BlocksRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE.get());
-
-        simpleBlock(BlocksRegistry.CAST_IRON_BLOCK.get());
-
+        // Dripper
         ModelFile dripperModel = models().withExistingParent("block/dripper", modLoc("block/dripper_base"));
         simpleBlock(BlocksRegistry.DRIPPER.get(), dripperModel);
 
-        models().withExistingParent("block/tube_inv", modLoc("block/tube_base"));
-
+        // Jar
         ModelFile jarModel = models().withExistingParent("block/jar", modLoc("block/jar_base"));
         simpleBlock(BlocksRegistry.JAR.get(), jarModel);
 
+        // Tempered Jar
         getVariantBuilder(BlocksRegistry.TEMPERED_JAR.get()).forAllStates(state -> {
             Temperature temp = state.getValue(TemperedJarBlock.TEMPERATURE);
             return ConfiguredModel.builder().modelFile(
@@ -86,6 +147,7 @@ public class BlockStatesGenerators extends BlockStateProvider {
             ).build();
         });
 
+        // Jar auto processing block
         EnumMap<Direction, IntIntPair> rots = Util.make(new EnumMap<>(Direction.class), map -> {
             map.put(Direction.UP, IntIntPair.of(180, 0));
             map.put(Direction.NORTH, IntIntPair.of(90, 180));
@@ -93,7 +155,6 @@ public class BlockStatesGenerators extends BlockStateProvider {
             map.put(Direction.WEST, IntIntPair.of(90, 90));
             map.put(Direction.EAST, IntIntPair.of(90, 270));
         });
-
         MultiPartBlockStateBuilder apBuilder = getMultipartBuilder(BlocksRegistry.AUTO_PROCESSING_BLOCK.get());
         apBuilder.part().modelFile(models().getExistingFile(modLoc("block/auto_processing_block"))).addModel();
         AutoProcessingBlock.CONN_PROPS.forEach((dir, prop) -> {
@@ -103,6 +164,25 @@ public class BlockStatesGenerators extends BlockStateProvider {
                     .addModel()
                     .condition(prop, true);
         });
+
+
+        // Misc simple blocks
+
+        simpleBlock(BlocksRegistry.BLUE_MAGMA_BLOCK.get());
+        simpleBlock(BlocksRegistry.CREATIVE_HOT_TEMPERATURE_SOURCE.get());
+        simpleBlock(BlocksRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE.get());
+        simpleBlock(BlocksRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE.get());
+
+        simpleBlock(BlocksRegistry.CAST_IRON_BLOCK.get());
+    }
+
+    private ModelFile machineModel(DeferredBlock<? extends Block> block, boolean active) {
+        String name = block.getId().getPath();
+        String suffix = active ? "_active" : "";
+        return models().withExistingParent(name + suffix, "block/orientable")
+                .texture("top", modLoc("block/" + name + "_top" + suffix))
+                .texture("side", modLoc("block/generic_machine_side"))
+                .texture("front", modLoc("block/" + name + "_front" + suffix));
     }
 
     private static class TubeLoaderBuilder extends CustomLoaderBuilder<BlockModelBuilder> {
@@ -110,4 +190,8 @@ public class BlockStatesGenerators extends BlockStateProvider {
             super(TubeModel.Loader.ID, parent, existingFileHelper, false);
         }
     }
+
+    private record DirRotation(Direction direction, int rotation) {
+    }
+
 }

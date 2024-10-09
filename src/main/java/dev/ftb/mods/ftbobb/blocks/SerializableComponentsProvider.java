@@ -5,7 +5,9 @@ import net.minecraft.core.component.DataComponentType;
 import java.util.List;
 
 /**
- * Implements on block entities which have data that needs to be serialized onto the dropped item.
+ * Implement this on blocks which have data that needs to be serialized onto the dropped item. This is for the
+ * purpose of block loot table data generation; the declared components for each block must also be handled via
+ * applyImplicitComponents() and collectImplicitComponents() in the corresponding block entity.
  */
 @FunctionalInterface
 public interface SerializableComponentsProvider {

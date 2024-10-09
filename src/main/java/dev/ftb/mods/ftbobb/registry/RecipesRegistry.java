@@ -1,10 +1,7 @@
 package dev.ftb.mods.ftbobb.registry;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
-import dev.ftb.mods.ftbobb.recipes.DripperRecipe;
-import dev.ftb.mods.ftbobb.recipes.FTBOBBRecipeType;
-import dev.ftb.mods.ftbobb.recipes.JarRecipe;
-import dev.ftb.mods.ftbobb.recipes.TemperatureSourceRecipe;
+import dev.ftb.mods.ftbobb.recipes.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -36,6 +33,26 @@ public class RecipesRegistry {
             = registerType("dripper", FTBOBBRecipeType::new);
     public static final Supplier<RecipeSerializer<DripperRecipe>> DRIP_SERIALIZER
             = RECIPE_SERIALIZERS.register("dripper", () -> new DripperRecipe.Serializer<>(DripperRecipe::new));
+
+    public static final Supplier<RecipeType<CrookRecipe>> CROOK_TYPE
+            = registerType("crook", FTBOBBRecipeType::new);
+    public static final Supplier<RecipeSerializer<CrookRecipe>> CROOK_SERIALIZER
+            = RECIPE_SERIALIZERS.register("crook", () -> new CrookRecipe.Serializer<>(CrookRecipe::new));
+
+    public static final Supplier<RecipeType<HammerRecipe>> HAMMER_TYPE
+            = registerType("hammer", FTBOBBRecipeType::new);
+    public static final Supplier<RecipeSerializer<HammerRecipe>> HAMMER_SERIALIZER
+            = RECIPE_SERIALIZERS.register("hammer", () -> new HammerRecipe.Serializer<>(HammerRecipe::new));
+
+    public static final Supplier<RecipeType<FusingMachineRecipe>> FUSING_MACHINE_TYPE
+            = registerType("fusing_machine", FTBOBBRecipeType::new);
+    public static final Supplier<RecipeSerializer<FusingMachineRecipe>> FUSING_MACHINE_SERIALIZER
+            = RECIPE_SERIALIZERS.register("fusing_machine", () -> new FusingMachineRecipe.Serializer<>(FusingMachineRecipe::new));
+
+    public static final Supplier<RecipeType<SuperCoolerRecipe>> SUPER_COOLER_TYPE
+            = registerType("supercooler", FTBOBBRecipeType::new);
+    public static final Supplier<RecipeSerializer<SuperCoolerRecipe>> SUPER_COOLER_SERIALIZER
+            = RECIPE_SERIALIZERS.register("supercooler", () -> new SuperCoolerRecipe.Serializer<>(SuperCoolerRecipe::new));
 
     // ---------------------------------------------
 

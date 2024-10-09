@@ -2,7 +2,12 @@ package dev.ftb.mods.ftbobb.registry;
 
 import com.mojang.serialization.MapCodec;
 import dev.ftb.mods.ftbobb.FTBOBB;
+import dev.ftb.mods.ftbobb.blocks.FusingMachineMenu;
+import dev.ftb.mods.ftbobb.blocks.SuperCoolerMenu;
+import dev.ftb.mods.ftbobb.lootmodifiers.CrookModifier;
+import dev.ftb.mods.ftbobb.lootmodifiers.HammerModifier;
 import dev.ftb.mods.ftbobb.recipes.DevEnvironmentCondition;
+import dev.ftb.mods.ftbobb.recipes.SuperCoolerRecipe;
 import dev.ftb.mods.ftbobb.screens.TemperedJarMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -15,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -48,6 +54,8 @@ public class ContentRegistry {
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, FTBOBB.MODID);
 
     public static final Supplier<MenuType<TemperedJarMenu>> TEMPERED_JAR_MENU = registerMenu("tempered_jar", TemperedJarMenu::fromNetwork);
+    public static final Supplier<MenuType<FusingMachineMenu>> FUSING_MACHINE_MENU = registerMenu("fusing_machine", FusingMachineMenu::new);
+    public static final Supplier<MenuType<SuperCoolerMenu>> SUPER_COOLER_MENU = registerMenu("super_cooler", SuperCoolerMenu::new);
 
     //-----------------------------------------------
 
@@ -59,11 +67,23 @@ public class ContentRegistry {
 
     //-----------------------------------------------
 
+    public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS_REGISTRY
+            = DeferredRegister.create(NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, FTBOBB.MODID);
+
+    public static final Supplier<MapCodec<? extends IGlobalLootModifier>> HAMMER_LOOT_MODIFIER
+            = LOOT_MODIFIERS_REGISTRY.register("hammer_loot_modifier", HammerModifier.CODEC);
+    public static final Supplier<MapCodec<? extends IGlobalLootModifier>> CROOK_LOOT_MODIFIER
+            = LOOT_MODIFIERS_REGISTRY.register("crook_loot_modifier", CrookModifier.CODEC);
+
+
+    //-----------------------------------------------
+
     public static void init(IEventBus bus) {
         CREATIVE_MODE_TABS.register(bus);
         DAMAGE_TYPES.register(bus);
         MENU_TYPES.register(bus);
         CONDITIONS.register(bus);
+        LOOT_MODIFIERS_REGISTRY.register(bus);
     }
 
     private static <C extends AbstractContainerMenu, T extends MenuType<C>> Supplier<T> registerMenu(String name, IContainerFactory<? extends C> f) {

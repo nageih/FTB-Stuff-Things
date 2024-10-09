@@ -6,6 +6,7 @@
 		"base": "ftbobb:block/gold_auto_hammer_base",
 		"hammer": "ftbobb:block/gold_auto_hammer"
 	},
+	"render_type": "cutout",
 	"elements": [
 		{
 			"name": "frame_sw",

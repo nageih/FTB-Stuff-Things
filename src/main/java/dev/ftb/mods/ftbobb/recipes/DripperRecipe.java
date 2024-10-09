@@ -4,10 +4,10 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.ftb.mods.ftbobb.registry.RecipesRegistry;
+import dev.ftb.mods.ftbobb.util.MiscUtil;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,7 +27,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Map;
 
-public class DripperRecipe implements Recipe<NoInventory> {
+public class DripperRecipe extends BaseRecipe<DripperRecipe> {
 	private final String inputStateStr;
 	private final Block inputBlock;
 	private final Map<Property<?>, Comparable<?>> inputProperties;
@@ -38,6 +38,8 @@ public class DripperRecipe implements Recipe<NoInventory> {
 	private final boolean consumeFluidOnFail;
 
 	public DripperRecipe(String inputStateStr, String outputStateStr, FluidStack fluid, double chance, boolean consumeFluidOnFail) {
+		super(RecipesRegistry.DRIP_SERIALIZER, RecipesRegistry.DRIP_TYPE);
+
 		this.inputStateStr = inputStateStr;
 		this.outputString = outputStateStr;
 		this.fluid = fluid;
@@ -107,36 +109,6 @@ public class DripperRecipe implements Recipe<NoInventory> {
 		return true;
 	}
 
-	@Override
-	public boolean matches(NoInventory inv, Level world) {
-		return true;
-	}
-
-	@Override
-	public ItemStack assemble(NoInventory input, HolderLookup.Provider registries) {
-		return ItemStack.EMPTY;
-	}
-
-	@Override
-	public boolean canCraftInDimensions(int width, int height) {
-		return true;
-	}
-
-	@Override
-	public ItemStack getResultItem(HolderLookup.Provider registries) {
-		return ItemStack.EMPTY;
-	}
-
-	@Override
-	public RecipeSerializer<?> getSerializer() {
-		return RecipesRegistry.DRIP_SERIALIZER.get();
-	}
-
-	@Override
-	public RecipeType<?> getType() {
-		return RecipesRegistry.DRIP_TYPE.get();
-	}
-
 	public interface IFactory<T extends DripperRecipe> {
 		T create(String inputString, String outputString, FluidStack fluid, double chance, boolean consumeFluidOnFail);
 	}
@@ -150,7 +122,7 @@ public class DripperRecipe implements Recipe<NoInventory> {
 					Codec.STRING.fieldOf("input").forGetter(DripperRecipe::getInputStateStr),
 					Codec.STRING.fieldOf("output").forGetter(DripperRecipe::getOutputStateStr),
 					FluidStack.CODEC.fieldOf("fluid").forGetter(DripperRecipe::getFluid),
-					Codec.DOUBLE.validate(Serializer::checkChanceRange).optionalFieldOf("chance", 1.0).forGetter(DripperRecipe::getChance),
+					Codec.DOUBLE.validate(MiscUtil::validateChanceRange).optionalFieldOf("chance", 1.0).forGetter(DripperRecipe::getChance),
 					Codec.BOOL.optionalFieldOf("consume_fluid_on_fail", false).forGetter(DripperRecipe::consumeFluidOnFail)
 			).apply(builder, factory::create));
 
@@ -162,10 +134,6 @@ public class DripperRecipe implements Recipe<NoInventory> {
 					ByteBufCodecs.BOOL, DripperRecipe::consumeFluidOnFail,
 					factory::create
 			);
-		}
-
-		private static DataResult<Double> checkChanceRange(double d) {
-			return d > 0.0 && d <= 1.0 ? DataResult.success(d) : DataResult.error(() -> "must be in range (0.0 -> 1.0]");
 		}
 
 		@Override

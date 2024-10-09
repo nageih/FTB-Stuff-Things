@@ -3,8 +3,11 @@ package dev.ftb.mods.ftbobb.integration.jei;
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.recipes.IHideableRecipe;
 import dev.ftb.mods.ftbobb.recipes.TemperatureSourceRecipe;
+import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import dev.ftb.mods.ftbobb.registry.RecipesRegistry;
+import dev.ftb.mods.ftbobb.screens.FusingMachineScreen;
+import dev.ftb.mods.ftbobb.screens.SuperCoolerScreen;
 import dev.ftb.mods.ftbobb.screens.TemperedJarScreen;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
 import mezz.jei.api.IModPlugin;
@@ -57,7 +60,10 @@ public class OBBJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(
                 new TemperedJarCategory(),
                 new TemperatureSourceCategory(),
-                new DripperCategory()
+                new DripperCategory(),
+                new HammerCategory(),
+                new FusingMachineCategory(),
+                new SuperCoolerCategory()
         );
     }
 
@@ -66,6 +72,9 @@ public class OBBJeiPlugin implements IModPlugin {
         addRecipeType(registration, RecipesRegistry.TEMPERED_JAR_TYPE.get(), RecipeTypes.TEMPERED_JAR, TemperedJarCategory::sortRecipes);
         addRecipeType(registration, RecipesRegistry.TEMPERATURE_SOURCE_TYPE.get(), RecipeTypes.TEMPERATURE_SOURCE, TemperatureSourceRecipe::sortRecipes);
         addRecipeType(registration, RecipesRegistry.DRIP_TYPE.get(), RecipeTypes.DRIPPER);
+        addRecipeType(registration, RecipesRegistry.HAMMER_TYPE.get(), RecipeTypes.HAMMER);
+        addRecipeType(registration, RecipesRegistry.FUSING_MACHINE_TYPE.get(), RecipeTypes.FUSING_MACHINE);
+        addRecipeType(registration, RecipesRegistry.SUPER_COOLER_TYPE.get(), RecipeTypes.SUPER_COOLER);
     }
 
     @Override
@@ -75,11 +84,22 @@ public class OBBJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(ItemsRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE.toStack(), RecipeTypes.TEMPERATURE_SOURCE);
         registration.addRecipeCatalyst(ItemsRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE.toStack(), RecipeTypes.TEMPERATURE_SOURCE);
         registration.addRecipeCatalyst(ItemsRegistry.DRIPPER.toStack(), RecipeTypes.DRIPPER);
+        registration.addRecipeCatalyst(ItemsRegistry.FUSING_MACHINE.toStack(), RecipeTypes.FUSING_MACHINE);
+        registration.addRecipeCatalyst(ItemsRegistry.SUPER_COOLER.toStack(), RecipeTypes.SUPER_COOLER);
+
+        for (var item : List.of(ItemsRegistry.STONE_HAMMER, ItemsRegistry.IRON_HAMMER, ItemsRegistry.GOLD_HAMMER, ItemsRegistry.DIAMOND_HAMMER, ItemsRegistry.NETHERITE_HAMMER)) {
+            registration.addRecipeCatalyst(item.toStack(), RecipeTypes.HAMMER);
+        }
+        for (var block : List.of(BlocksRegistry.IRON_AUTO_HAMMER, BlocksRegistry.GOLD_AUTO_HAMMER, BlocksRegistry.DIAMOND_AUTO_HAMMER, BlocksRegistry.NETHERITE_AUTO_HAMMER)) {
+            registration.addRecipeCatalyst(block.toStack(), RecipeTypes.HAMMER);
+        }
     }
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addGuiContainerHandler(TemperedJarScreen.class, TemperedJarCategory.TemperedJarContainerHandler.INSTANCE);
+        registration.addGuiContainerHandler(TemperedJarScreen.class, TemperedJarCategory.ContainerHandler.INSTANCE);
+        registration.addGuiContainerHandler(FusingMachineScreen.class, FusingMachineCategory.ContainerHandler.INSTANCE);
+        registration.addGuiContainerHandler(SuperCoolerScreen.class, SuperCoolerCategory.ContainerHandler.INSTANCE);
     }
 
     @Override

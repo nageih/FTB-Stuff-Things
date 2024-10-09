@@ -1,13 +1,12 @@
 package dev.ftb.mods.ftbobb.client;
 
 import dev.ftb.mods.ftbobb.client.model.TubeModel;
-import dev.ftb.mods.ftbobb.client.renders.JarBlockEntityRenderer;
-import dev.ftb.mods.ftbobb.client.renders.PumpBlockEntityRender;
-import dev.ftb.mods.ftbobb.client.renders.SluiceBlockEntityRenderer;
-import dev.ftb.mods.ftbobb.client.renders.TemperedJarBlockEntityRenderer;
+import dev.ftb.mods.ftbobb.client.renders.*;
 import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbobb.registry.ContentRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
+import dev.ftb.mods.ftbobb.screens.FusingMachineScreen;
+import dev.ftb.mods.ftbobb.screens.SuperCoolerScreen;
 import dev.ftb.mods.ftbobb.screens.TemperedJarScreen;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -32,6 +31,11 @@ public class ClientSetup {
 
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.PUMP.get(), PumpBlockEntityRender::new);
 
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.IRON_HAMMER.get(), AutoHammerRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.GOLD_HAMMER.get(), AutoHammerRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.DIAMOND_HAMMER.get(), AutoHammerRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.NETHERITE_HAMMER.get(), AutoHammerRenderer::new);
+
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.JAR.get(), JarBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.TEMPERED_JAR.get(), TemperedJarBlockEntityRenderer::new);
     }
@@ -42,6 +46,8 @@ public class ClientSetup {
 
     private static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ContentRegistry.TEMPERED_JAR_MENU.get(), TemperedJarScreen::new);
+        event.register(ContentRegistry.FUSING_MACHINE_MENU.get(), FusingMachineScreen::new);
+        event.register(ContentRegistry.SUPER_COOLER_MENU.get(), SuperCoolerScreen::new);
     }
 
     private static void registerColorHandlers(RegisterColorHandlersEvent.Item event) {

@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbobb:dev_environment"
+    }
+  ],
+  "type": "ftbobb:fusing_machine",
+  "energy": {
+    "fe_per_tick": 100,
+    "ticks_to_process": 60
+  },
+  "inputs": [
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:gravel"
+    }
+  ],
+  "result": {
+    "amount": 1000,
+    "id": "minecraft:lava"
+  }
+}

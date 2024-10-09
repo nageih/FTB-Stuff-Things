@@ -25,5 +25,6 @@ public class DataGenerators {
         generator.addProvider(event.includeServer(), new ItemTagsGenerator(packOutput, event.getLookupProvider(), blockTagsProvider.contentsGetter(), existingFileHelper));
         generator.addProvider(event.includeServer(), new RecipesGenerator(packOutput, event.getLookupProvider()));
         generator.addProvider(event.includeServer(), new LootTablesGenerator(packOutput, event.getLookupProvider()));
+        generator.addProvider(event.includeServer(), new LootModifiersGenerator(packOutput, event.getLookupProvider()));
     }
 }

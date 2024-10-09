@@ -27,11 +27,17 @@ public class ItemTagsGenerator extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         appendToTag(Tags.Items.INGOTS, FTBOBBTags.Items.INGOTS_CAST_IRON);
         appendToTag(Tags.Items.NUGGETS, FTBOBBTags.Items.NUGGETS_CAST_IRON);
-//        appendToTag(FTBOBBTags.Items.GEARS, FTBOBBTags.Items.GEARS_CAST_IRON);
 
         addItemsToTag(FTBOBBTags.Items.NUGGETS_CAST_IRON, ItemsRegistry.CAST_IRON_NUGGET);
         addItemsToTag(FTBOBBTags.Items.INGOTS_CAST_IRON, ItemsRegistry.CAST_IRON_INGOT);
         addItemsToTag(FTBOBBTags.Items.GEARS, ItemsRegistry.CAST_IRON_GEAR);
+
+        addItemsToTag(FTBOBBTags.Items.HAMMERS,
+                ItemsRegistry.STONE_HAMMER, ItemsRegistry.IRON_HAMMER, ItemsRegistry.GOLD_HAMMER,
+                ItemsRegistry.DIAMOND_HAMMER, ItemsRegistry.NETHERITE_HAMMER
+        );
+
+        addItemsToTag(FTBOBBTags.Items.CROOKS, ItemsRegistry.CROOK);
     }
 
     @SafeVarargs
