@@ -2,7 +2,10 @@ package dev.ftb.mods.ftbobb.registry;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.items.*;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -37,6 +40,7 @@ public class ItemsRegistry {
                     DiggerItem.createAttributes(Tiers.STONE, 2, -2.8F)
             ))
     );
+    public static final DeferredItem<Item> STONE_ROD = simpleItem("stone_rod");
 
     //#region Block Items
     public static final DeferredItem<BlockItem> OAK_SLUICE = blockItem("oak_sluice", BlocksRegistry.OAK_SLUICE);

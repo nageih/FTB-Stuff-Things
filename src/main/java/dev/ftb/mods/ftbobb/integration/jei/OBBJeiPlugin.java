@@ -1,14 +1,14 @@
 package dev.ftb.mods.ftbobb.integration.jei;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
+import dev.ftb.mods.ftbobb.client.screens.FusingMachineScreen;
+import dev.ftb.mods.ftbobb.client.screens.SuperCoolerScreen;
+import dev.ftb.mods.ftbobb.client.screens.TemperedJarScreen;
 import dev.ftb.mods.ftbobb.crafting.IHideableRecipe;
 import dev.ftb.mods.ftbobb.crafting.recipe.TemperatureSourceRecipe;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import dev.ftb.mods.ftbobb.registry.RecipesRegistry;
-import dev.ftb.mods.ftbobb.client.screens.FusingMachineScreen;
-import dev.ftb.mods.ftbobb.client.screens.SuperCoolerScreen;
-import dev.ftb.mods.ftbobb.client.screens.TemperedJarScreen;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -63,7 +63,8 @@ public class OBBJeiPlugin implements IModPlugin {
                 new DripperCategory(),
                 new HammerCategory(),
                 new FusingMachineCategory(),
-                new SuperCoolerCategory()
+                new SuperCoolerCategory(),
+                new CrookCategory()
         );
     }
 
@@ -72,6 +73,7 @@ public class OBBJeiPlugin implements IModPlugin {
         addRecipeType(registration, RecipesRegistry.TEMPERED_JAR_TYPE.get(), RecipeTypes.TEMPERED_JAR, TemperedJarCategory::sortRecipes);
         addRecipeType(registration, RecipesRegistry.TEMPERATURE_SOURCE_TYPE.get(), RecipeTypes.TEMPERATURE_SOURCE, TemperatureSourceRecipe::sortRecipes);
         addRecipeType(registration, RecipesRegistry.DRIP_TYPE.get(), RecipeTypes.DRIPPER);
+        addRecipeType(registration, RecipesRegistry.CROOK_TYPE.get(), RecipeTypes.CROOK);
         addRecipeType(registration, RecipesRegistry.HAMMER_TYPE.get(), RecipeTypes.HAMMER);
         addRecipeType(registration, RecipesRegistry.FUSING_MACHINE_TYPE.get(), RecipeTypes.FUSING_MACHINE);
         addRecipeType(registration, RecipesRegistry.SUPER_COOLER_TYPE.get(), RecipeTypes.SUPER_COOLER);
@@ -83,6 +85,7 @@ public class OBBJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(ItemsRegistry.CREATIVE_HOT_TEMPERATURE_SOURCE.toStack(), RecipeTypes.TEMPERATURE_SOURCE);
         registration.addRecipeCatalyst(ItemsRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE.toStack(), RecipeTypes.TEMPERATURE_SOURCE);
         registration.addRecipeCatalyst(ItemsRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE.toStack(), RecipeTypes.TEMPERATURE_SOURCE);
+        registration.addRecipeCatalyst(ItemsRegistry.CROOK.toStack(), RecipeTypes.CROOK);
         registration.addRecipeCatalyst(ItemsRegistry.DRIPPER.toStack(), RecipeTypes.DRIPPER);
         registration.addRecipeCatalyst(ItemsRegistry.FUSING_MACHINE.toStack(), RecipeTypes.FUSING_MACHINE);
         registration.addRecipeCatalyst(ItemsRegistry.SUPER_COOLER.toStack(), RecipeTypes.SUPER_COOLER);

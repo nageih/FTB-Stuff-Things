@@ -36,6 +36,7 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbobb.tooltip.hammers", "Crushes materials down to their core components");
         add("ftbobb.tooltip.energy", "Energy: %s FE");
         add("ftbobb.tooltip.fluid", "Fluid: %smB %s");
+        add("ftbobb.crook.limit", "Max drops per block broken: %s");
         add("ftbobb.jade.processing", "Processing");
         add("ftbobb.jade.buffer", "Buffer");
         add("config.jade.plugin_ftbobb.autohammer", "Autohammer");
@@ -90,5 +91,6 @@ public class I18nGenerator extends LanguageProvider {
         addItem(ItemsRegistry.NETHERITE_HAMMER, "Netherite Hammer");
 
         addItem(ItemsRegistry.CROOK, "Stone Crook");
+        addItem(ItemsRegistry.STONE_ROD, "Stone Rod");
     }
 }

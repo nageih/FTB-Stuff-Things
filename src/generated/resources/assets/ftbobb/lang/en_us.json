@@ -24,6 +24,7 @@
   "block.ftbobb.tube": "Cast Iron Tube",
   "config.jade.plugin_ftbobb.autohammer": "Autohammer",
   "ftbobb.any_block": "Any Block",
+  "ftbobb.crook.limit": "Max drops per block broken: %s",
   "ftbobb.dripper.chance": "Chance: %s%% / sec",
   "ftbobb.dripper.consume_on_fail": "Fluid is consumed even on failed attempt",
   "ftbobb.efficiency": "Efficiency: %s",
@@ -62,6 +63,7 @@
   "item.ftbobb.netherite_hammer": "Netherite Hammer",
   "item.ftbobb.stone_crook": "Stone Crook",
   "item.ftbobb.stone_hammer": "Stone Hammer",
+  "item.ftbobb.stone_rod": "Stone Rod",
   "item.ftbobb.tempered_glass": "Tempered Glass",
   "item.ftbobb.water_bowl": "Water Bowl"
 }

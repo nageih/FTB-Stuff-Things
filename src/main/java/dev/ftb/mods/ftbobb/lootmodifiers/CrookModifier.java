@@ -4,8 +4,8 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.ftb.mods.ftbobb.FTBOBBTags;
-import dev.ftb.mods.ftbobb.crafting.recipe.CrookRecipe;
 import dev.ftb.mods.ftbobb.crafting.ToolsRecipeCache;
+import dev.ftb.mods.ftbobb.crafting.recipe.CrookRecipe;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -45,6 +45,7 @@ public class CrookModifier extends LootModifier {
         }
 
         CrookRecipe.CrookDrops crookDrops = ToolsRecipeCache.getCrookDrops(entity.level(), new ItemStack(blockState.getBlock()));
+        int maxDrops = crookDrops.max() <= 0 ? Integer.MAX_VALUE : crookDrops.max();
         if (!crookDrops.items().isEmpty()) {
             RandomSource random = context.getRandom();
 
@@ -59,7 +60,7 @@ public class CrookModifier extends LootModifier {
             if (crookDrops.replaceDrops()) {
                 list.clear();
             }
-            collect.stream().limit(crookDrops.max()).forEach(list::add);
+            collect.stream().limit(maxDrops).forEach(list::add);
         }
 
         return list;

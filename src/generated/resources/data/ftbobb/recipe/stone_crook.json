@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "item": "ftbobb:stone_rod"
+    }
+  },
+  "pattern": [
+    "SS",
+    " S",
+    " S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ftbobb:stone_crook"
+  }
+}

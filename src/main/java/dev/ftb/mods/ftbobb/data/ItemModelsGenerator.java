@@ -54,6 +54,7 @@ public class ItemModelsGenerator extends ItemModelProvider {
         simpleItem(ItemsRegistry.NETHERITE_HAMMER, "item/netherite_hammer");
 
         simpleItem(ItemsRegistry.CROOK, "item/stone_crook");
+        simpleItem(ItemsRegistry.STONE_ROD, "item/stone_rod");
     }
 
     private ItemModelBuilder simpleItem(DeferredItem<? extends Item> item, String... textures) {

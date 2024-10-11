@@ -2,9 +2,9 @@ package dev.ftb.mods.ftbobb.data;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.FTBOBBTags;
-import dev.ftb.mods.ftbobb.data.recipe.*;
 import dev.ftb.mods.ftbobb.crafting.DevEnvironmentCondition;
 import dev.ftb.mods.ftbobb.crafting.ItemWithChance;
+import dev.ftb.mods.ftbobb.data.recipe.*;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
@@ -104,6 +104,14 @@ public class RecipesGenerator extends RecipeProvider {
                 'S', Tags.Items.RODS_WOODEN,
                 'P', ItemTags.WOODEN_SLABS,
                 'B', ItemTags.WOODEN_BUTTONS
+        ).save(output);
+        shaped(ItemsRegistry.STONE_ROD.get(), Items.COBBLESTONE,
+                "S/S",
+                'S', Items.COBBLESTONE
+        ).save(output);
+        shaped(ItemsRegistry.CROOK.get(), ItemsRegistry.STONE_ROD,
+                "SS/ S/ S",
+                'S', ItemsRegistry.STONE_ROD
         ).save(output);
 
         temperedJarRecipes(output);
