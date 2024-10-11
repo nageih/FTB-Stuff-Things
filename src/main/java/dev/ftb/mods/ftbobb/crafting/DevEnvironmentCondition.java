@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbobb.crafting;
 
 import com.mojang.serialization.MapCodec;
+import dev.ftb.mods.ftbobb.Config;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.conditions.ICondition;
 
@@ -11,7 +12,7 @@ public enum DevEnvironmentCondition implements ICondition {
 
     @Override
     public boolean test(IContext context) {
-        return !FMLLoader.isProduction();
+        return Config.INCLUDE_DEV_RECIPES.get() || !FMLLoader.isProduction();
     }
 
     @Override

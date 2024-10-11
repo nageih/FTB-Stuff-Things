@@ -1,5 +1,6 @@
 package dev.ftb.mods.ftbobb.data.recipe;
 
+import dev.ftb.mods.ftbobb.crafting.DevEnvironmentCondition;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -29,6 +30,14 @@ public abstract class BaseRecipeBuilder<T extends Recipe<?>> implements RecipeBu
 
     @Override
     public void save(RecipeOutput recipeOutput, ResourceLocation id) {
-        recipeOutput.accept(id, buildRecipe(), null);
+        T recipe = buildRecipe();
+        ResourceLocation id1 = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), recipe.getType() + "/" + id.getPath());
+        recipeOutput.accept(id1, recipe, null);
+    }
+
+    public void saveTest(RecipeOutput recipeOutput, ResourceLocation id) {
+        T recipe = buildRecipe();
+        ResourceLocation id1 = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), recipe.getType() + "/dev_test_" + id.getPath());
+        recipeOutput.withConditions(DevEnvironmentCondition.INSTANCE).accept(id1, recipe, null);
     }
 }

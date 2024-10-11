@@ -1,10 +1,18 @@
 package dev.ftb.mods.ftbobb;
 
+import dev.ftb.mods.ftblibrary.snbt.config.BooleanValue;
 import dev.ftb.mods.ftblibrary.snbt.config.IntValue;
 import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig;
 
+import static dev.ftb.mods.ftblibrary.snbt.config.ConfigUtil.CONFIG_DIR;
+import static dev.ftb.mods.ftblibrary.snbt.config.ConfigUtil.loadDefaulted;
+
 public class Config {
     private static final SNBTConfig CONFIG = SNBTConfig.create("ftb-obb");
+
+    private static final SNBTConfig GENERAL_CONFIG = CONFIG.addGroup("general");
+    public static final BooleanValue INCLUDE_DEV_RECIPES = GENERAL_CONFIG.addBoolean("include_dev_recipes", false)
+            .comment("If true, dev/testing recipes will be available outside a development environment", "Leave this false unless actually testing the mod.");
 
     private static final SNBTConfig SLUICE_CONFIG = CONFIG.addGroup("sluice");
     public static final SNBTConfig OAK_SLUICE_CONFIG = createSluiceConfig(SLUICE_CONFIG, "oakSluice", 1, 1, 12000, false, false, false, 0);
@@ -23,7 +31,7 @@ public class Config {
             .comment("Speed of the netherite auto-hammer as ticks taken to process a block");
 
     public static void init() {
-        // TODO: Implement
+        loadDefaulted(CONFIG, CONFIG_DIR, FTBOBB.MODID, FTBOBB.MODID + ".snbt");
     }
 
     private static SNBTConfig createSluiceConfig(SNBTConfig parent, String name, double timeMod, double fluidMod, int tankCap, boolean allowsIO, boolean allowsTank, boolean upgradeable, int energyCost) {

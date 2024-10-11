@@ -129,7 +129,7 @@ public class RecipesGenerator extends RecipeProvider {
         temperedJar(List.of(SizedIngredient.of(Tags.Items.COBBLESTONES, 4)), List.of(),
                 List.of(), List.of(new FluidStack(Fluids.LAVA, 10)),
                 Temperature.SUPERHEATED
-        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("jar/cobble_to_lava"));
+        ).saveTest(output, FTBOBB.id("cobble_to_lava"));
 
         temperedJar(
                 List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1)),
@@ -137,114 +137,114 @@ public class RecipesGenerator extends RecipeProvider {
                 List.of(),
                 List.of(new FluidStack(Fluids.LAVA, 1000)),
                 Temperature.HOT
-        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("jar/redstone_to_lava"));
+        ).saveTest(output, FTBOBB.id("redstone_to_lava"));
         temperedJar(
                 List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1), SizedIngredient.of(Tags.Items.DUSTS_GLOWSTONE, 1)),
                 List.of(SizedFluidIngredient.of(Fluids.WATER, 1000)),
                 List.of(),
                 List.of(new FluidStack(Fluids.LAVA, 2000)),
                 Temperature.HOT
-        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("jar/redstone_glowstone_to_lava"));
+        ).saveTest(output, FTBOBB.id("redstone_glowstone_to_lava"));
 
         temperedJar(List.of(), List.of(SizedFluidIngredient.of(Fluids.WATER, 1000), SizedFluidIngredient.of(Fluids.LAVA, 1000)),
                 List.of(new ItemStack(Items.OBSIDIAN)), List.of(),
                 Temperature.NORMAL, 60
-        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("jar/obsidian"));
+        ).saveTest(output, FTBOBB.id("obsidian"));
 
         temperedJar(List.of(SizedIngredient.of(Items.SUGAR, 1)), List.of(SizedFluidIngredient.of(Fluids.WATER, 1000)),
                 List.of(new ItemStack(Blocks.GLASS, 4)), List.of(),
                 Temperature.CHILLED
-        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("jar/sugar_glass"));
+        ).saveTest(output, FTBOBB.id("sugar_glass"));
     }
 
     private void temperatureSourceRecipes(RecipeOutput output) {
         new TemperatureSourceRecipeBuilder(Blocks.STONE, Temperature.NORMAL, 1.0)
                 .withDisplayItem(Util.make(Blocks.STONE.asItem().getDefaultInstance(),
                         stack -> stack.set(DataComponents.CUSTOM_NAME, Component.translatable("ftbobb.any_block"))))
-                .save(output, FTBOBB.id("temperature_source/any_block"));
+                .save(output, FTBOBB.id("any_block"));
         new TemperatureSourceRecipeBuilder(Blocks.BEACON, Temperature.SUPERHEATED, 4.0)
-                .save(output, FTBOBB.id("temperature_source/beacon"));
+                .save(output, FTBOBB.id("beacon"));
         new TemperatureSourceRecipeBuilder(Blocks.BLUE_ICE, Temperature.CHILLED, 4.0)
-                .save(output, FTBOBB.id("temperature_source/blue_ice"));
+                .save(output, FTBOBB.id("blue_ice"));
         new TemperatureSourceRecipeBuilder(BlocksRegistry.BLUE_MAGMA_BLOCK.get(), Temperature.SUPERHEATED, 4.0)
-                .save(output, FTBOBB.id("temperature_source/blue_magma_block"));
+                .save(output, FTBOBB.id("blue_magma_block"));
         new TemperatureSourceRecipeBuilder("minecraft:campfire[lit=true]", Temperature.HOT, 0.5)
-                .save(output, FTBOBB.id("temperature_source/campfire"));
+                .save(output, FTBOBB.id("campfire"));
         new TemperatureSourceRecipeBuilder(BlocksRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE.get(), Temperature.SUPERHEATED, 100.0)
                 .hideFromJEI()
-                .save(output, FTBOBB.id("temperature_source/creative_high"));
+                .save(output, FTBOBB.id("creative_high"));
         new TemperatureSourceRecipeBuilder(BlocksRegistry.CREATIVE_HOT_TEMPERATURE_SOURCE.get(), Temperature.HOT, 100.0)
                 .hideFromJEI()
-                .save(output, FTBOBB.id("temperature_source/creative_low"));
+                .save(output, FTBOBB.id("creative_low"));
         new TemperatureSourceRecipeBuilder(BlocksRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE.get(), Temperature.CHILLED, 100.0)
                 .hideFromJEI()
-                .save(output, FTBOBB.id("temperature_source/creative_subzero"));
+                .save(output, FTBOBB.id("creative_subzero"));
         new TemperatureSourceRecipeBuilder(Blocks.CRYING_OBSIDIAN, Temperature.NORMAL, 3.0)
-                .save(output, FTBOBB.id("temperature_source/crying_obsidian"));
+                .save(output, FTBOBB.id("crying_obsidian"));
         new TemperatureSourceRecipeBuilder(Blocks.FIRE, Temperature.HOT, 0.75)
                 .withDisplayItem(Util.make(Items.FLINT_AND_STEEL.getDefaultInstance(),
                         stack -> stack.set(DataComponents.CUSTOM_NAME, Blocks.FIRE.getName())))
-                .save(output, FTBOBB.id("temperature_source/fire"));
+                .save(output, FTBOBB.id("fire"));
         new TemperatureSourceRecipeBuilder(Blocks.GLOWSTONE, Temperature.NORMAL, 1.25)
-                .save(output, FTBOBB.id("temperature_source/glowstone"));
+                .save(output, FTBOBB.id("glowstone"));
         new TemperatureSourceRecipeBuilder(Blocks.ICE, Temperature.CHILLED, 0.25)
-                .save(output, FTBOBB.id("temperature_source/ice"));
+                .save(output, FTBOBB.id("ice"));
         new TemperatureSourceRecipeBuilder(Blocks.LAVA, Temperature.HOT, 4.0)
                 .withDisplayItem(Items.LAVA_BUCKET.getDefaultInstance())
-                .save(output, FTBOBB.id("temperature_source/lava"));
+                .save(output, FTBOBB.id("lava"));
         new TemperatureSourceRecipeBuilder(Blocks.MAGMA_BLOCK, Temperature.HOT, 1.0)
-                .save(output, FTBOBB.id("temperature_source/magma_block"));
+                .save(output, FTBOBB.id("magma_block"));
         new TemperatureSourceRecipeBuilder(Blocks.PACKED_ICE, Temperature.CHILLED, 1.0)
-                .save(output, FTBOBB.id("temperature_source/packed_ice"));
+                .save(output, FTBOBB.id("packed_ice"));
         new TemperatureSourceRecipeBuilder(Blocks.RESPAWN_ANCHOR, Temperature.NORMAL, 8.0)
-                .save(output, FTBOBB.id("temperature_source/respawn_anchor"));
+                .save(output, FTBOBB.id("respawn_anchor"));
         new TemperatureSourceRecipeBuilder("minecraft:soul_campfire[lit=true]", Temperature.SUPERHEATED, 0.5)
-                .save(output, FTBOBB.id("temperature_source/soul_campfire"));
+                .save(output, FTBOBB.id("soul_campfire"));
         new TemperatureSourceRecipeBuilder(Blocks.SOUL_FIRE, Temperature.SUPERHEATED, 0.75)
                 .withDisplayItem(Util.make(Items.FLINT_AND_STEEL.getDefaultInstance(),
                         stack -> stack.set(DataComponents.CUSTOM_NAME, Blocks.SOUL_FIRE.getName())))
-                .save(output, FTBOBB.id("temperature_source/soul_fire"));
+                .save(output, FTBOBB.id("soul_fire"));
         new TemperatureSourceRecipeBuilder(Blocks.TORCH, Temperature.HOT, 0.25)
-                .save(output, FTBOBB.id("temperature_source/torch"));
+                .save(output, FTBOBB.id("torch"));
         new TemperatureSourceRecipeBuilder(Blocks.WALL_TORCH, Temperature.HOT, 0.25)
                 .hideFromJEI() // looks identical to torch
-                .save(output, FTBOBB.id("temperature_source/wall_torch"));
+                .save(output, FTBOBB.id("wall_torch"));
     }
 
     private void dripperRecipes(RecipeOutput output) {
         new DripperRecipeBuilder(stateStr(Blocks.DIRT), stateStr(Blocks.MUD), new FluidStack(Fluids.WATER, 50))
                 .withChance(0.2)
-                .save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("dripper/dirt_to_mud"));
+                .saveTest(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("dirt_to_mud"));
         new DripperRecipeBuilder(stateStr(Blocks.IRON_BLOCK), stateStr(Blocks.GOLD_BLOCK), new FluidStack(Fluids.LAVA, 250))
                 .withChance(0.01)
-                .save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("dripper/iron_to_gold"));
+                .saveTest(output, FTBOBB.id("iron_to_gold"));
         new DripperRecipeBuilder(stateStr(Blocks.SAND), stateStr(Blocks.CLAY), new FluidStack(Fluids.WATER, 5))
                 .withChance(0.1)
                 .consumeFluidOnFail()
-                .save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("dripper/sand_to_clay"));
+                .saveTest(output, FTBOBB.id("sand_to_clay"));
         new DripperRecipeBuilder("minecraft:campfire[lit=false]", "minecraft:campfire[lit=true]", new FluidStack(Fluids.LAVA, 250))
                 .withChance(0.5)
-                .save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("dripper/campfire_lighting"));
+                .saveTest(output, FTBOBB.id("campfire_lighting"));
     }
 
     private void crookRecipes(RecipeOutput output) {
         new CrookRecipeBuilder(Ingredient.of(ItemTags.LEAVES), List.of(
                 new ItemWithChance(new ItemStack(Items.GOLD_NUGGET), 0.5),
                 new ItemWithChance(new ItemStack(Items.IRON_NUGGET), 0.5)
-        )).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("crook/nuggets_from_leaves"));
+        )).saveTest(output, FTBOBB.id("nuggets_from_leaves"));
 
         new CrookRecipeBuilder(Ingredient.of(Blocks.SHORT_GRASS), List.of(
                 new ItemWithChance(new ItemStack(Items.STRING), 0.5)
-        )).keepExistingDrops().save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("crook/string_from_grass"));
+        )).keepExistingDrops().saveTest(output, FTBOBB.id("string_from_grass"));
     }
 
     private void hammerRecipes(RecipeOutput output) {
         new HammerRecipeBuilder(Ingredient.of(Items.COBBLESTONE), List.of(
                 new ItemStack(Blocks.GRAVEL)
-        )).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("hammer/gravel_from_cobblestone"));
+        )).saveTest(output, FTBOBB.id("gravel_from_cobblestone"));
         new HammerRecipeBuilder(Ingredient.of(Items.GRAVEL), List.of(
                 new ItemStack(Blocks.SAND)
-        )).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("hammer/sand_from_gravel"));
+        )).saveTest(output, FTBOBB.id("sand_from_gravel"));
         new HammerRecipeBuilder(Ingredient.of(Items.COBBLED_DEEPSLATE), List.of(
                 new ItemStack(Blocks.GRAVEL, 64),
                 new ItemStack(Blocks.GRAVEL, 64),
@@ -255,7 +255,7 @@ public class RecipesGenerator extends RecipeProvider {
                 new ItemStack(Blocks.GRAVEL, 64),
                 new ItemStack(Blocks.GRAVEL, 64),
                 new ItemStack(Blocks.GRAVEL, 64)
-        )).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("hammer/gravel_from_deepslate"));
+        )).saveTest(output, FTBOBB.id("gravel_from_deepslate"));
     }
 
     private void fusingMachineRecipes(RecipeOutput output) {
@@ -263,17 +263,17 @@ public class RecipesGenerator extends RecipeProvider {
                 List.of(Ingredient.of(Items.COBBLESTONE), Ingredient.of(Items.GRAVEL)),
                 new FluidStack(Fluids.LAVA, 1000),
                 100, 60
-        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("fusing_machine/lava_from_cobble_gravel"));
+        ).saveTest(output, FTBOBB.id("lava_from_cobble_gravel"));
         new FusingMachineRecipeBuilder(
                 List.of(Ingredient.of(Items.COBBLESTONE)),
                 new FluidStack(Fluids.LAVA, 250),
                 50, 40
-        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("fusing_machine/lava_from_cobble"));
+        ).saveTest(output, FTBOBB.id("lava_from_cobble"));
         new FusingMachineRecipeBuilder(
                 List.of(Ingredient.of(Items.ICE)),
                 new FluidStack(Fluids.WATER, 1000),
                 5, 20
-        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("fusing_machine/water_from_ice"));
+        ).saveTest(output, FTBOBB.id("water_from_ice"));
     }
 
     private void superCoolerRecipes(RecipeOutput output) {
@@ -282,20 +282,20 @@ public class RecipesGenerator extends RecipeProvider {
                 SizedFluidIngredient.of(Fluids.WATER, FluidType.BUCKET_VOLUME),
                 50, 20,
                 new ItemStack(Items.WHITE_CONCRETE, 2)
-        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("super_cooler/white_concrete"));
+        ).saveTest(output, FTBOBB.id("white_concrete"));
         new SuperCoolerRecipeBuilder(
                 List.of(Ingredient.of(Items.DIRT)),
                 SizedFluidIngredient.of(Fluids.WATER, 100),
                 25, 40,
                 new ItemStack(Items.MUD)
-        ).save(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBOBB.id("super_cooler/mud"));
+        ).saveTest(output, FTBOBB.id("mud"));
     }
 
-    private static RecipeBuilder temperedJar(List<SizedIngredient> itemsIn, List<SizedFluidIngredient> fluidsIn, List<ItemStack> itemsOut, List<FluidStack> fluidsOut, Temperature requiredTemp) {
+    private static TemperedJarRecipeBuilder temperedJar(List<SizedIngredient> itemsIn, List<SizedFluidIngredient> fluidsIn, List<ItemStack> itemsOut, List<FluidStack> fluidsOut, Temperature requiredTemp) {
         return new TemperedJarRecipeBuilder(itemsIn, fluidsIn, itemsOut, fluidsOut, requiredTemp);
     }
 
-    private static RecipeBuilder temperedJar(List<SizedIngredient> itemsIn, List<SizedFluidIngredient> fluidsIn, List<ItemStack> itemsOut, List<FluidStack> fluidsOut, Temperature requiredTemp, int time) {
+    private static TemperedJarRecipeBuilder temperedJar(List<SizedIngredient> itemsIn, List<SizedFluidIngredient> fluidsIn, List<ItemStack> itemsOut, List<FluidStack> fluidsOut, Temperature requiredTemp, int time) {
         return new TemperedJarRecipeBuilder(itemsIn, fluidsIn, itemsOut, fluidsOut, requiredTemp).withTime(time);
     }
 
