@@ -1,7 +1,6 @@
 package dev.ftb.mods.ftbobb.integration.jei;
 
 
-import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.crafting.recipe.DripperRecipe;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
@@ -17,7 +16,7 @@ public class DripperCategory extends BaseOBBCategory<DripperRecipe> {
 	public DripperCategory() {
 		super(RecipeTypes.DRIPPER,
 				Component.translatable(BlocksRegistry.DRIPPER.get().getDescriptionId()),
-				guiHelper().drawableBuilder(FTBOBB.id("textures/gui/dripper_jei_background.png"),
+				guiHelper().drawableBuilder(bgTexture("jei_dripper.png"),
 						0, 0, 91, 30).setTextureSize(128, 64).build(),
 				guiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, ItemsRegistry.DRIPPER.get().getDefaultInstance())
 		);

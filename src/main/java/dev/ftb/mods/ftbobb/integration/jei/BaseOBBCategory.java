@@ -17,11 +17,13 @@
 
 package dev.ftb.mods.ftbobb.integration.jei;
 
+import dev.ftb.mods.ftbobb.FTBOBB;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 public abstract class BaseOBBCategory<T> implements IRecipeCategory<T> {
     private final RecipeType<T> type;
@@ -58,5 +60,9 @@ public abstract class BaseOBBCategory<T> implements IRecipeCategory<T> {
 
     static IGuiHelper guiHelper() {
         return OBBJeiPlugin.jeiHelpers.getGuiHelper();
+    }
+
+    static ResourceLocation bgTexture(String name) {
+        return FTBOBB.id("textures/gui/jei/" + name);
     }
 }

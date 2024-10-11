@@ -1,10 +1,10 @@
 package dev.ftb.mods.ftbobb.integration.jei;
 
 import dev.ftb.mods.ftbobb.FTBOBB;
+import dev.ftb.mods.ftbobb.client.screens.TemperedJarScreen;
 import dev.ftb.mods.ftbobb.crafting.recipe.JarRecipe;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
-import dev.ftb.mods.ftbobb.client.screens.TemperedJarScreen;
 import dev.ftb.mods.ftbobb.temperature.TemperatureAndEfficiency;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -28,7 +28,7 @@ public class TemperedJarCategory extends BaseOBBCategory<JarRecipe> {
     protected TemperedJarCategory() {
         super(RecipeTypes.TEMPERED_JAR,
                 Component.translatable(BlocksRegistry.TEMPERED_JAR.get().getDescriptionId()),
-                guiHelper().drawableBuilder(FTBOBB.id("textures/gui/tempered_jar_jei_background.png"), 0, 0, 150, 18)
+                guiHelper().drawableBuilder(bgTexture("jei_tempered_jar.png"), 0, 0, 150, 18)
                         .setTextureSize(256, 32).build(),
                 guiHelper().createDrawableItemStack(new ItemStack(ItemsRegistry.TEMPERED_JAR.get()))
         );

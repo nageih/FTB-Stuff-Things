@@ -1,7 +1,6 @@
 package dev.ftb.mods.ftbobb.integration.jei;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.crafting.ItemWithChance;
 import dev.ftb.mods.ftbobb.crafting.recipe.CrookRecipe;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
@@ -12,19 +11,17 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.Comparator;
 import java.util.List;
 
 public class CrookCategory extends BaseOBBCategory<CrookRecipe> {
-    private static final ResourceLocation BACKGROUND = FTBOBB.id("textures/gui/crook_jei_background.png");
     private static final Comparator<ItemWithChance> COMPARATOR = (a, b) -> (int) ((b.chance() * 100) - (a.chance() * 100));
 
     public CrookCategory() {
         super(RecipeTypes.CROOK,
                 Component.translatable("item.ftbobb.stone_crook"),
-                guiHelper().drawableBuilder(BACKGROUND, 0, 0, 156, 78).setTextureSize(180, 78).build(),
+                guiHelper().drawableBuilder(bgTexture("jei_crook.png"), 0, 0, 156, 78).setTextureSize(180, 78).build(),
                 guiHelper().createDrawableItemStack(ItemsRegistry.CROOK.toStack())
         );
     }

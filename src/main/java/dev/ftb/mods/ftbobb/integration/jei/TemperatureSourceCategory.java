@@ -1,6 +1,5 @@
 package dev.ftb.mods.ftbobb.integration.jei;
 
-import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.crafting.recipe.TemperatureSourceRecipe;
 import dev.ftb.mods.ftbobb.temperature.Temperature;
 import mezz.jei.api.constants.VanillaTypes;
@@ -13,7 +12,7 @@ public class TemperatureSourceCategory extends BaseOBBCategory<TemperatureSource
     protected TemperatureSourceCategory() {
         super(RecipeTypes.TEMPERATURE_SOURCE,
                 Component.translatable("ftbobb.temperature_source"),
-                guiHelper().drawableBuilder(FTBOBB.id("textures/gui/temperature_source_jei.png"), 0, 0, 71, 30)
+                guiHelper().drawableBuilder(bgTexture("temperature_source.png"), 0, 0, 71, 30)
                         .setTextureSize(128, 64).build(),
                 guiHelper().createDrawableIngredient(OBBIngredientTypes.TEMPERATURE, Temperature.HOT)
         );

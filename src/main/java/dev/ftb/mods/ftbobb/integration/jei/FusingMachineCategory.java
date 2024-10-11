@@ -1,11 +1,10 @@
 package dev.ftb.mods.ftbobb.integration.jei;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.ftb.mods.ftbobb.FTBOBB;
+import dev.ftb.mods.ftbobb.client.screens.FusingMachineScreen;
 import dev.ftb.mods.ftbobb.crafting.EnergyComponent;
 import dev.ftb.mods.ftbobb.crafting.recipe.FusingMachineRecipe;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
-import dev.ftb.mods.ftbobb.client.screens.FusingMachineScreen;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -24,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class FusingMachineCategory extends BaseOBBCategory<FusingMachineRecipe> {
-    public static final ResourceLocation BACKGROUND = FTBOBB.id("textures/gui/jei_fusing_machine.png");
+    public static final ResourceLocation BACKGROUND = bgTexture("jei_fusing_machine.png");
 
     private static final Rect2i CLICK_AREA = new Rect2i(89, 26, 26, 19);
 

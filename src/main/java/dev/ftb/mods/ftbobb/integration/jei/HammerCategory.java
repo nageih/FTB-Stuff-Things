@@ -1,6 +1,5 @@
 package dev.ftb.mods.ftbobb.integration.jei;
 
-import dev.ftb.mods.ftbobb.FTBOBB;
 import dev.ftb.mods.ftbobb.crafting.recipe.HammerRecipe;
 import dev.ftb.mods.ftbobb.registry.ItemsRegistry;
 import mezz.jei.api.constants.VanillaTypes;
@@ -13,7 +12,7 @@ public class HammerCategory extends BaseOBBCategory<HammerRecipe> {
     public HammerCategory() {
         super(RecipeTypes.HAMMER,
                 Component.translatable(ItemsRegistry.STONE_HAMMER.get().getDescriptionId()),
-                guiHelper().drawableBuilder(FTBOBB.id("textures/gui/hammer_jei_background.png"),
+                guiHelper().drawableBuilder(bgTexture("jei_hammer.png"),
                         0, 0, 156, 62).setTextureSize(180, 62).build(),
                 guiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, ItemsRegistry.STONE_HAMMER.get().getDefaultInstance())
         );
