@@ -16,7 +16,7 @@ import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 public class SluiceBlockEntity extends BlockEntity {
-    private Lazy<PublicReadOnlyFluidTank> fluidTank = Lazy.of(() -> new PublicReadOnlyFluidTank(this, 10_000));
+    private final Lazy<PublicReadOnlyFluidTank> fluidTank = Lazy.of(() -> new PublicReadOnlyFluidTank(this, 10_000));
 
     public SluiceBlockEntity(BlockEntityType<?> entity, BlockPos pos, BlockState blockState) {
         super(entity, pos, blockState);

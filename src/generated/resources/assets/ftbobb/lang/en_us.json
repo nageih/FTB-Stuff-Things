@@ -23,6 +23,7 @@
   "block.ftbobb.tempered_jar": "Tempered Glass Jar",
   "block.ftbobb.tube": "Cast Iron Tube",
   "config.jade.plugin_ftbobb.autohammer": "Autohammer",
+  "death.attack.static_electric": "%1$s was killed by static electricity",
   "ftbobb.any_block": "Any Block",
   "ftbobb.crook.limit": "Max drops per block broken: %s",
   "ftbobb.dripper.chance": "Chance: %s%% / sec",

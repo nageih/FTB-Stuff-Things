@@ -44,12 +44,6 @@ public class ContentRegistry {
 
     //-----------------------------------------------
 
-    private static final DeferredRegister<DamageType> DAMAGE_TYPES = DeferredRegister.create(Registries.DAMAGE_TYPE, FTBOBB.MODID);
-
-    public static final DeferredHolder<DamageType, DamageType> STATIC_ELECTRIC_DAMAGE_TYPE = DAMAGE_TYPES.register("static_electric", () -> new DamageType("static_electric", 0.0F));
-
-    //-----------------------------------------------
-
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, FTBOBB.MODID);
 
     public static final Supplier<MenuType<TemperedJarMenu>> TEMPERED_JAR_MENU = registerMenu("tempered_jar", TemperedJarMenu::fromNetwork);
@@ -79,7 +73,6 @@ public class ContentRegistry {
 
     public static void init(IEventBus bus) {
         CREATIVE_MODE_TABS.register(bus);
-        DAMAGE_TYPES.register(bus);
         MENU_TYPES.register(bus);
         CONDITIONS.register(bus);
         LOOT_MODIFIERS_REGISTRY.register(bus);

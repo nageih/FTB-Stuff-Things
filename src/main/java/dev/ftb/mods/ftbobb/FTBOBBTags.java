@@ -31,6 +31,8 @@ public class FTBOBBTags {
         public static final TagKey<Item> HAMMERS = modTag("hammers");
         public static final TagKey<Item> CROOKS = modTag("crooks");
 
+        public static final TagKey<Item> MESHES = modTag("meshes");
+
         static TagKey<Item> tag(String modid, String name) {
             return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(modid, name));
         }

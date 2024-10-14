@@ -43,6 +43,8 @@ public class I18nGenerator extends LanguageProvider {
         add("block.ftbobb.fusing_machine.tooltip", "Used to fuse items together to produce new results");
         add("block.ftbobb.super_cooler.tooltip", "Used to \"super\"-cool items to produce new results");
 
+        add("death.attack.static_electric", "%1$s was killed by static electricity");
+
         addBlock(BlocksRegistry.OAK_SLUICE, "Oak Sluice");
         addBlock(BlocksRegistry.IRON_SLUICE, "Iron Sluice");
         addBlock(BlocksRegistry.DIAMOND_SLUICE, "Diamond Sluice");
