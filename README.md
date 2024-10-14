@@ -1,6 +1,6 @@
-# FTB Ocean Building Blocks
+# FTB Stuff & Things
 
-FTB 'OBB' is a combination mod that merges all the best parts of our previous FTB Sluice, FTB Jar Mod, FTB Dripper and Item Recycler mods into one mod that is better integrated, more fleshed out, and easier to use.
+A combination mod that merges all the best parts of our previous FTB Sluice, FTB Jar Mod, FTB Dripper and Item Recycler mods into one mod that is better integrated, more fleshed out, and easier to use.
 
 ## Features
 
