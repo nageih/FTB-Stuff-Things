@@ -32,6 +32,8 @@ public class ItemTagsGenerator extends ItemTagsProvider {
         addItemsToTag(FTBOBBTags.Items.NUGGETS_CAST_IRON, ItemsRegistry.CAST_IRON_NUGGET);
         addItemsToTag(FTBOBBTags.Items.INGOTS_CAST_IRON, ItemsRegistry.CAST_IRON_INGOT);
         addItemsToTag(FTBOBBTags.Items.GEARS, ItemsRegistry.CAST_IRON_GEAR);
+
+        addItemsToTag(FTBOBBTags.Items.MESHES, ItemsRegistry.CLOTH_MESH, ItemsRegistry.IRON_MESH, ItemsRegistry.GOLD_MESH, ItemsRegistry.DIAMOND_MESH);
     }
 
     @SafeVarargs

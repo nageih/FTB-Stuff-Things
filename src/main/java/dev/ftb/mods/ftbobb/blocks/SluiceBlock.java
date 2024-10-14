@@ -1,11 +1,16 @@
 package dev.ftb.mods.ftbobb.blocks;
 
 import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig;
+import dev.ftb.mods.ftbobb.FTBOBBTags;
+import dev.ftb.mods.ftbobb.items.MeshItem;
 import dev.ftb.mods.ftbobb.items.MeshType;
 import dev.ftb.mods.ftbobb.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbobb.registry.BlocksRegistry;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
@@ -13,10 +18,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -35,9 +37,13 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +51,7 @@ import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-public class SluiceBlock extends Block implements EntityBlock {
+public class SluiceBlock extends Block implements EntityBlock, SerializableComponentsProvider {
     public static final EnumProperty<MeshType> MESH = EnumProperty.create("mesh", MeshType.class);
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
 
@@ -125,8 +131,35 @@ public class SluiceBlock extends Block implements EntityBlock {
             return ItemInteractionResult.FAIL;
         }
 
-        if (level.isClientSide) {
-            return ItemInteractionResult.CONSUME_PARTIAL;
+        // Get the sluice tile entity
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (!(tileEntity instanceof SluiceBlockEntity sluice)) {
+            return ItemInteractionResult.FAIL;
+        }
+
+        if (stack.is(FTBOBBTags.Items.MESHES)) {
+            MeshType type = ((MeshItem) stack.getItem()).mesh;
+
+            ItemStack current = state.getValue(MESH).getItemStack();
+            level.setBlock(pos, state.setValue(MESH, type), 3);
+            if (!player.isCreative()) {
+                stack.shrink(1);
+
+                if (!level.isClientSide()) {
+                    ItemHandlerHelper.giveItemToPlayer(player, current);
+                }
+
+            }
+//            sluice.clearCache();
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
+
+        if (stack.getItem() instanceof BucketItem || stack.getCapability(Capabilities.FluidHandler.ITEM) != null) {
+            if (!level.isClientSide()) {
+                FluidUtil.interactWithFluidHandler(player, hand, sluice.getFluidTank());
+            }
+
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
 
         System.out.println("SluiceBlock.useItemOn");
@@ -149,9 +182,7 @@ public class SluiceBlock extends Block implements EntityBlock {
 //
 //        SluiceBlockEntity sluice = (SluiceBlockEntity) tileEntity;
 //
-//        if (itemStack.isEmpty() && !world.isClientSide() && !player.isCrouching() && sluice.sluiceConfig.upgradeable.get()) {
-//            NetworkHooks.openGui((ServerPlayer) player, sluice, pos);
-//            return InteractionResult.SUCCESS;
+
 //        } else if (player.isCrouching()) {
 //            if (state.getValue(MESH) != MeshType.NONE && itemStack.isEmpty()) {
 //                ItemStack current = state.getValue(MESH).getItemStack();
@@ -165,35 +196,6 @@ public class SluiceBlock extends Block implements EntityBlock {
 //            }
 //
 //            return InteractionResult.SUCCESS;
-//        } else if (itemStack.getItem() instanceof MeshItem) {
-//            MeshType type = ((MeshItem) itemStack.getItem()).mesh;
-//            if (state.getValue(MESH) != type) {
-//                if (type == MeshType.BLAZING && state.getBlock() != SluiceBlocks.EMPOWERED_SLUICE.get()) {
-//                    if (world.isClientSide) {
-//                        player.displayClientMessage(new TranslatableComponent(FTBSluice.MOD_ID + ".block.sluice.warning.wrong_sluice"), true);
-//                    }
-//
-//                    return InteractionResult.FAIL;
-//                }
-//
-//                ItemStack current = state.getValue(MESH).getItemStack();
-//                world.setBlock(pos, state.setValue(MESH, type), 3);
-//                if (!player.abilities.instabuild) {
-//                    itemStack.shrink(1);
-//
-//                    if (!world.isClientSide()) {
-//                        ItemHandlerHelper.giveItemToPlayer(player, current);
-//                    }
-//                }
-//
-//                sluice.clearCache();
-//            }
-//
-//            return InteractionResult.SUCCESS;
-//        } else if (itemStack.getItem() instanceof BucketItem || itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()) {
-//            if (!world.isClientSide()) {
-//                FluidUtil.interactWithFluidHandler(player, hand, sluice.tank);
-//            }
 //        } else if (FTBSluiceRecipes.itemIsSluiceInput(state.getValue(MESH), itemStack)) {
 //            if (!world.isClientSide()) {
 //                if (sluice.inventory.getStackInSlot(0).isEmpty()) {
@@ -232,8 +234,8 @@ public class SluiceBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
-        return p_185499_1_;
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state;
     }
 
     @Override
@@ -242,8 +244,8 @@ public class SluiceBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public BlockState mirror(BlockState p_185471_1_, Mirror p_185471_2_) {
-        return p_185471_1_;
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state;
     }
 
     @Override
@@ -296,40 +298,34 @@ public class SluiceBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-    }
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
+        boolean isShift = Screen.hasShiftDown();
 
-    // TODO: ^
-//    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public void appendHoverText(ItemStack stack, @Nullable  BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
-//        boolean isShift = Screen.hasShiftDown();
-//
-//        tooltip.add(new TextComponent("" + TextUtil.INFO)
-//                .append(new TextComponent(" (Shift)").withStyle(isShift ? ChatFormatting.DARK_GRAY : ChatFormatting.GRAY))
-//                .withStyle(ChatFormatting.BLUE));
-//
-//        if (isShift) {
-//            tooltip.add(new TranslatableComponent("ftbsluice.properties.processing_time",
+        // TOOD: Translate
+        tooltip.add(Component.empty()
+                .append(Component.literal(" (Shift)").withStyle(isShift ? ChatFormatting.DARK_GRAY : ChatFormatting.GRAY))
+                .withStyle(ChatFormatting.BLUE));
+
+        if (isShift) {
+//            tooltip.add(Component.translatable("ftbsluice.properties.processing_time",
 //                    new TextComponent(props.timeMod.get() + "").withStyle(TextUtil.COLOUR_HIGHLIGHT)).withStyle(ChatFormatting.GRAY));
-//            tooltip.add(new TranslatableComponent("ftbsluice.properties.fluid_usage",
+//            tooltip.add(Component.translatable("ftbsluice.properties.fluid_usage",
 //                    new TextComponent(props.fluidMod.get() + "").withStyle(TextUtil.COLOUR_HIGHLIGHT)).withStyle(ChatFormatting.GRAY));
-//            tooltip.add(new TranslatableComponent("ftbsluice.properties.tank",
+//            tooltip.add(Component.translatable("ftbsluice.properties.tank",
 //                    new TextComponent(props.tankCap.get() + "").withStyle(TextUtil.COLOUR_HIGHLIGHT)).withStyle(ChatFormatting.GRAY));
-//
-//            tooltip.add(new TranslatableComponent("ftbsluice.properties.auto",
-//                    new TranslatableComponent("ftbsluice.properties.auto.item").withStyle(props.allowsIO.get() ? TextUtil.COLOUR_TRUE : TextUtil.COLOUR_FALSE),
-//                    new TranslatableComponent("ftbsluice.properties.auto.fluid").withStyle(props.allowsTank.get() ? TextUtil.COLOUR_TRUE : TextUtil.COLOUR_FALSE)
+
+//            tooltip.add(Component.translatable("ftbsluice.properties.auto",
+//                    Component.translatable("ftbsluice.properties.auto.item").withStyle(props.allowsIO.get() ? ChatFormatting.BLUE : ChatFormatting.BLUE),
+//                    Component.translatable("ftbsluice.properties.auto.fluid").withStyle(props.allowsTank.get() ? ChatFormatting.BLUE : ChatFormatting.BLUE)
 //            ).withStyle(ChatFormatting.GRAY));
-//
+
 //            if (props.upgradeable.get()) {
-//                tooltip.add(new TranslatableComponent("ftbsluice.properties.upgradeable").withStyle(TextUtil.COLOUR_INFO));
+//                tooltip.add(Component.translatable("ftbsluice.properties.upgradeable").withStyle(ChatFormatting.BLUE));
 //            }
-//        } else {
-//            tooltip.add(new TranslatableComponent("ftbsluice.tooltip." + this.getRegistryName().getPath()).withStyle(ChatFormatting.GRAY));
-//        }
-//    }
+        } else {
+//            tooltip.add(Component.translatable("ftbsluice.tooltip." + this.getName()).withStyle(ChatFormatting.GRAY));
+        }
+    }
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack item) {
@@ -358,9 +354,6 @@ public class SluiceBlock extends Block implements EntityBlock {
         } else if (block == BlocksRegistry.DIAMOND_SLUICE.get()) {
             return BlockEntitiesRegistry.DIAMOND_SLUICE.get().create(blockPos, blockState);
         }
-//        else if (state.getBlock() == BlocksRegistry.EMPOWERED_SLUICE.get()) {
-//            return SluiceBlockEntities.EMPOWERED_SLUICE.get().create(blockPos, blockState);
-//        }
 
         return BlockEntitiesRegistry.NETHERITE_SLUICE.get().create(blockPos, blockState);
     }
@@ -369,6 +362,11 @@ public class SluiceBlock extends Block implements EntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return EntityBlock.super.getTicker(level, state, blockEntityType);
+    }
+
+    @Override
+    public void addSerializableComponents(List<DataComponentType<?>> list) {
+
     }
 
     public static class SluiceBlockItem extends BlockItem {

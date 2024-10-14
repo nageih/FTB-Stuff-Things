@@ -27,6 +27,8 @@ public class FTBOBBTags {
         public static final TagKey<Item> GEARS = commonTag("gears");
         public static final TagKey<Item> GEARS_CAST_IRON = commonTag("gears/cast_iron");
 
+        public static final TagKey<Item> MESHES = modTag("meshes");
+
         static TagKey<Item> tag(String modid, String name) {
             return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(modid, name));
         }
