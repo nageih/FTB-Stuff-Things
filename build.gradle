@@ -132,6 +132,8 @@ neoForge.ideSyncTask generateModMetadata
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
+            artifactId = archives_base_name
+            version ftbPublishing.mavenVersion
             from components.java
         }
     }
