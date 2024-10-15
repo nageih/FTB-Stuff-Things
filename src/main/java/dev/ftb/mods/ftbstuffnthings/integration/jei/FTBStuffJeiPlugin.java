@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @JeiPlugin
-public class OBBJeiPlugin implements IModPlugin {
+public class FTBStuffJeiPlugin implements IModPlugin {
     static IJeiHelpers jeiHelpers;
     static IRecipeManager recipeManager;
     static IRecipesGui recipesGui;
@@ -40,12 +40,12 @@ public class OBBJeiPlugin implements IModPlugin {
         recipeManager = jeiRuntime.getRecipeManager();
         recipesGui = jeiRuntime.getRecipesGui();
 
-        jeiRuntime.getIngredientManager().addIngredientsAtRuntime(OBBIngredientTypes.TEMPERATURE, Arrays.asList(Temperature.values()));
+        jeiRuntime.getIngredientManager().addIngredientsAtRuntime(FTBStuffIngredientTypes.TEMPERATURE, Arrays.asList(Temperature.values()));
     }
 
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
-        registration.register(OBBIngredientTypes.TEMPERATURE,
+        registration.register(FTBStuffIngredientTypes.TEMPERATURE,
                 Arrays.asList(Temperature.values()),
                 TemperatureHelper.INSTANCE,
                 TemperatureRenderer.INSTANCE,

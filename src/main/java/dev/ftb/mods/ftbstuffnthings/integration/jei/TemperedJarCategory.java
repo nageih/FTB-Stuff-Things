@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class TemperedJarCategory extends BaseOBBCategory<JarRecipe> {
+public class TemperedJarCategory extends BaseStuffCategory<JarRecipe> {
     protected TemperedJarCategory() {
         super(RecipeTypes.TEMPERED_JAR,
                 Component.translatable(BlocksRegistry.TEMPERED_JAR.get().getDescriptionId()),
@@ -55,7 +55,7 @@ public class TemperedJarCategory extends BaseOBBCategory<JarRecipe> {
         }
 
         builder.addSlot(RecipeIngredientRole.CATALYST, 67, 1)
-                .addIngredient(OBBIngredientTypes.TEMPERATURE, recipe.getTemperature())
+                .addIngredient(FTBStuffIngredientTypes.TEMPERATURE, recipe.getTemperature())
                 .addRichTooltipCallback((recipeSlotView, tooltip) -> {
                     String time = String.format("%.1f", recipe.getTime() / 20f);
                     tooltip.add(Component.translatable(FTBStuffNThings.MODID + ".processing_time", time));

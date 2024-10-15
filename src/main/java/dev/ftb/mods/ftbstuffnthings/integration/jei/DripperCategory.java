@@ -12,7 +12,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public class DripperCategory extends BaseOBBCategory<DripperRecipe> {
+public class DripperCategory extends BaseStuffCategory<DripperRecipe> {
 	public DripperCategory() {
 		super(RecipeTypes.DRIPPER,
 				Component.translatable(BlocksRegistry.DRIPPER.get().getDescriptionId()),

@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbstuffnthings.registry;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
-import dev.ftb.mods.ftbstuffnthings.crafting.*;
+import dev.ftb.mods.ftbstuffnthings.crafting.FTBStuffRecipeType;
 import dev.ftb.mods.ftbstuffnthings.crafting.recipe.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -21,37 +21,37 @@ public class RecipesRegistry {
     // ---------------------------------------------
 
     public static final Supplier<RecipeType<JarRecipe>> TEMPERED_JAR_TYPE
-            = registerType("jar", FTBOBBRecipeType::new);
+            = registerType("jar", FTBStuffRecipeType::new);
     public static final Supplier<RecipeSerializer<JarRecipe>> TEMPERED_JAR_SERIALIZER
             = RECIPE_SERIALIZERS.register("jar", () -> new JarRecipe.Serializer<>(JarRecipe::new));
 
     public static final Supplier<RecipeType<TemperatureSourceRecipe>> TEMPERATURE_SOURCE_TYPE
-            = registerType("temperature_source", FTBOBBRecipeType::new);
+            = registerType("temperature_source", FTBStuffRecipeType::new);
     public static final Supplier<RecipeSerializer<TemperatureSourceRecipe>> TEMPERATURE_SOURCE_SERIALIZER
             = RECIPE_SERIALIZERS.register("temperature_source", () -> new TemperatureSourceRecipe.Serializer<>(TemperatureSourceRecipe::new));
 
     public static final Supplier<RecipeType<DripperRecipe>> DRIP_TYPE
-            = registerType("dripper", FTBOBBRecipeType::new);
+            = registerType("dripper", FTBStuffRecipeType::new);
     public static final Supplier<RecipeSerializer<DripperRecipe>> DRIP_SERIALIZER
             = RECIPE_SERIALIZERS.register("dripper", () -> new DripperRecipe.Serializer<>(DripperRecipe::new));
 
     public static final Supplier<RecipeType<CrookRecipe>> CROOK_TYPE
-            = registerType("crook", FTBOBBRecipeType::new);
+            = registerType("crook", FTBStuffRecipeType::new);
     public static final Supplier<RecipeSerializer<CrookRecipe>> CROOK_SERIALIZER
             = RECIPE_SERIALIZERS.register("crook", () -> new CrookRecipe.Serializer<>(CrookRecipe::new));
 
     public static final Supplier<RecipeType<HammerRecipe>> HAMMER_TYPE
-            = registerType("hammer", FTBOBBRecipeType::new);
+            = registerType("hammer", FTBStuffRecipeType::new);
     public static final Supplier<RecipeSerializer<HammerRecipe>> HAMMER_SERIALIZER
             = RECIPE_SERIALIZERS.register("hammer", () -> new HammerRecipe.Serializer<>(HammerRecipe::new));
 
     public static final Supplier<RecipeType<FusingMachineRecipe>> FUSING_MACHINE_TYPE
-            = registerType("fusing_machine", FTBOBBRecipeType::new);
+            = registerType("fusing_machine", FTBStuffRecipeType::new);
     public static final Supplier<RecipeSerializer<FusingMachineRecipe>> FUSING_MACHINE_SERIALIZER
             = RECIPE_SERIALIZERS.register("fusing_machine", () -> new FusingMachineRecipe.Serializer<>(FusingMachineRecipe::new));
 
     public static final Supplier<RecipeType<SuperCoolerRecipe>> SUPER_COOLER_TYPE
-            = registerType("supercooler", FTBOBBRecipeType::new);
+            = registerType("supercooler", FTBStuffRecipeType::new);
     public static final Supplier<RecipeSerializer<SuperCoolerRecipe>> SUPER_COOLER_SERIALIZER
             = RECIPE_SERIALIZERS.register("supercooler", () -> new SuperCoolerRecipe.Serializer<>(SuperCoolerRecipe::new));
 

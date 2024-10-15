@@ -8,7 +8,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.network.chat.Component;
 
-public class HammerCategory extends BaseOBBCategory<HammerRecipe> {
+public class HammerCategory extends BaseStuffCategory<HammerRecipe> {
     public HammerCategory() {
         super(RecipeTypes.HAMMER,
                 Component.translatable(ItemsRegistry.STONE_HAMMER.get().getDescriptionId()),

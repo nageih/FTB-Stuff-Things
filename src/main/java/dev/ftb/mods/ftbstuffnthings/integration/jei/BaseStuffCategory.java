@@ -19,19 +19,21 @@ package dev.ftb.mods.ftbstuffnthings.integration.jei;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public abstract class BaseOBBCategory<T> implements IRecipeCategory<T> {
+public abstract class BaseStuffCategory<T> implements IRecipeCategory<T> {
     private final RecipeType<T> type;
     private final Component localizedName;
     private final IDrawable background;
     private final IDrawable icon;
 
-    protected BaseOBBCategory(RecipeType<T> type, Component localizedName, IDrawable background, IDrawable icon) {
+    protected BaseStuffCategory(RecipeType<T> type, Component localizedName, IDrawable background, IDrawable icon) {
         this.type = type;
         this.localizedName = localizedName;
         this.background = background;
@@ -44,8 +46,18 @@ public abstract class BaseOBBCategory<T> implements IRecipeCategory<T> {
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background;
+    public int getWidth() {
+        return background.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return background.getHeight();
+    }
+
+    @Override
+    public void draw(T recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        background.draw(guiGraphics);
     }
 
     @Override
@@ -59,7 +71,7 @@ public abstract class BaseOBBCategory<T> implements IRecipeCategory<T> {
     }
 
     static IGuiHelper guiHelper() {
-        return OBBJeiPlugin.jeiHelpers.getGuiHelper();
+        return FTBStuffJeiPlugin.jeiHelpers.getGuiHelper();
     }
 
     static ResourceLocation bgTexture(String name) {

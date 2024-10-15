@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import java.util.Comparator;
 import java.util.List;
 
-public class CrookCategory extends BaseOBBCategory<CrookRecipe> {
+public class CrookCategory extends BaseStuffCategory<CrookRecipe> {
     private static final Comparator<ItemWithChance> COMPARATOR = (a, b) -> (int) ((b.chance() * 100) - (a.chance() * 100));
 
     public CrookCategory() {
@@ -45,6 +45,8 @@ public class CrookCategory extends BaseOBBCategory<CrookRecipe> {
 
     @Override
     public void draw(CrookRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        super.draw(recipe, recipeSlotsView, graphics, mouseX, mouseY);
+
         List<ItemWithChance> outputs = recipe.getResults().stream().sorted(COMPARATOR).toList();
 
         int row = 0;

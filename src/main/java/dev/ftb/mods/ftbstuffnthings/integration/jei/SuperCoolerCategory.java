@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class SuperCoolerCategory extends BaseOBBCategory<SuperCoolerRecipe> {
+public class SuperCoolerCategory extends BaseStuffCategory<SuperCoolerRecipe> {
     public static final ResourceLocation BACKGROUND = bgTexture("jei_super_cooler.png");
 
     private static final Rect2i CLICK_AREA = new Rect2i(77, 25, 27, 21);
@@ -53,6 +53,8 @@ public class SuperCoolerCategory extends BaseOBBCategory<SuperCoolerRecipe> {
 
     @Override
     public void draw(SuperCoolerRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        super.draw(recipe, recipeSlotsView, graphics, mouseX, mouseY);
+
         this.powerBar.draw(graphics, 6, 6);
         this.progress.draw(graphics, 97, 6);
 

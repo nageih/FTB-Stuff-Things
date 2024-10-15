@@ -14,7 +14,7 @@ public enum TemperatureHelper implements IIngredientHelper<Temperature> {
 
     @Override
     public IIngredientType<Temperature> getIngredientType() {
-        return OBBIngredientTypes.TEMPERATURE;
+        return FTBStuffIngredientTypes.TEMPERATURE;
     }
 
     @Override

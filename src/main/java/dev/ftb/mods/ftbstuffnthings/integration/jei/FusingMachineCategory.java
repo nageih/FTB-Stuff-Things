@@ -22,7 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Collection;
 import java.util.List;
 
-public class FusingMachineCategory extends BaseOBBCategory<FusingMachineRecipe> {
+public class FusingMachineCategory extends BaseStuffCategory<FusingMachineRecipe> {
     public static final ResourceLocation BACKGROUND = bgTexture("jei_fusing_machine.png");
 
     private static final Rect2i CLICK_AREA = new Rect2i(89, 26, 26, 19);
@@ -50,6 +50,8 @@ public class FusingMachineCategory extends BaseOBBCategory<FusingMachineRecipe> 
 
     @Override
     public void draw(FusingMachineRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        super.draw(recipe, recipeSlotsView, graphics, mouseX, mouseY);
+
         this.powerBar.draw(graphics, 6, 6);
         this.progress.draw(graphics, 57, 6);
 
