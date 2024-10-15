@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbstuff:dev_environment"
+    }
+  ],
+  "type": "ftbstuff:dripper",
+  "chance": 0.5,
+  "fluid": {
+    "amount": 250,
+    "id": "minecraft:lava"
+  },
+  "input": "minecraft:campfire[lit=false]",
+  "output": "minecraft:campfire[lit=true]"
+}

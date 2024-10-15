@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "ftbstuff:stored_fluid",
+                "ftbstuff:energy"
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "ftbstuff:super_cooler"
+        }
+      ],
+      "name": "super_cooler",
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "ftbstuff:blocks/super_cooler"
+}

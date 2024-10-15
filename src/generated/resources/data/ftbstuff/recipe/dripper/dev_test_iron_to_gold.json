@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbstuff:dev_environment"
+    }
+  ],
+  "type": "ftbstuff:dripper",
+  "chance": 0.01,
+  "fluid": {
+    "amount": 250,
+    "id": "minecraft:lava"
+  },
+  "input": "minecraft:iron_block",
+  "output": "minecraft:gold_block"
+}

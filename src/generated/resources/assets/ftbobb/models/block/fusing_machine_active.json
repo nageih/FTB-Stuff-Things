@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "front": "ftbobb:block/fusing_machine_front_active",
-    "side": "ftbobb:block/generic_machine_side",
-    "top": "ftbobb:block/fusing_machine_top_active"
-  }
-}

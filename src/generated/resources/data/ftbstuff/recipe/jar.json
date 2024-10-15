@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "minecraft:wooden_buttons"
+    },
+    "G": {
+      "tag": "c:glass_panes"
+    }
+  },
+  "pattern": [
+    "GBG",
+    "G G",
+    "GGG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ftbstuff:jar"
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "front": "ftbobb:block/super_cooler_front_active",
-    "side": "ftbobb:block/generic_machine_side",
-    "top": "ftbobb:block/super_cooler_top_active"
-  }
-}

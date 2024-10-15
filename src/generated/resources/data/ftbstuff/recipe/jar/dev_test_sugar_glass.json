@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbstuff:dev_environment"
+    }
+  ],
+  "type": "ftbstuff:jar",
+  "input_fluids": [
+    {
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "input_items": [
+    {
+      "count": 1,
+      "item": "minecraft:sugar"
+    }
+  ],
+  "output_fluids": [],
+  "output_items": [
+    {
+      "count": 4,
+      "id": "minecraft:glass"
+    }
+  ],
+  "temperature": "chilled"
+}

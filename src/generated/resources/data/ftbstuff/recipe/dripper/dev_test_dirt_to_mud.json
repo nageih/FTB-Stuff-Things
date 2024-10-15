@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbstuff:dev_environment"
+    },
+    {
+      "type": "ftbstuff:dev_environment"
+    }
+  ],
+  "type": "ftbstuff:dripper",
+  "chance": 0.2,
+  "fluid": {
+    "amount": 50,
+    "id": "minecraft:water"
+  },
+  "input": "minecraft:dirt",
+  "output": "minecraft:mud"
+}

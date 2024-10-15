@@ -1,0 +1,11 @@
+{
+  "type": "ftbstuff:hammer_loot_modifier",
+  "conditions": [
+    {
+      "condition": "minecraft:match_tool",
+      "predicate": {
+        "items": "#ftbstuff:hammers"
+      }
+    }
+  ]
+}

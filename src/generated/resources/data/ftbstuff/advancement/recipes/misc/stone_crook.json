@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stone_rod": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ftbstuff:stone_rod"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ftbstuff:stone_crook"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_stone_rod"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ftbstuff:stone_crook"
+    ]
+  }
+}

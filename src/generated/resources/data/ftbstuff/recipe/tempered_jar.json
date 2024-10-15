@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "ftbstuff:tempered_glass"
+    },
+    "I": {
+      "item": "ftbstuff:cast_iron_ingot"
+    }
+  },
+  "pattern": [
+    "GIG",
+    "G G",
+    "GGG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ftbstuff:tempered_jar"
+  }
+}

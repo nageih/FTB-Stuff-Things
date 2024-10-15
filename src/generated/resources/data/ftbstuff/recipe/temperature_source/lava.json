@@ -1,0 +1,10 @@
+{
+  "type": "ftbstuff:temperature_source",
+  "blockstate": "minecraft:lava[level=0]",
+  "display_item": {
+    "count": 1,
+    "id": "minecraft:lava_bucket"
+  },
+  "efficiency": 4.0,
+  "temperature": "hot"
+}

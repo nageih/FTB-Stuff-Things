@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbstuff:dev_environment"
+    }
+  ],
+  "type": "ftbstuff:crook",
+  "input": {
+    "item": "minecraft:short_grass"
+  },
+  "max": 1,
+  "replace_drops": false,
+  "results": [
+    {
+      "chance": 0.5,
+      "item": {
+        "count": 1,
+        "id": "minecraft:string"
+      }
+    }
+  ]
+}

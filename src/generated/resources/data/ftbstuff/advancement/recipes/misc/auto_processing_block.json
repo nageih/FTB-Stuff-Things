@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tempered_jar": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ftbstuff:tempered_jar"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ftbstuff:auto_processing_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tempered_jar"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ftbstuff:auto_processing_block"
+    ]
+  }
+}

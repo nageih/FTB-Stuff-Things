@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "active=false,temperature=chilled": {
+      "model": "ftbstuff:block/tempered_jar_chilled"
+    },
+    "active=false,temperature=hot": {
+      "model": "ftbstuff:block/tempered_jar_hot"
+    },
+    "active=false,temperature=normal": {
+      "model": "ftbstuff:block/tempered_jar_normal"
+    },
+    "active=false,temperature=superheated": {
+      "model": "ftbstuff:block/tempered_jar_superheated"
+    },
+    "active=true,temperature=chilled": {
+      "model": "ftbstuff:block/tempered_jar_chilled"
+    },
+    "active=true,temperature=hot": {
+      "model": "ftbstuff:block/tempered_jar_hot"
+    },
+    "active=true,temperature=normal": {
+      "model": "ftbstuff:block/tempered_jar_normal"
+    },
+    "active=true,temperature=superheated": {
+      "model": "ftbstuff:block/tempered_jar_superheated"
+    }
+  }
+}
