@@ -11,6 +11,9 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_group_id
 
+// needs to be done AFTER version is set
+apply from: "https://raw.githubusercontent.com/FTBTeam/mods-meta/main/gradle/publishing.gradle"
+
 repositories {
     mavenLocal()
 }
@@ -135,6 +138,24 @@ publishing {
     repositories {
         maven {
             url "file://${project.projectDir}/repo"
+        }
+    }
+    if (ftbPublishing.ftbToken) {
+        maven {
+            url ftbPublishing.ftbURL
+            credentials {
+                username = ftbPublishing.ftbUser
+                password = ftbPublishing.ftbToken
+            }
+        }
+    }
+    if (ftbPublishing.sapsToken) {
+        maven {
+            url ftbPublishing.sapsURL
+            credentials {
+                username = ftbPublishing.sapsUser
+                password = ftbPublishing.sapsToken
+            }
         }
     }
 }
