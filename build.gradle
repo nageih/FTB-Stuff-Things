@@ -141,22 +141,22 @@ publishing {
         maven {
             url "file://${project.projectDir}/repo"
         }
-    }
-    if (ftbPublishing.ftbToken) {
-        maven {
-            url ftbPublishing.ftbURL
-            credentials {
-                username = ftbPublishing.ftbUser
-                password = ftbPublishing.ftbToken
+        if (ftbPublishing.ftbToken) {
+            maven {
+                url ftbPublishing.ftbURL
+                credentials {
+                    username = ftbPublishing.ftbUser
+                    password = ftbPublishing.ftbToken
+                }
             }
         }
-    }
-    if (ftbPublishing.sapsToken) {
-        maven {
-            url ftbPublishing.sapsURL
-            credentials {
-                username = ftbPublishing.sapsUser
-                password = ftbPublishing.sapsToken
+        if (ftbPublishing.sapsToken) {
+            maven {
+                url ftbPublishing.sapsURL
+                credentials {
+                    username = ftbPublishing.sapsUser
+                    password = ftbPublishing.sapsToken
+                }
             }
         }
     }
