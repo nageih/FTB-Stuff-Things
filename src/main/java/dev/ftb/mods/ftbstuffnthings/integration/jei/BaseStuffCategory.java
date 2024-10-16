@@ -26,6 +26,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseStuffCategory<T> implements IRecipeCategory<T> {
     private final RecipeType<T> type;
@@ -46,6 +47,13 @@ public abstract class BaseStuffCategory<T> implements IRecipeCategory<T> {
     }
 
     @Override
+    public @Nullable IDrawable getBackground() {
+        // TODO this can go once EMI supports checking for a null getBackground() return
+        // https://github.com/emilyploszaj/emi/issues/755
+        return background;
+    }
+
+    @Override
     public int getWidth() {
         return background.getWidth();
     }
@@ -57,7 +65,10 @@ public abstract class BaseStuffCategory<T> implements IRecipeCategory<T> {
 
     @Override
     public void draw(T recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        background.draw(guiGraphics);
+        // TODO remove if check when EMI updates, see link above
+        if (getBackground() == null) {
+            background.draw(guiGraphics);
+        }
     }
 
     @Override
