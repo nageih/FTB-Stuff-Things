@@ -13,10 +13,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class SluiceBlockEntity extends BlockEntity {
     private final Lazy<PublicReadOnlyFluidTank> fluidTank = Lazy.of(() -> new PublicReadOnlyFluidTank(this, 10_000));
+
+    private final Lazy<ItemStackHandler> inputInventory = Lazy.of(() -> new ItemStackHandler(1));
+    private final Lazy<ItemStackHandler> outputInventory = Lazy.of(() -> new ItemStackHandler(1));
 
     public SluiceBlockEntity(BlockEntityType<?> entity, BlockPos pos, BlockState blockState) {
         super(entity, pos, blockState);
@@ -25,11 +29,17 @@ public class SluiceBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         fluidTank.get().writeToNBT(registries, tag);
+
+        tag.put("inputInventory", inputInventory.get().serializeNBT(registries));
+        tag.put("outputInventory", outputInventory.get().serializeNBT(registries));
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         fluidTank.get().readFromNBT(registries, tag);
+
+        inputInventory.get().deserializeNBT(registries, tag.getCompound("inputInventory"));
+        outputInventory.get().deserializeNBT(registries, tag.getCompound("outputInventory"));
     }
 
     @Override
