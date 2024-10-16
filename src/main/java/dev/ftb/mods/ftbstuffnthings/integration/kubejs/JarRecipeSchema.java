@@ -17,7 +17,7 @@ public interface JarRecipeSchema {
     RecipeKey<List<SizedFluidIngredient>> INPUT_FLUIDS = SizedFluidIngredientComponent.FLAT.asList().inputKey("input_fluids");
     RecipeKey<List<ItemStack>> OUTPUT_ITEMS = ItemStackComponent.STRICT_ITEM_STACK.asList().outputKey("output_items");
     RecipeKey<List<FluidStack>> OUTPUT_FLUIDS = FluidStackComponent.FLUID_STACK.asList().outputKey("output_fluids");
-    RecipeKey<Temperature> TEMPERATURE = EnumComponent.of("temperature", Temperature.class, StringRepresentable.fromEnum(Temperature::values)).otherKey("temperature");
+    RecipeKey<Temperature> TEMPERATURE = EnumComponent.of("temperature", Temperature.class, StringRepresentable.fromEnum(Temperature::values)).otherKey("temperature").optional(Temperature.NORMAL);
     RecipeKey<Integer> TIME = NumberComponent.INT.key("time", ComponentRole.OTHER).optional(200);
     RecipeKey<Boolean> CAN_REPEAT = BooleanComponent.BOOLEAN.key("can_repeat", ComponentRole.OTHER).optional(true);
     RecipeKey<String> STAGE = StringComponent.ANY.key("stage", ComponentRole.OTHER).optional("");

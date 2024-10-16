@@ -11,7 +11,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.List;
 
 public interface HammerRecipeSchema {
-    RecipeKey<Ingredient> INGREDIENT = IngredientComponent.INGREDIENT.key("ingredient", ComponentRole.INPUT);
+    RecipeKey<Ingredient> INGREDIENT = IngredientComponent.INGREDIENT.key("input", ComponentRole.INPUT);
     RecipeKey<List<ItemStack>> RESULTS = ItemStackComponent.ITEM_STACK.asList().key("results", ComponentRole.OUTPUT);
 
     RecipeSchema SCHEMA = new RecipeSchema(RESULTS, INGREDIENT);
