@@ -49,7 +49,9 @@ ftbstuff.crook([
 
 #### Example
 
-`ftbstuff.hammer([ "9x iron_ingot ], "minecraft:iron_block")`
+```javascript
+ftbstuff.hammer([ "9x iron_ingot ], "minecraft:iron_block")
+```
 
 Drop 9 iron ingots when an iron block is broken with any hammer:
 
@@ -71,7 +73,9 @@ Optional arguments:
 
 #### Example
 
-`ftbstuff.fusing_machine(Fluid.of("pneumaticcraft:lpg", 1000), [ "minecraft:sugar" ], { "fe_per_tick": 70, "ticks_to_process": 50 })`
+```javascript
+ftbstuff.fusing_machine(Fluid.of("pneumaticcraft:lpg", 1000), [ "minecraft:sugar" ], { "fe_per_tick": 70, "ticks_to_process": 50 })
+```
 
 Converts 1 sugar to 1000mB of PneumaticCraft LPG, using 70 FE/t, and taking 50 ticks (so 3500 FE in total):
 
@@ -81,7 +85,9 @@ Converts 1 sugar to 1000mB of PneumaticCraft LPG, using 70 FE/t, and taking 50 t
 
 #### Example
 
-`ftbstuff.supercooler("minecraft:mud", [ "minecraft:dirt", "minecraft:clay" ], Fluid.of("minecraft:water", 1000), {"fe_per_tick": 50, "ticks_to_process": 20 })`
+```javascript
+ftbstuff.supercooler("minecraft:mud", [ "minecraft:dirt", "minecraft:clay" ], Fluid.of("minecraft:water", 1000), {"fe_per_tick": 50, "ticks_to_process": 20 })
+```
 
 Converts 1 dirt & 1 clay to 1 mud, using 50 FE/t, taking 20 ticks.
 
@@ -102,7 +108,9 @@ Optional arguments:
 
 #### Example
 
-`ftbstuff.temperature_source("minecraft:campfire[lit=true]", "hot", 1.0, "minecraft:campfire")`
+```javascript
+ftbstuff.temperature_source("minecraft:campfire[lit=true]", "hot", 1.0, "minecraft:campfire")
+```
 
 Makes lit campfires act as a hot temperature source.
 
