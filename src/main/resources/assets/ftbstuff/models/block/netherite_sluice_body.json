@@ -5,6 +5,7 @@
 		"0": "ftbstuff:block/netherite_sluice",
 		"particle": "ftbstuff:block/netherite_sluice"
 	},
+	"render_type": "cutout",
 	"elements": [
 		{
 			"from": [12.5, 0, 0],

@@ -120,8 +120,20 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        System.out.println("SluiceBlock.useWithoutItem");
-        return InteractionResult.PASS;
+        if (player.isCrouching()) {
+            if (state.getValue(MESH) != MeshType.EMPTY) {
+                ItemStack current = state.getValue(MESH).getItemStack();
+                level.setBlock(pos, state.setValue(MESH, MeshType.EMPTY), 3);
+
+                if (!level.isClientSide()) {
+                    ItemHandlerHelper.giveItemToPlayer(player, current);
+                }
+
+                return InteractionResult.SUCCESS;
+            }
+        }
+
+        return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
     @Override
@@ -161,42 +173,9 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        System.out.println("SluiceBlock.useItemOn");
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-    }
-
-    //    @Override
-//    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-//        if (state.getValue(PART) == Part.FUNNEL) {
-//            return InteractionResult.PASS;
-//        }
-
-//        ItemStack itemStack = player.getItemInHand(hand);
-//        BlockEntity tileEntity = world.getBlockEntity(pos);
-//
-//        if (!(tileEntity instanceof SluiceBlockEntity)) {
-//            return InteractionResult.SUCCESS;
-//        }
-//
-//
-//        SluiceBlockEntity sluice = (SluiceBlockEntity) tileEntity;
-//
-
-//        } else if (player.isCrouching()) {
-//            if (state.getValue(MESH) != MeshType.NONE && itemStack.isEmpty()) {
-//                ItemStack current = state.getValue(MESH).getItemStack();
-//                world.setBlock(pos, state.setValue(MESH, MeshType.NONE), 3);
-//
-//                if (!world.isClientSide()) {
-//                    ItemHandlerHelper.giveItemToPlayer(player, current);
-//                }
-//
-//                sluice.clearCache();
-//            }
-//
-//            return InteractionResult.SUCCESS;
-//        } else if (FTBSluiceRecipes.itemIsSluiceInput(state.getValue(MESH), itemStack)) {
-//            if (!world.isClientSide()) {
+        // Finally, if the player is holding an item that we can process, pass it to the sluice
+//        if (FTBSluiceRecipes.itemIsSluiceInput(state.getValue(MESH), itemStack)) {
+//            if (!level.isClientSide()) {
 //                if (sluice.inventory.getStackInSlot(0).isEmpty()) {
 //                    sluice.clearCache();
 //                    ItemStack copy = itemStack.copy();
@@ -206,11 +185,11 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
 //                }
 //            }
 //
-//            return InteractionResult.SUCCESS;
+//            return ItemInteractionResult.sidedSuccess(level.isClientSide());
 //        }
-//
-//        return InteractionResult.SUCCESS;
-//    }
+
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

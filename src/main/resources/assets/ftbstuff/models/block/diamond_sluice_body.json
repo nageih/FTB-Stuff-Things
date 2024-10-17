@@ -5,6 +5,7 @@
 		"0": "ftbstuff:block/diamond_sluice",
 		"particle": "ftbstuff:block/diamond_sluice"
 	},
+	"render_type": "cutout",
 	"elements": [
 		{
 			"from": [12.5, 0, 0],
