@@ -2,6 +2,8 @@ package dev.ftb.mods.ftbstuffnthings.registry;
 
 import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
+import dev.ftb.mods.ftbstuffnthings.blocks.cobblegen.CobbleGenProperties;
+import dev.ftb.mods.ftbstuffnthings.blocks.cobblegen.CobblegenBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.dripper.DripperBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.fusingmachine.FusingMachineBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.hammer.AutoHammerBlock;
@@ -45,6 +47,7 @@ public class BlocksRegistry {
     public static final DeferredBlock<DripperBlock> DRIPPER
             = BLOCKS.register("dripper", DripperBlock::new);
 
+
     public static final DeferredBlock<AutoHammerBlock> IRON_AUTO_HAMMER
             = BLOCKS.register("iron_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.IRON));
     public static final DeferredBlock<AutoHammerBlock> GOLD_AUTO_HAMMER
@@ -53,6 +56,15 @@ public class BlocksRegistry {
             = BLOCKS.register("diamond_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.DIAMOND));
     public static final DeferredBlock<AutoHammerBlock> NETHERITE_AUTO_HAMMER
             = BLOCKS.register("netherite_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.NETHERITE));
+
+    public static final DeferredBlock<CobblegenBlock> IRON_COBBLEGEN
+            = BLOCKS.register("iron_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.IRON));
+    public static final DeferredBlock<CobblegenBlock> GOLD_COBBLEGEN
+            = BLOCKS.register("gold_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.GOLD));
+    public static final DeferredBlock<CobblegenBlock> DIAMOND_COBBLEGEN
+            = BLOCKS.register("diamond_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.DIAMOND));
+    public static final DeferredBlock<CobblegenBlock> NETHERITE_COBBLEGEN
+            = BLOCKS.register("netherite_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.NETHERITE));
 
     public static final DeferredBlock<FusingMachineBlock> FUSING_MACHINE
             = BLOCKS.register("fusing_machine", FusingMachineBlock::new);

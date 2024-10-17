@@ -53,6 +53,12 @@ public class ItemsRegistry {
     public static final DeferredItem<BlockItem> DIAMOND_AUTO_HAMMER = blockItem("diamond_auto_hammer", BlocksRegistry.DIAMOND_AUTO_HAMMER);
     public static final DeferredItem<BlockItem> NETHERITE_AUTO_HAMMER = blockItem("netherite_auto_hammer", BlocksRegistry.NETHERITE_AUTO_HAMMER);
 
+
+    public static final DeferredItem<BlockItem> IRON_COBBLEGEN = blockItem("iron_cobblegen", BlocksRegistry.IRON_COBBLEGEN);
+    public static final DeferredItem<BlockItem> GOLD_COBBLEGEN = blockItem("gold_cobblegen", BlocksRegistry.GOLD_COBBLEGEN);
+    public static final DeferredItem<BlockItem> DIAMOND_COBBLEGEN = blockItem("diamond_cobblegen", BlocksRegistry.DIAMOND_COBBLEGEN);
+    public static final DeferredItem<BlockItem> NETHERITE_COBBLEGEN = blockItem("netherite_cobblegen", BlocksRegistry.NETHERITE_COBBLEGEN);
+
     public static final DeferredItem<BlockItem> PUMP = blockItem("pump", BlocksRegistry.PUMP);
 
     public static final DeferredItem<BlockItem> DRIPPER = blockItem("dripper", BlocksRegistry.DRIPPER);
