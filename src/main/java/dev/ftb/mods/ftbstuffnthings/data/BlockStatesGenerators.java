@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbstuffnthings.data;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
-import dev.ftb.mods.ftbstuffnthings.blocks.*;
+import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.JarAutomaterBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.pump.PumpBlock;
@@ -178,6 +178,10 @@ public class BlockStatesGenerators extends BlockStateProvider {
         simpleBlock(BlocksRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE.get());
 
         simpleBlock(BlocksRegistry.CAST_IRON_BLOCK.get());
+        simpleBlock(BlocksRegistry.DUST_BLOCK.get());
+        simpleBlock(BlocksRegistry.CRUSHED_BASALT.get());
+        simpleBlock(BlocksRegistry.CRUSHED_ENDSTONE.get());
+        simpleBlock(BlocksRegistry.CRUSHED_NETHERRACK.get());
     }
 
     private ModelFile machineModel(DeferredBlock<? extends Block> block, boolean active) {

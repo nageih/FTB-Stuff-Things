@@ -37,6 +37,10 @@ public class ItemModelsGenerator extends ItemModelProvider {
         withExistingParent("gold_auto_hammer", modLoc("block/gold_auto_hammer"));
         withExistingParent("diamond_auto_hammer", modLoc("block/diamond_auto_hammer"));
         withExistingParent("netherite_auto_hammer", modLoc("block/netherite_auto_hammer"));
+        withExistingParent("dust", modLoc("block/dust"));
+        withExistingParent("crushed_basalt", modLoc("block/crushed_basalt"));
+        withExistingParent("crushed_endstone", modLoc("block/crushed_endstone"));
+        withExistingParent("crushed_netherrack", modLoc("block/crushed_netherrack"));
 
         simpleItem(ItemsRegistry.FLUID_CAPSULE, "item/fluid_container_base", "item/fluid_container_overlay");
         simpleItem(ItemsRegistry.DRIPPER, "item/dripper");

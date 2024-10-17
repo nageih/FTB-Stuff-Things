@@ -62,6 +62,11 @@ public class ItemsRegistry {
 
     public static final DeferredItem<BlockItem> CAST_IRON_BLOCK = blockItem("cast_iron_block", BlocksRegistry.CAST_IRON_BLOCK);
 
+    public static final DeferredItem<BlockItem> DUST = blockItem("dust", BlocksRegistry.DUST_BLOCK);
+    public static final DeferredItem<BlockItem> CRUSHED_BASALT = blockItem("crushed_basalt", BlocksRegistry.CRUSHED_BASALT);
+    public static final DeferredItem<BlockItem> CRUSHED_ENDSTONE = blockItem("crushed_endstone", BlocksRegistry.CRUSHED_ENDSTONE);
+    public static final DeferredItem<BlockItem> CRUSHED_NETHERRACK = blockItem("crushed_netherrack", BlocksRegistry.CRUSHED_NETHERRACK);
+
     public static final DeferredItem<BlockItem> TUBE = blockItem("tube", BlocksRegistry.TUBE);
     public static final DeferredItem<BlockItem> JAR = blockItem("jar", BlocksRegistry.JAR);
     public static final DeferredItem<BlockItem> TEMPERED_JAR = blockItem("tempered_jar", BlocksRegistry.TEMPERED_JAR);

@@ -20,6 +20,10 @@
     "ftbstuff:creative_low_temperature_source",
     "ftbstuff:creative_high_temperature_source",
     "ftbstuff:creative_subzero_temperature_source",
-    "ftbstuff:cast_iron_block"
+    "ftbstuff:cast_iron_block",
+    "ftbstuff:dust",
+    "ftbstuff:crushed_netherrack",
+    "ftbstuff:crushed_basalt",
+    "ftbstuff:crushed_endstone"
   ]
 }

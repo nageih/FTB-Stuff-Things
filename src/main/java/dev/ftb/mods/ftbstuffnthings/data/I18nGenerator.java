@@ -73,6 +73,11 @@ public class I18nGenerator extends LanguageProvider {
 
         addBlock(BlocksRegistry.CAST_IRON_BLOCK, "Cast Iron Block");
 
+        addBlock(BlocksRegistry.DUST_BLOCK, "Dust");
+        addBlock(BlocksRegistry.CRUSHED_BASALT, "Crushed Basalt");
+        addBlock(BlocksRegistry.CRUSHED_ENDSTONE, "Crushed Endstone");
+        addBlock(BlocksRegistry.CRUSHED_NETHERRACK, "Crushed Netherrack");
+
         addItem(ItemsRegistry.CLOTH_MESH, "Cloth Mesh");
         addItem(ItemsRegistry.IRON_MESH, "Iron Mesh");
         addItem(ItemsRegistry.GOLD_MESH, "Gold Mesh");

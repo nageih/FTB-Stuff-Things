@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbstuffnthings.registry;
 
 import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
+import dev.ftb.mods.ftbstuffnthings.blocks.SimpleFallingBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.dripper.DripperBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.fusingmachine.FusingMachineBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.hammer.AutoHammerBlock;
@@ -14,6 +15,7 @@ import dev.ftb.mods.ftbstuffnthings.blocks.pump.PumpBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.supercooler.SuperCoolerBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.tube.TubeBlock;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.MagmaBlock;
@@ -93,6 +95,15 @@ public class BlocksRegistry {
             .sound(SoundType.METAL)
             .requiresCorrectToolForDrops()
     );
+
+    public static final DeferredBlock<Block> DUST_BLOCK = BLOCKS.registerBlock("dust", SimpleFallingBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).strength(0.4F).sound(SoundType.SAND));
+    public static final DeferredBlock<Block> CRUSHED_NETHERRACK = BLOCKS.registerBlock("crushed_netherrack", SimpleFallingBlock::new,
+           BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.NETHER).requiresCorrectToolForDrops().strength(0.35F).sound(SoundType.NETHERRACK));
+    public static final DeferredBlock<Block> CRUSHED_BASALT = BLOCKS.registerBlock("crushed_basalt", SimpleFallingBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(DyeColor.BLACK).requiresCorrectToolForDrops().strength(0.8F, 2.75F).sound(SoundType.BASALT));
+    public static final DeferredBlock<Block> CRUSHED_ENDSTONE = BLOCKS.registerBlock("crushed_endstone", SimpleFallingBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.SAND).requiresCorrectToolForDrops().strength(2.0F, 6.0F));
 
     public static void init(IEventBus bus) {
         BLOCKS.register(bus);
