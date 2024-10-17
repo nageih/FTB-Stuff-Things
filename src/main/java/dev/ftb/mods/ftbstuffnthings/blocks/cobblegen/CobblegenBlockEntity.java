@@ -101,6 +101,12 @@ public class CobblegenBlockEntity extends BlockEntity {
         inventory.deserializeNBT(registries, tag.getCompound("inventory"));
     }
 
+    public static class Stone extends CobblegenBlockEntity {
+        public Stone(BlockPos pos, BlockState blockState) {
+            super(BlockEntitiesRegistry.STONE_COBBLEGEN.get(), CobbleGenProperties.STONE, pos, blockState);
+        }
+    }
+
     public static class Iron extends CobblegenBlockEntity {
         public Iron(BlockPos pos, BlockState blockState) {
             super(BlockEntitiesRegistry.IRON_COBBLEGEN.get(), CobbleGenProperties.IRON, pos, blockState);

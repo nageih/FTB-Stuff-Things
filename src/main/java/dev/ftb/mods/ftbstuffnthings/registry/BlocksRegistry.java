@@ -57,6 +57,9 @@ public class BlocksRegistry {
     public static final DeferredBlock<AutoHammerBlock> NETHERITE_AUTO_HAMMER
             = BLOCKS.register("netherite_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.NETHERITE));
 
+
+    public static final DeferredBlock<CobblegenBlock> STONE_COBBLEGEN
+            = BLOCKS.register("stone_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.STONE));
     public static final DeferredBlock<CobblegenBlock> IRON_COBBLEGEN
             = BLOCKS.register("iron_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.IRON));
     public static final DeferredBlock<CobblegenBlock> GOLD_COBBLEGEN

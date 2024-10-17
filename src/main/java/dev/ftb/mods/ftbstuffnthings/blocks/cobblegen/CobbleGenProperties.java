@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.function.BiFunction;
 
 public enum CobbleGenProperties {
+    STONE(Config.STONE_COBBLEGEN_AMOUNT, CobblegenBlockEntity.Stone::new),
     IRON(Config.IRON_COBBLEGEN_AMOUNT, CobblegenBlockEntity.Iron::new),
     GOLD(Config.GOLD_COBBLEGEN_AMOUNT, CobblegenBlockEntity.Gold::new),
     DIAMOND(Config.DIAMOND_COBBLEGEN_AMOUNT, CobblegenBlockEntity.Diamond::new),

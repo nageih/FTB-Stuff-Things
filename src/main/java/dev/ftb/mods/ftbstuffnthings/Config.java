@@ -35,7 +35,9 @@ public class Config {
     public static final IntValue DELAY_PER_OPERATION = COBBLEGEN_CONFIG.addInt("operations_per_tick", 20, 1, Integer.MAX_VALUE)
             .comment("The delay between each cobble generation in ticks");
 
-    public static final IntValue IRON_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("stone_cobblegen_amount", 1, 1, 1000)
+    public static final IntValue STONE_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("stone_cobblegen_amount", 1, 1, 1000)
+            .comment("Amount of cobble the stone cobblegen produces per tick");
+    public static final IntValue IRON_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("iron_cobblegen_amount", 8, 1, 1000)
             .comment("Amount of cobble the iron cobblegen produces per tick");
     public static final IntValue GOLD_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("gold_cobblegen_amount", 16, 1, 1000)
             .comment("Amount of cobble the gold cobblegen produces per tick");
