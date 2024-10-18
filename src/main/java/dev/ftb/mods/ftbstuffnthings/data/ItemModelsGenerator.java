@@ -38,6 +38,11 @@ public class ItemModelsGenerator extends ItemModelProvider {
         withExistingParent("diamond_auto_hammer", modLoc("block/diamond_auto_hammer"));
         withExistingParent("netherite_auto_hammer", modLoc("block/netherite_auto_hammer"));
 
+        withExistingParent("iron_cobblestone_generator", modLoc("block/iron_cobblestone_generator"));
+        withExistingParent("gold_cobblestone_generator", modLoc("block/gold_cobblestone_generator"));
+        withExistingParent("diamond_cobblestone_generator", modLoc("block/diamond_cobblestone_generator"));
+        withExistingParent("netherite_cobblestone_generator", modLoc("block/netherite_cobblestone_generator"));
+
         simpleItem(ItemsRegistry.FLUID_CAPSULE, "item/fluid_container_base", "item/fluid_container_overlay");
         simpleItem(ItemsRegistry.DRIPPER, "item/dripper");
         simpleItem(ItemsRegistry.WATER_BOWL, "item/water_bowl");
