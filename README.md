@@ -1,13 +1,17 @@
 # FTB Stuff & Things
 
-A combination mod that merges all the best parts of our previous FTB Sluice, FTB Jar Mod, FTB Dripper and Item Recycler mods into one mod that is better integrated, more fleshed out, and easier to use.
+FTB Stuff & Things is our general use mod for adding new content to our modpacks that don't quite fit into our other mods. This is mostly a collection of small features and blocks that our packs have needed over the years. 
+
+This mod is designed to be used with a modpack so it is not recommended to use this mod on its own as there are no recipes for a start...
 
 ## Features
 
-- 🫧 **Sluice**: A block that can be used to wash materials using a variety of fluids. It can be used to wash ores, crops, and other items to get additional resources.
+- 🫧 **Sluices**: A block that can be used to wash materials using a variety of fluids. It can be used to wash ores, crops, and other items to get additional resources.
 - 🫙 **Jar**: Jars are a both a storage solution for fluids and also a new way to craft items using items and fluids.
-- 💧 **Dripper**: ...
-- ♻️ **Item Recycler**: ...
+- 💧 **Dripper**: A block that can be used to slowly drip fluids into the world. It is compatible with most fluids and can be used to convert blocks into other blocks through the use of fluids. (Recipe powered)
+- ♻️ **Item Recycler**: A block that can be used to recycle items into other items. It can be used to recycle items that are no longer needed or to get additional resources from items. (Recipe powered)
+- ❄️ **Fusing & Coolers**: These are used to fuse materials into new forms or supercool them to get additional resources. (Recipe powered)
+- ⚒️ **Hammers**: Hammers are used to crush blocks into smaller pieces. This is your typical cobble to gravel to sand to dust type of block. This is recipe powered and can be used to get additional resources from blocks.
 
 ## Integration
 
