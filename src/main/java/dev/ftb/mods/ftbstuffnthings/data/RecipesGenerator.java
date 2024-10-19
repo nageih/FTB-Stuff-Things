@@ -5,6 +5,7 @@ import dev.ftb.mods.ftbstuffnthings.FTBStuffTags;
 import dev.ftb.mods.ftbstuffnthings.crafting.DevEnvironmentCondition;
 import dev.ftb.mods.ftbstuffnthings.crafting.ItemWithChance;
 import dev.ftb.mods.ftbstuffnthings.data.recipe.*;
+import dev.ftb.mods.ftbstuffnthings.items.MeshType;
 import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ItemsRegistry;
 import dev.ftb.mods.ftbstuffnthings.temperature.Temperature;
@@ -118,6 +119,7 @@ public class RecipesGenerator extends RecipeProvider {
         temperatureSourceRecipes(output);
         dripperRecipes(output);
         crookRecipes(output);
+        sluiceRecipes(output);
         hammerRecipes(output);
         fusingMachineRecipes(output);
         superCoolerRecipes(output);
@@ -236,6 +238,12 @@ public class RecipesGenerator extends RecipeProvider {
         new CrookRecipeBuilder(Ingredient.of(Blocks.SHORT_GRASS), List.of(
                 new ItemWithChance(new ItemStack(Items.STRING), 0.5)
         )).keepExistingDrops().saveTest(output, FTBStuffNThings.id("string_from_grass"));
+    }
+
+    private void sluiceRecipes(RecipeOutput output) {
+        new SluiceRecipeBuilder(Ingredient.of(Items.COBBLESTONE), List.of(
+                new ItemWithChance(new ItemStack(Blocks.GRAVEL), 1)
+        ), List.of(MeshType.CLOTH, MeshType.IRON)).saveTest(output, FTBStuffNThings.id("gravel_from_cobblestone"));
     }
 
     private void hammerRecipes(RecipeOutput output) {

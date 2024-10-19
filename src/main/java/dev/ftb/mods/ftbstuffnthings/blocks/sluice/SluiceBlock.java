@@ -3,6 +3,7 @@ package dev.ftb.mods.ftbstuffnthings.blocks.sluice;
 import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffTags;
 import dev.ftb.mods.ftbstuffnthings.blocks.SerializableComponentsProvider;
+import dev.ftb.mods.ftbstuffnthings.crafting.recipe.SluiceRecipe;
 import dev.ftb.mods.ftbstuffnthings.items.MeshItem;
 import dev.ftb.mods.ftbstuffnthings.items.MeshType;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
@@ -13,6 +14,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -21,6 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -46,6 +50,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
@@ -86,6 +91,7 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
     public SNBTConfig getProps() {
         return config;
     }
+
 
     @Override
     protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
@@ -173,20 +179,22 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        // Finally, if the player is holding an item that we can process, pass it to the sluice
-//        if (FTBSluiceRecipes.itemIsSluiceInput(state.getValue(MESH), itemStack)) {
-//            if (!level.isClientSide()) {
-//                if (sluice.inventory.getStackInSlot(0).isEmpty()) {
-//                    sluice.clearCache();
-//                    ItemStack copy = itemStack.copy();
-//                    copy.setCount(1);
-//                    sluice.inventory.internalInsert(0, copy, false);
-//                    itemStack.shrink(1);
-//                }
-//            }
-//
-//            return ItemInteractionResult.sidedSuccess(level.isClientSide());
-//        }
+        // Right, the player is trying to insert an item into the sluice
+        Optional<RecipeHolder<SluiceRecipe>> recipeFor = sluice.getRecipeFor(stack);
+        boolean insertResult = recipeFor.map(recipe -> {
+            if (level.isClientSide()) {
+                return true;
+            }
+
+            sluice.getInputInventory().get().insertItem(0, stack.copyWithCount(1), false);
+            stack.shrink(1);
+
+            return true;
+        }).orElse(false);
+
+        if (insertResult) {
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
 
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
@@ -339,7 +347,11 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return EntityBlock.super.getTicker(level, state, blockEntityType);
+//        if (!level.isClientSide) {
+//            return null;
+//        }
+
+        return SluiceBlockEntity::tick;
     }
 
     @Override
