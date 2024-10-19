@@ -12,6 +12,7 @@ This mod is designed to be used with a modpack so it is not recommended to use t
 - ♻️ **Item Recycler**: A block that can be used to recycle items into other items. It can be used to recycle items that are no longer needed or to get additional resources from items. (Recipe powered)
 - ❄️ **Fusing & Coolers**: These are used to fuse materials into new forms or supercool them to get additional resources. (Recipe powered)
 - ⚒️ **Hammers**: Hammers are used to crush blocks into smaller pieces. This is your typical cobble to gravel to sand to dust type of block. This is recipe powered and can be used to get additional resources from blocks.
+- 📦 **Crates & Barrels**: These are basic loot dropping blocks that will drop items when broken. These are modified by updating their own blocks loot table.
 
 ## Integration
 
