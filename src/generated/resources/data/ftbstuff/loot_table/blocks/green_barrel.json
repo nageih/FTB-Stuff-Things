@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [],
+      "name": "green_barrel",
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "ftbstuff:blocks/green_barrel"
+}

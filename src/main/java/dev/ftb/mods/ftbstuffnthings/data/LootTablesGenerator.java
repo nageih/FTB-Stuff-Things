@@ -1,6 +1,9 @@
 package dev.ftb.mods.ftbstuffnthings.data;
 
 import dev.ftb.mods.ftbstuffnthings.blocks.SerializableComponentsProvider;
+import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.BarrelBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.CrateBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.SmallCrateBlock;
 import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.WritableRegistry;
@@ -11,6 +14,7 @@ import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -35,7 +39,9 @@ import java.util.stream.Collectors;
 
 public class LootTablesGenerator extends LootTableProvider {
     public LootTablesGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, Set.of(), List.of(new LootTableProvider.SubProviderEntry(BlockLoot::new, LootContextParamSets.BLOCK)), registries);
+        super(output, Set.of(), List.of(
+                new LootTableProvider.SubProviderEntry(BlockLoot::new, LootContextParamSets.BLOCK)
+        ), registries);
     }
 
     @Override
@@ -63,9 +69,23 @@ public class LootTablesGenerator extends LootTableProvider {
                 if (b instanceof EntityBlock && BuiltInRegistries.ITEM.containsKey(holder.getId())) {
                     addStandardSerializedDrop(b, holder.getId());
                 } else if (b.asItem() != Items.AIR) {
+                    if (b instanceof CrateBlock || b instanceof SmallCrateBlock || b instanceof BarrelBlock) {
+                        continue;
+                    }
+
                     dropSelf(b);
                 }
             }
+
+            // Barrels should drop another loot table instead of themselves
+            BlocksRegistry.BARRELS.forEach(barrel -> {
+                var name = barrel.getId().getPath();
+                add(barrel.get(), LootTable.lootTable().withPool(LootPool.lootPool().name(name)));
+            });
+
+            add(BlocksRegistry.CRATE.get(), LootTable.lootTable().withPool(LootPool.lootPool().name("crate")));
+            add(BlocksRegistry.SMALL_CRATE.get(), LootTable.lootTable().withPool(LootPool.lootPool().name("small_crate")));
+            add(BlocksRegistry.PULSATING_CRATE.get(), LootTable.lootTable().withPool(LootPool.lootPool().name("pulsating_crate")));
         }
 
         private void addStandardSerializedDrop(Block block, ResourceLocation blockId) {

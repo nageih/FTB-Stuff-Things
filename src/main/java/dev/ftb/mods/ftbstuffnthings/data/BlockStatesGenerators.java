@@ -15,6 +15,7 @@ import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.*;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -169,6 +170,22 @@ public class BlockStatesGenerators extends BlockStateProvider {
                     .condition(prop, true);
         });
 
+        // Crates & Barrels
+        BlocksRegistry.BARRELS.forEach((block) -> {
+            var name = block.getId().getPath();
+            ModelFile model = models().getExistingFile(modLoc("block/" + name));
+            simpleBlock(block.get(), model);
+        });
+
+        simpleBlock(BlocksRegistry.CRATE.get(), models().getExistingFile(modLoc("block/crate")));
+        simpleBlock(BlocksRegistry.PULSATING_CRATE.get(), models().getExistingFile(modLoc("block/pulsating_crate")));
+
+        // Small crate supports rotations
+        var smallCrateModel = models().getExistingFile(modLoc("block/small_crate"));
+        getVariantBuilder(BlocksRegistry.SMALL_CRATE.get()).forAllStatesExcept(state -> ConfiguredModel.builder()
+                        .modelFile(smallCrateModel)
+                        .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build(),
+                BlockStateProperties.WATERLOGGED);
 
         // Misc simple blocks
 

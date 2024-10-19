@@ -11,6 +11,9 @@ import dev.ftb.mods.ftbstuffnthings.blocks.jar.CreativeTemperatureSourceBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.JarAutomaterBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.JarBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.BarrelBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.CrateBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.SmallCrateBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.pump.PumpBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.supercooler.SuperCoolerBlock;
@@ -104,6 +107,22 @@ public class BlocksRegistry {
             BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(DyeColor.BLACK).requiresCorrectToolForDrops().strength(0.8F, 2.75F).sound(SoundType.BASALT));
     public static final DeferredBlock<Block> CRUSHED_ENDSTONE = BLOCKS.registerBlock("crushed_endstone", SimpleFallingBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.SAND).requiresCorrectToolForDrops().strength(2.0F, 6.0F));
+
+    public static final DeferredBlock<Block> WHITE_BARREL = BLOCKS.register("white_barrel", BarrelBlock::new);
+    public static final DeferredBlock<Block> GREEN_BARREL = BLOCKS.register("green_barrel", BarrelBlock::new);
+    public static final DeferredBlock<Block> BLUE_BARREL = BLOCKS.register("blue_barrel", BarrelBlock::new);
+    public static final DeferredBlock<Block> PURPLE_BARREL = BLOCKS.register("purple_barrel", BarrelBlock::new);
+    public static final DeferredBlock<Block> RED_BARREL = BLOCKS.register("red_barrel", BarrelBlock::new);
+    public static final DeferredBlock<Block> BLACK_BARREL = BLOCKS.register("black_barrel", BarrelBlock::new);
+    public static final DeferredBlock<Block> GOLDEN_BARREL = BLOCKS.register("golden_barrel", BarrelBlock::new);
+
+    public static final List<DeferredBlock<Block>> BARRELS = List.of(WHITE_BARREL, GREEN_BARREL, BLUE_BARREL, PURPLE_BARREL, RED_BARREL, BLACK_BARREL, GOLDEN_BARREL);
+
+    public static final DeferredBlock<Block> SMALL_CRATE = BLOCKS.register("small_crate", SmallCrateBlock::new);
+    public static final DeferredBlock<Block> CRATE = BLOCKS.register("crate", CrateBlock::new);
+    public static final DeferredBlock<Block> PULSATING_CRATE = BLOCKS.register("pulsating_crate", CrateBlock::new);
+
+    public static final List<DeferredBlock<Block>> CRATES = List.of(SMALL_CRATE, CRATE, PULSATING_CRATE);
 
     public static void init(IEventBus bus) {
         BLOCKS.register(bus);

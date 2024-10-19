@@ -99,5 +99,17 @@ public class I18nGenerator extends LanguageProvider {
 
         addItem(ItemsRegistry.CROOK, "Stone Crook");
         addItem(ItemsRegistry.STONE_ROD, "Stone Rod");
+
+        BlocksRegistry.BARRELS.forEach((barrel) -> {
+            String name = barrel.getId().getPath().split("_")[0];
+            // Upper case first letter
+            name = name.substring(0, 1).toUpperCase() + name.substring(1);
+
+            addBlock(barrel, name + " Barrel");
+        });
+
+        addBlock(BlocksRegistry.CRATE, "Crate");
+        addBlock(BlocksRegistry.SMALL_CRATE, "Small Crate");
+        addBlock(BlocksRegistry.PULSATING_CRATE, "Pulsating Crate");
     }
 }
