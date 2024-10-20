@@ -17,8 +17,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,6 +24,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -67,7 +66,6 @@ public class SluiceBlockEntity extends BlockEntity {
         if (sluice.processing) {
             sluice.processingProgress++;
 
-            System.out.println("Processing progress: " + sluice.processingProgress + " / " + sluice.processingTime);
             if (sluice.processingProgress > sluice.processingTime) {
                 sluice.processing = false;
                 sluice.processingProgress = 0;
@@ -83,6 +81,13 @@ public class SluiceBlockEntity extends BlockEntity {
                 var recipe = sluice.getRecipeFor(inputStack);
                 if (recipe.isEmpty()) {
                     return; // How did we get here?
+                }
+
+                // Take the fluid
+                var recipeFluid = recipe.get().value().getFluid();
+                if (!recipeFluid.isEmpty()) {
+                    // This is safe to assume we have the fluid as you can only insert fluid to this tank and we check it before starting the processing
+                    sluice.fluidTank.get().drain(recipeFluid.getAmount(), IFluidHandler.FluidAction.EXECUTE);
                 }
 
                 // Get the results
@@ -217,30 +222,33 @@ public class SluiceBlockEntity extends BlockEntity {
     private int genRecipeHash(ItemStack input) {
         int fluidHash = FluidStack.hashFluidAndComponents(fluidTank.get().getFluid());
         int itemHash = input.hashCode();
+        int meshOrdinal = this.getBlockState().getValue(SluiceBlock.MESH).ordinal();
 
-        return Objects.hash(fluidHash, itemHash);
+        return Objects.hash(fluidHash, itemHash, meshOrdinal);
     }
 
     private Optional<RecipeHolder<SluiceRecipe>> searchForRecipe(ItemStack input) {
+        assert level != null;
+
         return level.getRecipeManager().getRecipesFor(RecipesRegistry.SLUICE_TYPE.get(), NoInventory.INSTANCE, level)
                 .stream()
                 // Test the fluid and the itemss
-                .filter(r -> !fluidAndItemMatch(r.value(), input))
+                .filter(r -> !fluidItemAndMeshMatch(r.value(), input))
                 .findFirst();
     }
 
-    // TODO: Mesh as well
-    private boolean fluidAndItemMatch(SluiceRecipe recipe, ItemStack input) {
+    private boolean fluidItemAndMeshMatch(SluiceRecipe recipe, ItemStack input) {
         boolean itemTest = recipe.getIngredient().test(input);
+        boolean meshTest = recipe.getMeshTypes().contains(this.getBlockState().getValue(SluiceBlock.MESH));
 
         FluidStack recipeFluid = recipe.getFluid();
         FluidStack tankFluid = fluidTank.get().getFluid();
 
         if (recipeFluid.isEmpty() && tankFluid.isEmpty()) {
-            return itemTest;
+            return itemTest && meshTest;
         }
 
-        return itemTest && recipeFluid.equals(tankFluid) && tankFluid.getAmount() >= recipeFluid.getAmount();
+        return itemTest && meshTest && recipeFluid.equals(tankFluid) && tankFluid.getAmount() >= recipeFluid.getAmount();
     }
 
     @Override

@@ -5,6 +5,7 @@
 		"0": "ftbstuff:block/gold_mesh",
 		"particle": "ftbstuff:block/gold_mesh"
 	},
+	"render_type": "cutout",
 	"elements": [
 		{
 			"from": [3, 9, 2],

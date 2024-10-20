@@ -155,6 +155,10 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
             return ItemInteractionResult.FAIL;
         }
 
+        if (stack.isEmpty()) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+
         if (stack.is(FTBStuffTags.Items.MESHES)) {
             MeshType type = ((MeshItem) stack.getItem()).mesh;
 
@@ -180,6 +184,7 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
 
+
         // Right, the player is trying to insert an item into the sluice
         Optional<RecipeHolder<SluiceRecipe>> recipeFor = sluice.getRecipeFor(stack);
         boolean insertResult = recipeFor.map(recipe -> {
@@ -200,7 +205,7 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

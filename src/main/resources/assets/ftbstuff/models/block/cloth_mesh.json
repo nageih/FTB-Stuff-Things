@@ -5,6 +5,7 @@
 		"0": "ftbstuff:block/cloth_mesh",
 		"particle": "ftbstuff:block/cloth_mesh"
 	},
+	"render_type": "cutout",
 	"elements": [
 		{
 			"from": [3, 9, 2],
