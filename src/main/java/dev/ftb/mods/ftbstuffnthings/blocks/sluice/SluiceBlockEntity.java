@@ -43,6 +43,11 @@ public class SluiceBlockEntity extends BlockEntity {
         protected void onContentsChanged(int slot) {
             setChanged();
         }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
     });
 
     private boolean processing = false;
@@ -61,6 +66,7 @@ public class SluiceBlockEntity extends BlockEntity {
         // Step one, are we processing, if we're processing, we need to process, not check for items
         if (sluice.processing) {
             sluice.processingProgress++;
+
             System.out.println("Processing progress: " + sluice.processingProgress + " / " + sluice.processingTime);
             if (sluice.processingProgress > sluice.processingTime) {
                 sluice.processing = false;
@@ -87,10 +93,12 @@ public class SluiceBlockEntity extends BlockEntity {
                     }
                 }
 
+                sluice.setChanged();
                 // And we're done
                 return;
             }
 
+            sluice.setChanged();
             return;
         }
 
@@ -108,6 +116,7 @@ public class SluiceBlockEntity extends BlockEntity {
             sluice.dropItemOrPushToInventory(inputStack);
             // Clear the slot
             sluice.inputInventory.get().setStackInSlot(0, ItemStack.EMPTY);
+            sluice.setChanged();
             return;
         }
 
@@ -115,6 +124,7 @@ public class SluiceBlockEntity extends BlockEntity {
         sluice.processing = true;
         sluice.processingTime = (int) (BASE_PROCESSING_TIME * recipe.get().value().getProcessingTimeMultiplier());
         sluice.processingProgress = 0; // Just in case
+        sluice.setChanged();
     }
 
     private void dropItemOrPushToInventory(ItemStack stack) {
@@ -134,14 +144,11 @@ public class SluiceBlockEntity extends BlockEntity {
 
         if (!stack.isEmpty()) {
             BlockPos pos = this.worldPosition.relative(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), 2);
-            level.setBlock(pos, Blocks.GLASS.defaultBlockState(), 3);
-
             double my = 0.14D * (level.random.nextFloat() * 0.4D);
 
             ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
-//
-//            itemEntity.setNoPickUpDelay();
-//            itemEntity.setDeltaMovement(0, my, 0);
+
+            itemEntity.setDeltaMovement(0, my, 0);
             level.addFreshEntity(itemEntity);
         }
     }
@@ -159,15 +166,21 @@ public class SluiceBlockEntity extends BlockEntity {
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        fluidTank.get().writeToNBT(registries, tag);
+        tag.putBoolean("processing", processing);
+        tag.putInt("processingProgress", processingProgress);
+        tag.putInt("processingTime", processingTime);
 
+        fluidTank.get().writeToNBT(registries, tag);
         tag.put("inputInventory", inputInventory.get().serializeNBT(registries));
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        fluidTank.get().readFromNBT(registries, tag);
+        this.processing = tag.getBoolean("processing");
+        this.processingProgress = tag.getInt("processingProgress");
+        this.processingTime = tag.getInt("processingTime");
 
+        fluidTank.get().readFromNBT(registries, tag);
         inputInventory.get().deserializeNBT(registries, tag.getCompound("inputInventory"));
     }
 
@@ -178,20 +191,15 @@ public class SluiceBlockEntity extends BlockEntity {
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        var data = new CompoundTag();
-        this.saveAdditional(data, registries);
-        return data;
+        var tag = super.getUpdateTag(registries);
+        this.saveAdditional(tag, registries);
+        return tag;
     }
 
     @Nullable
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        this.loadAdditional(pkt.getTag(), lookupProvider);
     }
 
     public PublicReadOnlyFluidTank getFluidTank() {
@@ -221,6 +229,7 @@ public class SluiceBlockEntity extends BlockEntity {
                 .findFirst();
     }
 
+    // TODO: Mesh as well
     private boolean fluidAndItemMatch(SluiceRecipe recipe, ItemStack input) {
         boolean itemTest = recipe.getIngredient().test(input);
 
@@ -232,6 +241,23 @@ public class SluiceBlockEntity extends BlockEntity {
         }
 
         return itemTest && recipeFluid.equals(tankFluid) && tankFluid.getAmount() >= recipeFluid.getAmount();
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        handleUpdateTag(pkt.getTag(), lookupProvider);
+    }
+
+    public int getProcessingTime() {
+        return processingTime;
+    }
+
+    public int getProcessingProgress() {
+        return processingProgress;
+    }
+
+    public boolean isProcessing() {
+        return processing;
     }
 
     //#region BlockEntity types

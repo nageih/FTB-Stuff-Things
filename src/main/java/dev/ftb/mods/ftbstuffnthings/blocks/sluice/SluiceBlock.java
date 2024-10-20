@@ -45,6 +45,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -182,11 +183,14 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
         // Right, the player is trying to insert an item into the sluice
         Optional<RecipeHolder<SluiceRecipe>> recipeFor = sluice.getRecipeFor(stack);
         boolean insertResult = recipeFor.map(recipe -> {
-            if (level.isClientSide()) {
-                return true;
+            ItemStackHandler itemStackHandler = sluice.getInputInventory().get();
+            if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
+                return false;
             }
 
-            sluice.getInputInventory().get().insertItem(0, stack.copyWithCount(1), false);
+            itemStackHandler.insertItem(0, stack.copyWithCount(1), false);
+            sluice.setChanged();
+
             stack.shrink(1);
 
             return true;
@@ -347,10 +351,6 @@ public class SluiceBlock extends Block implements EntityBlock, SerializableCompo
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-//        if (!level.isClientSide) {
-//            return null;
-//        }
-
         return SluiceBlockEntity::tick;
     }
 
