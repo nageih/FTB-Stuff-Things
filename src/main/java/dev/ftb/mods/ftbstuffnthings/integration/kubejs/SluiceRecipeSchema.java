@@ -11,13 +11,12 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import java.util.List;
 
 public interface SluiceRecipeSchema {
+    RecipeKey<List<ItemWithChance>> RESULTS = ItemWithChanceComponent.INSTANCE.asList().key("results", ComponentRole.OUTPUT);
     RecipeKey<Ingredient> INGREDIENT = IngredientComponent.INGREDIENT.key("input", ComponentRole.INPUT);
     RecipeKey<SizedFluidIngredient> FLUID = SizedFluidIngredientComponent.FLAT.inputKey("fluid");
+    RecipeKey<List<MeshType>> MESH_TYPES = EnumComponent.of("mesh_type", MeshType.class, MeshType.CODEC).asList().otherKey("mesh_types");
     RecipeKey<Integer> MAX_RESULTS = NumberComponent.INT.key("max_results", ComponentRole.OTHER).optional(4);
     RecipeKey<Float> TIME = NumberComponent.FLOAT.key("processing_time_multiplier", ComponentRole.OTHER).optional(1F);
-    RecipeKey<List<MeshType>> MESH_TYPES = EnumComponent.of("mesh_type", MeshType.class, MeshType.CODEC).asList().otherKey("mesh_types");
 
-    RecipeKey<List<ItemWithChance>> RESULTS = ItemWithChanceComponent.INSTANCE.asList().key("results", ComponentRole.OUTPUT);
-
-    RecipeSchema SCHEMA = new RecipeSchema(RESULTS, INGREDIENT, FLUID, MAX_RESULTS, TIME, MESH_TYPES);
+    RecipeSchema SCHEMA = new RecipeSchema(RESULTS, INGREDIENT, FLUID, MESH_TYPES, MAX_RESULTS, TIME);
 }
