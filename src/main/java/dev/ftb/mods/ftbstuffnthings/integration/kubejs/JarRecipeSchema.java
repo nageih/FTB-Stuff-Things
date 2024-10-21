@@ -13,14 +13,14 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import java.util.List;
 
 public interface JarRecipeSchema {
-    RecipeKey<List<SizedIngredient>> INPUT_ITEMS = SizedIngredientComponent.FLAT.asList().inputKey("input_items");
-    RecipeKey<List<SizedFluidIngredient>> INPUT_FLUIDS = SizedFluidIngredientComponent.FLAT.asList().inputKey("input_fluids").optional(List.of());
     RecipeKey<List<ItemStack>> OUTPUT_ITEMS = ItemStackComponent.STRICT_ITEM_STACK.asList().outputKey("output_items");
     RecipeKey<List<FluidStack>> OUTPUT_FLUIDS = FluidStackComponent.FLUID_STACK.asList().outputKey("output_fluids");
+    RecipeKey<List<SizedIngredient>> INPUT_ITEMS = SizedIngredientComponent.FLAT.asList().inputKey("input_items").optional(List.of());
+    RecipeKey<List<SizedFluidIngredient>> INPUT_FLUIDS = SizedFluidIngredientComponent.FLAT.asList().inputKey("input_fluids").optional(List.of());
     RecipeKey<Temperature> TEMPERATURE = EnumComponent.of("temperature", Temperature.class, StringRepresentable.fromEnum(Temperature::values)).otherKey("temperature").optional(Temperature.NORMAL);
     RecipeKey<Integer> TIME = NumberComponent.INT.key("time", ComponentRole.OTHER).optional(200);
     RecipeKey<Boolean> CAN_REPEAT = BooleanComponent.BOOLEAN.key("can_repeat", ComponentRole.OTHER).optional(true);
     RecipeKey<String> STAGE = StringComponent.ANY.key("stage", ComponentRole.OTHER).optional("");
 
-    RecipeSchema SCHEMA = new RecipeSchema(INPUT_ITEMS, INPUT_FLUIDS, OUTPUT_ITEMS, OUTPUT_FLUIDS, TEMPERATURE, TIME, CAN_REPEAT, STAGE);
+    RecipeSchema SCHEMA = new RecipeSchema(OUTPUT_ITEMS, OUTPUT_FLUIDS, INPUT_ITEMS, INPUT_FLUIDS, TEMPERATURE, TIME, CAN_REPEAT, STAGE);
 }
