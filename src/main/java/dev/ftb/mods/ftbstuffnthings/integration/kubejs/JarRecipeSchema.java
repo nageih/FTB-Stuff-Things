@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface JarRecipeSchema {
     RecipeKey<List<SizedIngredient>> INPUT_ITEMS = SizedIngredientComponent.FLAT.asList().inputKey("input_items");
-    RecipeKey<List<SizedFluidIngredient>> INPUT_FLUIDS = SizedFluidIngredientComponent.FLAT.asList().inputKey("input_fluids");
+    RecipeKey<List<SizedFluidIngredient>> INPUT_FLUIDS = SizedFluidIngredientComponent.FLAT.asList().inputKey("input_fluids").optional(List.of());
     RecipeKey<List<ItemStack>> OUTPUT_ITEMS = ItemStackComponent.STRICT_ITEM_STACK.asList().outputKey("output_items");
     RecipeKey<List<FluidStack>> OUTPUT_FLUIDS = FluidStackComponent.FLUID_STACK.asList().outputKey("output_fluids");
     RecipeKey<Temperature> TEMPERATURE = EnumComponent.of("temperature", Temperature.class, StringRepresentable.fromEnum(Temperature::values)).otherKey("temperature").optional(Temperature.NORMAL);
