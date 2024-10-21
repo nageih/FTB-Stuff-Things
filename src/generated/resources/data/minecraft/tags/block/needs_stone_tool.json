@@ -24,6 +24,16 @@
     "ftbstuff:dust",
     "ftbstuff:crushed_netherrack",
     "ftbstuff:crushed_basalt",
-    "ftbstuff:crushed_endstone"
+    "ftbstuff:crushed_endstone",
+    "ftbstuff:white_barrel",
+    "ftbstuff:green_barrel",
+    "ftbstuff:blue_barrel",
+    "ftbstuff:purple_barrel",
+    "ftbstuff:red_barrel",
+    "ftbstuff:black_barrel",
+    "ftbstuff:golden_barrel",
+    "ftbstuff:small_crate",
+    "ftbstuff:crate",
+    "ftbstuff:pulsating_crate"
   ]
 }

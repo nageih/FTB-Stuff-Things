@@ -13,6 +13,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -29,25 +31,25 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
             this.renderFluid(te, partialTick, matrix, renderer, light, otherlight);
         }
 
-//        ItemStack resource = te.inventory.getStackInSlot(0);
-//        if (resource.isEmpty()) {
-//            return;
-//        }
-//
-//        int progress = (te.processed * 100) / te.maxProcessed;
-//        float offset = te.processed < 0 ? 0 : progress;
-//
-//        float v = te.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
-//        matrix.pushPose();
-//        matrix.translate(.5F, .85F - (offset / 250F), .5F);
-//        matrix.scale(1.4F, 1.4F, 1.4F);
-//        matrix.mulPose(Axis.YN.rotationDegrees(45 + v));
-//
-//        Minecraft.getInstance().getItemRenderer().renderStatic(
-//                resource, ItemDisplayContext.FIRST_PERSON_LEFT_HAND, light, otherlight, matrix, renderer
-//        );
-//
-//        matrix.popPose();
+        ItemStack resource = te.getInputInventory().get().getStackInSlot(0);
+        if (resource.isEmpty()) {
+            return;
+        }
+
+        int progress = (te.getProcessingProgress() * 100) / Math.max(1, te.getProcessingTime());
+        float offset = te.getProcessingProgress() < 0 ? 0 : progress;
+
+        float v = te.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
+        matrix.pushPose();
+        matrix.translate(.5F, .85F - (offset / 250F), .5F);
+        matrix.scale(1.4F, 1.4F, 1.4F);
+        matrix.mulPose(Axis.YN.rotationDegrees(45 + v));
+
+        Minecraft.getInstance().getItemRenderer().renderStatic(
+                resource, ItemDisplayContext.FIRST_PERSON_LEFT_HAND, light, otherlight, matrix,renderer, Minecraft.getInstance().level, 0
+        );
+
+        matrix.popPose();
     }
 
     // Lats code from jars (simpler this way)

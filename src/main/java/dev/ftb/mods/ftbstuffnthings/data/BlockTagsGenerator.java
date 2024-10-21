@@ -31,5 +31,8 @@ public class BlockTagsGenerator extends BlockTagsProvider {
                 tag(BlockTags.NEEDS_STONE_TOOL).add(block);
             }
         });
+
+        BlocksRegistry.CRATES.forEach(crate -> tag(FTBStuffTags.Blocks.CRATE).add(crate.get()));
+        BlocksRegistry.BARRELS.forEach(barrel -> tag(FTBStuffTags.Blocks.BARREL).add(barrel.get()));
     }
 }

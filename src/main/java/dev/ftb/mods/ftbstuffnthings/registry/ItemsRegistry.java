@@ -1,6 +1,9 @@
 package dev.ftb.mods.ftbstuffnthings.registry;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
+import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.BarrelBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.CrateBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.SmallCrateBlock;
 import dev.ftb.mods.ftbstuffnthings.items.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DiggerItem;
@@ -8,9 +11,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class ItemsRegistry {
@@ -80,6 +85,18 @@ public class ItemsRegistry {
             = blockItem("creative_high_temperature_source", BlocksRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE);
     public static final DeferredItem<BlockItem> CREATIVE_CHILLED_TEMPERATURE_SOURCE
             = blockItem("creative_subzero_temperature_source", BlocksRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE);
+
+    public static final DeferredItem<BlockItem> WHITE_BARREL = blockItem("white_barrel", BlocksRegistry.WHITE_BARREL);
+    public static final DeferredItem<BlockItem> GREEN_BARREL = blockItem("green_barrel", BlocksRegistry.GREEN_BARREL);
+    public static final DeferredItem<BlockItem> BLUE_BARREL = blockItem("blue_barrel", BlocksRegistry.BLUE_BARREL);
+    public static final DeferredItem<BlockItem> PURPLE_BARREL = blockItem("purple_barrel", BlocksRegistry.PURPLE_BARREL);
+    public static final DeferredItem<BlockItem> RED_BARREL = blockItem("red_barrel", BlocksRegistry.RED_BARREL);
+    public static final DeferredItem<BlockItem> BLACK_BARREL = blockItem("black_barrel", BlocksRegistry.BLACK_BARREL);
+    public static final DeferredItem<BlockItem> GOLDEN_BARREL = blockItem("golden_barrel", BlocksRegistry.GOLDEN_BARREL);
+
+    public static final DeferredItem<BlockItem> SMALL_CRATE = blockItem("small_crate", BlocksRegistry.SMALL_CRATE);
+    public static final DeferredItem<BlockItem> CRATE = blockItem("crate", BlocksRegistry.CRATE);
+    public static final DeferredItem<BlockItem> PULSATING_CRATE = blockItem("pulsating_crate", BlocksRegistry.PULSATING_CRATE);
 
     //#endregion
 
