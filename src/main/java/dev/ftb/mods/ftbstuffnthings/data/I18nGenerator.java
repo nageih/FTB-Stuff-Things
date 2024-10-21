@@ -39,7 +39,9 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.crook.limit", "Max drops per block broken: %s");
         add("ftbstuff.jade.processing", "Processing");
         add("ftbstuff.jade.buffer", "Buffer");
+        add("ftbstuff.jade.time_left", "Time Left: %s");
         add("config.jade.plugin_ftbstuff.autohammer", "Autohammer");
+        add("config.jade.plugin_ftbstuff.pump", "Pump");
         add("block.ftbstuff.fusing_machine.tooltip", "Used to fuse items together to produce new results");
         add("block.ftbstuff.super_cooler.tooltip", "Used to \"super\"-cool items to produce new results");
 

@@ -15,6 +15,13 @@
             {
               "function": "minecraft:copy_name",
               "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "ftbstuff:energy"
+              ],
+              "source": "block_entity"
             }
           ],
           "name": "ftbstuff:netherite_sluice"

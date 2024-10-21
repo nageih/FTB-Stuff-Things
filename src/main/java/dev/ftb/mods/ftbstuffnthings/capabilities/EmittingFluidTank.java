@@ -1,8 +1,11 @@
 package dev.ftb.mods.ftbstuffnthings.capabilities;
 
+import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineMenu;
-import dev.ftb.mods.ftbstuffnthings.network.FluidTankSync;
+import dev.ftb.mods.ftbstuffnthings.network.SyncDisplayFluidPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -45,15 +48,24 @@ public class EmittingFluidTank extends FluidTank {
         }
     }
 
-    public void sync(BlockEntity blockEntity) {
-        FluidTankSync fluidTankSync = new FluidTankSync(blockEntity.getBlockPos(), fluid);
+    public void syncToContainers(BlockEntity blockEntity) {
         if (syncAllObservers) {
             blockEntity.getLevel().getServer().getPlayerList().getPlayers().stream()
                     .filter(p -> p.containerMenu instanceof AbstractMachineMenu<?> prov && prov.getBlockEntity() == blockEntity)
                     .forEach(toSync::add);
         }
-        toSync.forEach(p -> PacketDistributor.sendToPlayer(p, fluidTankSync));
+        if (!toSync.isEmpty()) {
+            SyncDisplayFluidPacket syncDisplayFluidPacket = new SyncDisplayFluidPacket(blockEntity.getBlockPos(), fluid);
+            toSync.forEach(p -> PacketDistributor.sendToPlayer(p, syncDisplayFluidPacket));
+            toSync.clear();
+        }
         syncAllObservers = false;
-        toSync.clear();
+    }
+
+    public void syncToTrackers(AbstractMachineBlockEntity machine) {
+        if (machine.getLevel() instanceof ServerLevel sl) {
+            SyncDisplayFluidPacket packet = new SyncDisplayFluidPacket(machine.getBlockPos(), fluid);
+            PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(machine.getBlockPos()), packet);
+        }
     }
 }

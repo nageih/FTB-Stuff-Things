@@ -5,6 +5,5 @@ public interface ProgressProvider {
     int getMaxProgress();
 
     void setProgress(int progress);
-
     void setMaxProgress(int maxProgress);
 }

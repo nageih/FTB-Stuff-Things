@@ -12,6 +12,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FusingMachineBlock extends AbstractMachineBlock implements SerializableComponentsProvider {
+    public FusingMachineBlock() {
+        super(defaultMachineProps());
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

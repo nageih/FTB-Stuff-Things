@@ -10,18 +10,18 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record FluidTankSync(BlockPos pos, FluidStack fluidStack) implements CustomPacketPayload {
-    public static final Type<FluidTankSync> TYPE = new Type<>(FTBStuffNThings.id("fluid_tank_sync"));
+public record SyncDisplayFluidPacket(BlockPos pos, FluidStack fluidStack) implements CustomPacketPayload {
+    public static final Type<SyncDisplayFluidPacket> TYPE = new Type<>(FTBStuffNThings.id("display_fluid_sync"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FluidTankSync> STREAM_CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC, FluidTankSync::pos,
-            FluidStack.OPTIONAL_STREAM_CODEC, FluidTankSync::fluidStack,
-            FluidTankSync::new
+    public static final StreamCodec<RegistryFriendlyByteBuf, SyncDisplayFluidPacket> STREAM_CODEC = StreamCodec.composite(
+            BlockPos.STREAM_CODEC, SyncDisplayFluidPacket::pos,
+            FluidStack.OPTIONAL_STREAM_CODEC, SyncDisplayFluidPacket::fluidStack,
+            SyncDisplayFluidPacket::new
     );
 
-    public static void handleData(FluidTankSync packet, IPayloadContext ctx) {
+    public static void handleData(SyncDisplayFluidPacket packet, IPayloadContext ctx) {
         ClientUtil.getBlockEntityAt(packet.pos, AbstractMachineBlockEntity.class)
-                .ifPresent(holder -> holder.setFluid(packet.fluidStack));
+                .ifPresent(holder -> holder.syncFluidFromServer(packet.fluidStack));
     }
 
     @Override

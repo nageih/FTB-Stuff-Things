@@ -1,135 +1,149 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.sluice;
 
-import dev.ftb.mods.ftbstuffnthings.capabilities.PublicReadOnlyFluidTank;
+import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
+import dev.ftb.mods.ftbstuffnthings.capabilities.EmittingEnergy;
+import dev.ftb.mods.ftbstuffnthings.capabilities.EmittingFluidTank;
 import dev.ftb.mods.ftbstuffnthings.crafting.NoInventory;
 import dev.ftb.mods.ftbstuffnthings.crafting.RecipeCaches;
 import dev.ftb.mods.ftbstuffnthings.crafting.recipe.SluiceRecipe;
+import dev.ftb.mods.ftbstuffnthings.items.MeshType;
+import dev.ftb.mods.ftbstuffnthings.network.SendSluiceStartPacket;
+import dev.ftb.mods.ftbstuffnthings.network.SyncDisplayItemPacket;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.RecipesRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public class SluiceBlockEntity extends BlockEntity {
+public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
     private static final float BASE_PROCESSING_TIME = 60; // 60 ticks or 3 seconds
 
-    private final Lazy<PublicReadOnlyFluidTank> fluidTank = Lazy.of(() -> new PublicReadOnlyFluidTank(this, 10_000));
-    private final Lazy<ItemStackHandler> inputInventory = Lazy.of(() -> new ItemStackHandler(1) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return 1;
-        }
+    private final ItemStackHandler inputInventory = new SluiceItemHandler();
+    private final FluidTank fluidTank = new EmittingFluidTank(10_000, tank -> {
+        setChanged();
+        fluidSyncNeeded = true;
     });
+    private final EmittingEnergy energyStorage = new EmittingEnergy(100_000, energy -> setChanged());
 
-    private boolean processing = false;
     private int processingProgress = 0;
     private int processingTime = 0;
+    private boolean itemSyncNeeded;
+    private boolean fluidSyncNeeded;
 
     public SluiceBlockEntity(BlockEntityType<?> entity, BlockPos pos, BlockState blockState) {
         super(entity, pos, blockState);
     }
 
-    public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T tileEntity) {
-        if (!(tileEntity instanceof SluiceBlockEntity sluice)) {
-            return;
+    @Override
+    public void tickClient() {
+        super.tickClient();
+
+        if (processingTime > 0 && processingProgress++ > processingTime) {
+            processingProgress = 0;
+            processingTime = 0;
+        }
+    }
+
+    @Override
+    public void tickServer() {
+        if (itemSyncNeeded) {
+            syncItemToClients();
+            itemSyncNeeded = false;
+        }
+        if (fluidSyncNeeded) {
+            syncFluidTank(false);
+            fluidSyncNeeded = false;
         }
 
         // Step one, are we processing, if we're processing, we need to process, not check for items
-        if (sluice.processing) {
-            sluice.processingProgress++;
+        if (processingTime > 0) {
+            processingProgress++;
+            setChanged();
 
-            if (sluice.processingProgress > sluice.processingTime) {
-                sluice.processing = false;
-                sluice.processingProgress = 0;
-                sluice.processingTime = 0;
+            if (processingProgress > processingTime) {
                 // Process the item
+                processingProgress = 0;
+                processingTime = 0;
 
                 // Take the item from the input inventory
-                ItemStack inputStack = sluice.inputInventory.get().getStackInSlot(0);
-                inputStack.shrink(1);
-                sluice.setChanged();
+                ItemStack inputStack = inputInventory.extractItem(0, 1, false);
 
                 // Get the recipe
-                var recipe = sluice.getRecipeFor(inputStack);
-                if (recipe.isEmpty()) {
-                    return; // How did we get here?
-                }
+                getRecipeFor(inputStack).ifPresent(recipe -> {
+                    recipe.value().getFluid().ifPresent(fluid -> {
+                        // TODO consumption upgrade
+                        // This is safe to assume we have the fluid as you can only insert fluid to this tank,
+                        //   and we checked it before starting the processing
+                        fluidTank.drain(fluid.amount(), IFluidHandler.FluidAction.EXECUTE);
+                    });
 
-                // Take the fluid
-                var recipeFluid = recipe.get().value().getFluid();
-                if (!recipeFluid.isEmpty()) {
-                    // This is safe to assume we have the fluid as you can only insert fluid to this tank and we check it before starting the processing
-                    sluice.fluidTank.get().drain(recipeFluid.getAmount(), IFluidHandler.FluidAction.EXECUTE);
-                }
+                    energyStorage.extractEnergy(getProps().energyCost().get(), false);
 
-                // Get the results
-                var results = recipe.get().value().getResults();
-                for (var result : results) {
-                    if (level.random.nextFloat() <= result.chance()) {
-                        sluice.dropItemOrPushToInventory(result.item());
+                    for (var result : recipe.value().getResults()) {
+                        // TODO luck upgrade
+                        if (level.random.nextFloat() <= result.chance()) {
+                            dropItemOrPushToInventory(result.item());
+                        }
                     }
-                }
-
-                sluice.setChanged();
-                // And we're done
-                return;
+                });
             }
-
-            sluice.setChanged();
-            return;
+        } else {
+            ItemStack inputStack = inputInventory.getStackInSlot(0);
+            if (!inputStack.isEmpty()) {
+                setChanged();
+                getRecipeFor(inputStack).ifPresentOrElse(
+                        recipe -> {
+                            // Recipe found, but also make sure there's enough fluid and (possibly) energy in the sluice
+                            if (hasEnoughEnergy() && recipe.value().testFluid(fluidTank.getFluid(), true)) {
+                                // TODO speed upgrade
+                                double time = BASE_PROCESSING_TIME * getProps().timeMod().get() * recipe.value().getProcessingTimeMultiplier();
+                                processingTime = Math.max(1, (int) time);
+                                processingProgress = 0;
+                                PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) getLevel(),
+                                        new ChunkPos(getBlockPos()), new SendSluiceStartPacket(getBlockPos(), processingTime));
+                            }
+                        },
+                        () -> {
+                            // No recipe found, not sure how we got here, maybe a hopper? Let's just pop the resource back out
+                            dropItemOrPushToInventory(inputStack);
+                            // Clear the slot
+                            inputInventory.setStackInSlot(0, ItemStack.EMPTY);
+                        }
+                );
+            }
         }
+    }
 
-        // We're not processing, this means we need to find items in our input inventory and try and process them
-        ItemStack inputStack = sluice.inputInventory.get().getStackInSlot(0);
-        if (inputStack.isEmpty()) {
-            // Nothing to do!
-            return;
-        }
-
-        // We have an item, let's try and process it
-        var recipe = sluice.getRecipeFor(inputStack);
-        if (recipe.isEmpty()) {
-            // No recipe found, not sure how we got here, maybe a hopper? Let's just pop the resource back out
-            sluice.dropItemOrPushToInventory(inputStack);
-            // Clear the slot
-            sluice.inputInventory.get().setStackInSlot(0, ItemStack.EMPTY);
-            sluice.setChanged();
-            return;
-        }
-
-        // We have a recipe, let's start processing
-        sluice.processing = true;
-        sluice.processingTime = (int) (BASE_PROCESSING_TIME * recipe.get().value().getProcessingTimeMultiplier());
-        sluice.processingProgress = 0; // Just in case
-        sluice.setChanged();
+    private boolean hasEnoughEnergy() {
+        return energyStorage.getEnergyStored() >= getProps().energyCost().get();
     }
 
     private void dropItemOrPushToInventory(ItemStack stack) {
@@ -141,14 +155,13 @@ public class SluiceBlockEntity extends BlockEntity {
 
         // See if there is an inventory at the end of the sluice block
         assert level != null;
-        var inventory = availableInventory(level);
-
+        var inventory = availableInventory();
         if (inventory != null) {
             stack = ItemHandlerHelper.insertItem(inventory, stack, false);
         }
 
         if (!stack.isEmpty()) {
-            BlockPos pos = this.worldPosition.relative(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), 2);
+            BlockPos pos = worldPosition.relative(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), 2);
             double my = 0.14D * (level.random.nextFloat() * 0.4D);
 
             ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
@@ -158,35 +171,41 @@ public class SluiceBlockEntity extends BlockEntity {
         }
     }
 
-    /**
-     * @param level level to find the inventory from
-     * @return A valid IItemHandler or a empty optional
-     */
-    @Nullable
-    private IItemHandler availableInventory(Level level) {
-        BlockPos pos = this.getBlockPos().relative(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), 2);
+    public int getProgress() {
+        return processingProgress;
+    }
 
-        return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+    @Nullable
+    private IItemHandler availableInventory() {
+        // TODO a block capability cache here
+        if (level != null) {
+            BlockPos pos = this.getBlockPos().relative(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), 2);
+
+            return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+        }
+        return null;
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        tag.putBoolean("processing", processing);
         tag.putInt("processingProgress", processingProgress);
         tag.putInt("processingTime", processingTime);
 
-        fluidTank.get().writeToNBT(registries, tag);
-        tag.put("inputInventory", inputInventory.get().serializeNBT(registries));
+        fluidTank.writeToNBT(registries, tag);
+        tag.put("inputInventory", inputInventory.serializeNBT(registries));
+        if (energyStorage.getEnergyStored() > 0) tag.put("energy", energyStorage.serializeNBT(registries));
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        this.processing = tag.getBoolean("processing");
         this.processingProgress = tag.getInt("processingProgress");
         this.processingTime = tag.getInt("processingTime");
 
-        fluidTank.get().readFromNBT(registries, tag);
-        inputInventory.get().deserializeNBT(registries, tag.getCompound("inputInventory"));
+        fluidTank.readFromNBT(registries, tag);
+        inputInventory.deserializeNBT(registries, tag.getCompound("inputInventory"));
+        if (tag.get("energy") instanceof IntTag intTag) {
+            energyStorage.deserializeNBT(registries, intTag);
+        }
     }
 
     @Override
@@ -207,12 +226,28 @@ public class SluiceBlockEntity extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    public PublicReadOnlyFluidTank getFluidTank() {
-        return fluidTank.get();
+    public SluiceProperties getProps() {
+        if (getBlockState().getBlock() instanceof SluiceBlock sb) return sb.getProps();
+        throw new IllegalStateException("expected a sluice block at " + getBlockPos() + " !");
     }
 
-    public Lazy<ItemStackHandler> getInputInventory() {
-        return inputInventory;
+    @Override
+    public ItemStackHandler getItemHandler(@Nullable Direction dir) {
+        return dir == null || getProps().itemIO().get() ? inputInventory : null;
+    }
+
+    @Override
+    public IFluidHandler getFluidHandler(@Nullable Direction dir) {
+        return dir == null || getProps().fluidIO().get() ? fluidTank : null;
+    }
+
+    @Override
+    public IEnergyStorage getEnergyHandler(@Nullable Direction dir) {
+        return dir == null || getProps().energyCost().get() > 0 ? energyStorage : null;
+    }
+
+    public ItemStack getDisplayedItem() {
+        return inputInventory.getStackInSlot(0);
     }
 
     public Optional<RecipeHolder<SluiceRecipe>> getRecipeFor(ItemStack input) {
@@ -220,11 +255,10 @@ public class SluiceBlockEntity extends BlockEntity {
     }
 
     private int genRecipeHash(ItemStack input) {
-        int fluidHash = FluidStack.hashFluidAndComponents(fluidTank.get().getFluid());
-        int itemHash = input.hashCode();
-        int meshOrdinal = this.getBlockState().getValue(SluiceBlock.MESH).ordinal();
+        int fluidHash = FluidStack.hashFluidAndComponents(fluidTank.getFluid());
+        int itemHash = ItemStack.hashItemAndComponents(input);
 
-        return Objects.hash(fluidHash, itemHash, meshOrdinal);
+        return Objects.hash(fluidHash, itemHash, getInstalledMesh());
     }
 
     private Optional<RecipeHolder<SluiceRecipe>> searchForRecipe(ItemStack input) {
@@ -232,23 +266,18 @@ public class SluiceBlockEntity extends BlockEntity {
 
         return level.getRecipeManager().getRecipesFor(RecipesRegistry.SLUICE_TYPE.get(), NoInventory.INSTANCE, level)
                 .stream()
-                // Test the fluid and the itemss
-                .filter(r -> !fluidItemAndMeshMatch(r.value(), input))
+                .filter(r -> fluidItemAndMeshMatch(r.value(), input))
                 .findFirst();
     }
 
     private boolean fluidItemAndMeshMatch(SluiceRecipe recipe, ItemStack input) {
-        boolean itemTest = recipe.getIngredient().test(input);
-        boolean meshTest = recipe.getMeshTypes().contains(this.getBlockState().getValue(SluiceBlock.MESH));
+        return recipe.getIngredient().test(input)
+                && recipe.testFluid(fluidTank.getFluid(), false)
+                && recipe.getMeshTypes().contains(getInstalledMesh());
+    }
 
-        FluidStack recipeFluid = recipe.getFluid();
-        FluidStack tankFluid = fluidTank.get().getFluid();
-
-        if (recipeFluid.isEmpty() && tankFluid.isEmpty()) {
-            return itemTest && meshTest;
-        }
-
-        return itemTest && meshTest && recipeFluid.equals(tankFluid) && tankFluid.getAmount() >= recipeFluid.getAmount();
+    private @NotNull MeshType getInstalledMesh() {
+        return getBlockState().getValue(SluiceBlock.MESH);
     }
 
     @Override
@@ -264,8 +293,31 @@ public class SluiceBlockEntity extends BlockEntity {
         return processingProgress;
     }
 
-    public boolean isProcessing() {
-        return processing;
+    public void syncItemToClients() {
+        if (getLevel() instanceof ServerLevel sl) {
+            PacketDistributor.sendToPlayersTrackingChunk(sl, new ChunkPos(getBlockPos()), SyncDisplayItemPacket.forSluice(this));
+        }
+    }
+
+    @Override
+    public void syncItemFromServer(ItemStack stack) {
+        inputInventory.setStackInSlot(0, stack);
+    }
+
+    @Override
+    public void syncFluidFromServer(FluidStack fluidStack) {
+        fluidTank.setFluid(fluidStack);
+    }
+
+    public FluidTank getFluidTank() {
+        // used by sluice renderer and the Pump for direct access to the sluice's fluid
+        // everyone else should use capability access via getFluidHandler() !
+        return fluidTank;
+    }
+
+    public void syncProcessingTimeFromServer(int processingTime) {
+        this.processingProgress = 0;
+        this.processingTime = processingTime;
     }
 
     //#region BlockEntity types
@@ -293,4 +345,26 @@ public class SluiceBlockEntity extends BlockEntity {
         }
     }
     //#endregion
+
+    private class SluiceItemHandler extends ItemStackHandler {
+        public SluiceItemHandler() {
+            super(1);
+        }
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            itemSyncNeeded = true;
+            setChanged();
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return getRecipeFor(stack).isPresent();
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
+    }
 }

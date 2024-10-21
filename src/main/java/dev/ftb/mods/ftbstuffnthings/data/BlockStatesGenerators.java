@@ -64,35 +64,35 @@ public class BlockStatesGenerators extends BlockStateProvider {
         for (int d = 0; d < 4; d++) {
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_off")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, false)
+                    .condition(AbstractMachineBlock.ACTIVE, false)
                     .condition(HORIZONTAL_FACING, dirs[d]);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_on")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d]);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_20")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d])
                     .condition(PumpBlock.PROGRESS, PumpBlock.Progress.TWENTY);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_40")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d])
                     .condition(PumpBlock.PROGRESS, PumpBlock.Progress.FORTY);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_60")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d])
                     .condition(PumpBlock.PROGRESS, PumpBlock.Progress.SIXTY);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_80")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d])
                     .condition(PumpBlock.PROGRESS, PumpBlock.Progress.EIGHTY);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_100")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d])
                     .condition(PumpBlock.PROGRESS, PumpBlock.Progress.HUNDRED);
         }

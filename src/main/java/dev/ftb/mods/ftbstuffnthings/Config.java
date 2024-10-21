@@ -3,22 +3,30 @@ package dev.ftb.mods.ftbstuffnthings;
 import dev.ftb.mods.ftblibrary.snbt.config.BooleanValue;
 import dev.ftb.mods.ftblibrary.snbt.config.IntValue;
 import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig;
+import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceProperties;
+import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceType;
+import net.minecraft.Util;
+import net.neoforged.neoforge.common.util.Lazy;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 import static dev.ftb.mods.ftblibrary.snbt.config.ConfigUtil.CONFIG_DIR;
 import static dev.ftb.mods.ftblibrary.snbt.config.ConfigUtil.loadDefaulted;
 
 public class Config {
-    private static final SNBTConfig CONFIG = SNBTConfig.create("ftb-obb");
+    private static final SNBTConfig CONFIG = SNBTConfig.create(FTBStuffNThings.MODID);
 
     private static final SNBTConfig GENERAL_CONFIG = CONFIG.addGroup("general");
     public static final BooleanValue INCLUDE_DEV_RECIPES = GENERAL_CONFIG.addBoolean("include_dev_recipes", false)
             .comment("If true, dev/testing recipes will be available outside a development environment", "Leave this false unless actually testing the mod.");
 
     private static final SNBTConfig SLUICE_CONFIG = CONFIG.addGroup("sluice");
-    public static final SNBTConfig OAK_SLUICE_CONFIG = createSluiceConfig(SLUICE_CONFIG, "oakSluice", 1, 1, 12000, false, false, false, 0);
-    public static final SNBTConfig IRON_SLUICE_CONFIG = createSluiceConfig(SLUICE_CONFIG, "ironSluice", .8, .6, 12000, true, false, false, 0);
-    public static final SNBTConfig DIAMOND_SLUICE_CONFIG = createSluiceConfig(SLUICE_CONFIG, "diamondSluice", .6, .75, 12000, true, true, false, 0);
-    public static final SNBTConfig NETHERITE_SLUICE_CONFIG = createSluiceConfig(SLUICE_CONFIG, "netheriteSluice", .4, .5, 12000, true, true, true, 40);
+    private static final Map<SluiceType,SNBTConfig> SLUICE_TYPES = Util.make(new EnumMap<>(SluiceType.class), map -> {
+        for (SluiceType type : SluiceType.values()) {
+            map.put(type, SLUICE_CONFIG.addGroup(type.getSerializedName()));
+        }
+    });
 
     private static final SNBTConfig AUTOHAMMER_CONFIG = CONFIG.addGroup("autohammer");
     public static final IntValue IRON_HAMMER_SPEED = AUTOHAMMER_CONFIG.addInt("stone_hammer_speed", 50, 1, 100000)
@@ -34,17 +42,24 @@ public class Config {
         loadDefaulted(CONFIG, CONFIG_DIR, FTBStuffNThings.MODID, FTBStuffNThings.MODID + ".snbt");
     }
 
-    private static SNBTConfig createSluiceConfig(SNBTConfig parent, String name, double timeMod, double fluidMod, int tankCap, boolean allowsIO, boolean allowsTank, boolean upgradeable, int energyCost) {
-        SNBTConfig config = parent.addGroup(name);
+    public static Lazy<SluiceProperties> makeSluiceProperties(SluiceType type) {
+        SNBTConfig config = SLUICE_TYPES.get(type);
 
-        config.addDouble("processing time multiplier", timeMod).comment("Defines how long it takes to process a resource in this Sluice (This is multiplied by the recipe base tick time)");
-        config.addDouble("fluid multiplier", fluidMod).comment("Sets how much fluid is used per processed recipe (This is multiplied by the recipe's fluid consumption rate)");
-        config.addInt("tank capacity", tankCap).comment("Sets how much fluid this sluice's tank can carry (in mB)");
-        config.addBoolean("allowsIO", allowsIO).comment("Allows this sluice to be used for item IO");
-        config.addBoolean("allowsTank", allowsTank).comment("Allows this sluice to be used for fluid IO");
-        config.addBoolean("upgradeable", upgradeable).comment("Allows this sluice to be upgraded");
-        config.addInt("fe cost per use", energyCost).comment("FE cost per use");
-
-        return config;
+        return Lazy.of(() -> new SluiceProperties(
+                config.addDouble("processing time multiplier", type.defTimeMod)
+                        .comment("How long it takes to process a resource in this Sluice (multiplier for recipe base tick time)"),
+                config.addDouble("fluid multiplier", type.defFluidMod)
+                        .comment("How much fluid is used per recipe (multiplier for recipe's fluid consumption rate)"),
+                config.addInt("tank capacity", type.defCapacity)
+                        .comment("How much fluid this sluice's tank can carry (in mB)"),
+                config.addBoolean("allowsIO", type.defItemIO)
+                        .comment("Can items be piped in? False = items only clicked in manually"),
+                config.addBoolean("allowsTank", type.defFluidIO)
+                        .comment("Can fluid be piped in? False = need to use adjacent Pump"),
+                config.addBoolean("upgradeable", type.defUpgradeable)
+                        .comment("Can sluice be upgraded?"),
+                config.addInt("fe cost per use", type.defEnergyUsage)
+                        .comment("FE cost per use")
+        ));
     }
 }

@@ -69,7 +69,7 @@ public abstract class AbstractMachineMenu<T extends AbstractMachineBlockEntity> 
         super.broadcastChanges();
 
         if (blockEntity != null) {
-            blockEntity.syncFluidTank();
+            blockEntity.syncFluidTank(true);
         }
     }
 

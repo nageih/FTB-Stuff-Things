@@ -2,10 +2,11 @@ package dev.ftb.mods.ftbstuffnthings;
 
 import com.mojang.logging.LogUtils;
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
+import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.client.ClientSetup;
+import dev.ftb.mods.ftbstuffnthings.crafting.RecipeCaches;
 import dev.ftb.mods.ftbstuffnthings.items.FluidCapsuleItem;
 import dev.ftb.mods.ftbstuffnthings.items.WaterBowlItem;
-import dev.ftb.mods.ftbstuffnthings.crafting.RecipeCaches;
 import dev.ftb.mods.ftbstuffnthings.registry.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -62,7 +63,7 @@ public class FTBStuffNThings {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 BlockEntitiesRegistry.OAK_SLUICE.get(),
-                (blockEntity, side) -> blockEntity.getFluidTank()
+                (blockEntity, side) -> blockEntity.getFluidHandler()
         );
 
         event.registerBlockEntity(
@@ -73,6 +74,11 @@ public class FTBStuffNThings {
 
         List.of(BlockEntitiesRegistry.FUSING_MACHINE, BlockEntitiesRegistry.SUPER_COOLER).forEach(machine ->
                 AbstractMachineBlockEntity.registerCapabilities(event, machine.get()));
+
+        List.of(BlockEntitiesRegistry.OAK_SLUICE, BlockEntitiesRegistry.IRON_SLUICE,
+                BlockEntitiesRegistry.DIAMOND_SLUICE, BlockEntitiesRegistry.NETHERITE_SLUICE).forEach(sluice -> {
+            SluiceBlockEntity.registerCapabilities(event, sluice.get());
+        });
 
         event.registerItem(
                 Capabilities.FluidHandler.ITEM,

@@ -13,19 +13,22 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class SluiceRecipe extends BaseRecipe<SluiceRecipe> {
     private final Ingredient ingredient;
     private final List<ItemWithChance> results;
     private final int maxResults;
-    private final FluidStack fluid;
+    private final Optional<SizedFluidIngredient> fluid;
     private final float processingTimeMultiplier;
     private final HashSet<MeshType> meshTypes;
 
-    public SluiceRecipe(Ingredient ingredient, List<ItemWithChance> results, int maxResults, FluidStack fluid, float processingTimeMultiplier, List<MeshType> meshTypes) {
+    public SluiceRecipe(Ingredient ingredient, List<ItemWithChance> results, int maxResults, Optional<SizedFluidIngredient> fluid, float processingTimeMultiplier, List<MeshType> meshTypes) {
         super(RecipesRegistry.SLUICE_SERIALIZER, RecipesRegistry.SLUICE_TYPE);
 
         this.ingredient = ingredient;
@@ -48,8 +51,14 @@ public class SluiceRecipe extends BaseRecipe<SluiceRecipe> {
         return maxResults;
     }
 
-    public FluidStack getFluid() {
+    public Optional<SizedFluidIngredient> getFluid() {
         return fluid;
+    }
+
+    public boolean testFluid(FluidStack toCheck, boolean checkAmount) {
+        return fluid.map(ingr ->
+                checkAmount ? ingr.test(toCheck) : ingr.ingredient().test(toCheck)
+        ).orElse(true);
     }
 
     public float getProcessingTimeMultiplier() {
@@ -65,7 +74,7 @@ public class SluiceRecipe extends BaseRecipe<SluiceRecipe> {
     }
 
     public interface IFactory<T extends SluiceRecipe> {
-        T create(Ingredient ingredient, List<ItemWithChance> results, int maxResults, FluidStack fluid, float processingTimeMultiplier, List<MeshType> meshTypes);
+        T create(Ingredient ingredient, List<ItemWithChance> results, int maxResults, Optional<SizedFluidIngredient> fluid, float processingTimeMultiplier, List<MeshType> meshTypes);
     }
 
     public static class Serializer<T extends SluiceRecipe> implements RecipeSerializer<T> {
@@ -76,8 +85,8 @@ public class SluiceRecipe extends BaseRecipe<SluiceRecipe> {
             codec = RecordCodecBuilder.mapCodec(builder -> builder.group(
                     Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(SluiceRecipe::getIngredient),
                     ItemWithChance.CODEC.listOf().fieldOf("results").forGetter(SluiceRecipe::getResults),
-                    Codec.INT.optionalFieldOf("max_results", 1).forGetter(SluiceRecipe::getMaxResults),
-                    FluidStack.CODEC.fieldOf("fluid").forGetter(SluiceRecipe::getFluid),
+                    Codec.INT.optionalFieldOf("max_results", 4).forGetter(SluiceRecipe::getMaxResults),
+                    SizedFluidIngredient.FLAT_CODEC.optionalFieldOf("fluid").forGetter(SluiceRecipe::getFluid),
                     Codec.FLOAT.optionalFieldOf("processing_time_multiplier", 1F).forGetter(SluiceRecipe::getProcessingTimeMultiplier),
                     MeshType.CODEC.listOf().fieldOf("mesh_types").forGetter(SluiceRecipe::getMeshTypesAsList)
             ).apply(builder, factory::create));
@@ -86,7 +95,7 @@ public class SluiceRecipe extends BaseRecipe<SluiceRecipe> {
                     Ingredient.CONTENTS_STREAM_CODEC, SluiceRecipe::getIngredient,
                     ItemWithChance.STREAM_CODEC.apply(ByteBufCodecs.list()), SluiceRecipe::getResults,
                     ByteBufCodecs.VAR_INT, SluiceRecipe::getMaxResults,
-                    FluidStack.STREAM_CODEC, SluiceRecipe::getFluid,
+                    ByteBufCodecs.optional(SizedFluidIngredient.STREAM_CODEC), SluiceRecipe::getFluid,
                     ByteBufCodecs.FLOAT, SluiceRecipe::getProcessingTimeMultiplier,
                     MeshType.STREAM_CODEC.apply(ByteBufCodecs.list()), SluiceRecipe::getMeshTypesAsList,
                     factory::create

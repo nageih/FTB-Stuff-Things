@@ -11,8 +11,6 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public class SuperCoolerMenu extends AbstractMachineMenu<SuperCoolerBlockEntity> {
     public SuperCoolerMenu(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
         this(windowId, playerInventory, getTilePos(buffer));
@@ -21,12 +19,13 @@ public class SuperCoolerMenu extends AbstractMachineMenu<SuperCoolerBlockEntity>
     public SuperCoolerMenu(int windowId, Inventory playerInventory, BlockPos pos) {
         super(ContentRegistry.SUPER_COOLER_MENU.get(), windowId, playerInventory, pos);
 
-        IOStackHandler handler = Objects.requireNonNull(blockEntity.getItemHandler());
         int startY = 10;
-        addSlot(new SlotItemHandler(handler.getInput(), 0, 42, startY));
-        addSlot(new SlotItemHandler(handler.getInput(), 1, 42, startY + 18));
-        addSlot(new SlotItemHandler(handler.getInput(), 2, 42, startY + (18 * 2)));
-        addSlot(new ExtractOnlySlot(handler.getOutput(), 0, 122, startY + 19));
+        if (blockEntity.getItemHandler() instanceof IOStackHandler handler) {
+            addSlot(new SlotItemHandler(handler.getInput(), 0, 42, startY));
+            addSlot(new SlotItemHandler(handler.getInput(), 1, 42, startY + 18));
+            addSlot(new SlotItemHandler(handler.getInput(), 2, 42, startY + (18 * 2)));
+            addSlot(new ExtractOnlySlot(handler.getOutput(), 0, 122, startY + 19));
+        }
 
         addPlayerSlots(playerInventory, 8, 84);
 

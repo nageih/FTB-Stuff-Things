@@ -244,6 +244,11 @@ public class RecipesGenerator extends RecipeProvider {
         new SluiceRecipeBuilder(Ingredient.of(Items.COBBLESTONE), List.of(
                 new ItemWithChance(new ItemStack(Blocks.GRAVEL), 1)
         ), List.of(MeshType.CLOTH, MeshType.IRON)).saveTest(output, FTBStuffNThings.id("gravel_from_cobblestone"));
+        new SluiceRecipeBuilder(Ingredient.of(Items.GRAVEL), List.of(
+                new ItemWithChance(new ItemStack(Blocks.SAND), 0.5)
+        ), List.of(MeshType.CLOTH, MeshType.IRON, MeshType.DIAMOND))
+                .fluid(new FluidStack(Fluids.WATER, 1000)
+        ).saveTest(output, FTBStuffNThings.id("sand_from_gravel"));
     }
 
     private void hammerRecipes(RecipeOutput output) {

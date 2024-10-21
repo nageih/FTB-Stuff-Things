@@ -1,6 +1,5 @@
 package dev.ftb.mods.ftbstuffnthings.registry;
 
-import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.blocks.SimpleFallingBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.dripper.DripperBlock;
@@ -16,6 +15,7 @@ import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.CrateBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.lootdroppers.SmallCrateBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.pump.PumpBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceType;
 import dev.ftb.mods.ftbstuffnthings.blocks.supercooler.SuperCoolerBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.tube.TubeBlock;
 import net.minecraft.world.item.DyeColor;
@@ -35,13 +35,13 @@ public class BlocksRegistry {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(FTBStuffNThings.MODID);
 
     public static final DeferredBlock<SluiceBlock> OAK_SLUICE
-            = BLOCKS.register("oak_sluice", () -> new SluiceBlock(SNBTConfig.create("hello")));
+            = BLOCKS.register("oak_sluice", () -> new SluiceBlock(SluiceType.OAK));
     public static final DeferredBlock<SluiceBlock> IRON_SLUICE
-            = BLOCKS.register("iron_sluice", () -> new SluiceBlock(SNBTConfig.create("hello")));
+            = BLOCKS.register("iron_sluice", () -> new SluiceBlock(SluiceType.IRON));
     public static final DeferredBlock<SluiceBlock> DIAMOND_SLUICE
-            = BLOCKS.register("diamond_sluice", () -> new SluiceBlock(SNBTConfig.create("hello")));
+            = BLOCKS.register("diamond_sluice", () -> new SluiceBlock(SluiceType.DIAMOND));
     public static final DeferredBlock<SluiceBlock> NETHERITE_SLUICE
-            = BLOCKS.register("netherite_sluice", () -> new SluiceBlock(SNBTConfig.create("hello")));
+            = BLOCKS.register("netherite_sluice", () -> new SluiceBlock(SluiceType.NETHERITE));
     public static List<DeferredBlock<SluiceBlock>> ALL_SLUICES = List.of(OAK_SLUICE, IRON_SLUICE, DIAMOND_SLUICE, NETHERITE_SLUICE);
 
     public static final DeferredBlock<PumpBlock> PUMP

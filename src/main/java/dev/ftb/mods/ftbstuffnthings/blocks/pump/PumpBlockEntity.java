@@ -1,11 +1,14 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.pump;
 
+import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlockEntity;
-import dev.ftb.mods.ftbstuffnthings.capabilities.PublicReadOnlyFluidTank;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -15,147 +18,144 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
-public class PumpBlockEntity extends BlockEntity {
-    public int timeLeft = 0;
+public class PumpBlockEntity extends AbstractMachineBlockEntity {
+    private static final int CHECK_INTERVAL = 50;
+    private static final int TICK_RATE = 20;
 
-    final int checkInterval = 50;
-    int checkTimeout = 0;
-    boolean foundValidBlocks = false;
-    int lastTick = 0;
+    public int timeLeft= 0;
+    private int checkTimeout = CHECK_INTERVAL;
+    private boolean foundValidSluices = false;
+    private int tickCounter = 0;
 
     public boolean creative = false;
     public Fluid creativeFluid = Fluids.WATER;
     public Item creativeItem = null;
 
-    private Set<BlockPos> targetBlocks = new HashSet<>();
+    private final Set<BlockPos> targetBlocks = new HashSet<>();
 
     public PumpBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntitiesRegistry.PUMP.get(), pos, state);
     }
 
-    public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState state, T givenBlockEntity) {
-        if (!(givenBlockEntity instanceof PumpBlockEntity pumpBlockEntity)) {
+    @Override
+    public void tickServer() {
+        if (timeLeft <= 0 && !creative) {
             return;
         }
 
-        if (pumpBlockEntity.level == null || (pumpBlockEntity.timeLeft <= 0 && !pumpBlockEntity.creative)) {
-            return;
-        }
-
-        FluidState fluidState = level.getBlockState(pumpBlockEntity.getBlockPos().below()).getFluidState();
+        FluidState fluidState = level.getBlockState(getBlockPos().below()).getFluidState();
 
         // No valid fluid source
-        if (!pumpBlockEntity.creative && fluidState.isEmpty() || !fluidState.isSource() || !fluidState.is(FluidTags.WATER)) {
+        if (!creative && fluidState.isEmpty() || !fluidState.isSource() || !fluidState.is(FluidTags.WATER)) {
             return;
         }
 
-        // Try and find a valid block;
-        if (!pumpBlockEntity.foundValidBlocks) {
-            // Time to check
-            if (pumpBlockEntity.checkTimeout > pumpBlockEntity.checkInterval) {
-                for (Direction direction : Direction.values()) {
-                    BlockEntity blockEntity = level.getBlockEntity(pumpBlockEntity.getBlockPos().relative(direction));
-                    if (blockEntity instanceof SluiceBlockEntity) {
-                        pumpBlockEntity.targetBlocks.add(pumpBlockEntity.getBlockPos().relative(direction));
-                        pumpBlockEntity.foundValidBlocks = true;
-                    }
-                }
-
-                pumpBlockEntity.checkTimeout = 0;
-            }
-
-            pumpBlockEntity.checkTimeout ++;
-            return;
-        }
-
-        // Just do it
-        if (pumpBlockEntity.creative) {
-            for (BlockPos pos : pumpBlockEntity.getTargetBlocks()) {
-                BlockEntity blockEntity = level.getBlockEntity(pos);
-                if (blockEntity == null) {
-                    return;
-                }
-
-                pumpBlockEntity.provideFluidToSluice(blockEntity);
-                if (pumpBlockEntity.creativeItem != null && blockEntity instanceof SluiceBlockEntity) {
-//                    ItemsHandler inventory = ((SluiceBlockEntity) blockEntity).inventory;
-//                    if (inventory.getStackInSlot(0).isEmpty()) {
-//                        inventory.internalInsert(0, new ItemStack(pumpBlockEntity.creativeItem, 1), false);
-//                    }
-                }
-            }
-
-            // Don't do anything else, creative means creative
-            return;
-        }
-
-        pumpBlockEntity.lastTick ++;
-        if (pumpBlockEntity.lastTick < 20) {
-            return;
-        }
-
-        pumpBlockEntity.lastTick = 0;
-
-        boolean wasUsed = false;
-        for (BlockPos pos : pumpBlockEntity.getTargetBlocks()) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity == null) {
-                return;
-            }
-
-            boolean filled = pumpBlockEntity.provideFluidToSluice(blockEntity);
-            if (!wasUsed && filled) {
-                wasUsed = true;
-            }
-        }
-
-        if (!wasUsed) {
-            return;
-        }
-
-        pumpBlockEntity.timeLeft -= 20;
-        PumpBlock.computeStateForProgress(pumpBlockEntity.getBlockState(), pumpBlockEntity.getBlockPos(), pumpBlockEntity.level, pumpBlockEntity.timeLeft);
-        if (pumpBlockEntity.timeLeft < 0) {
-            pumpBlockEntity.timeLeft = 0;
-
-            level.setBlock(pumpBlockEntity.getBlockPos(), pumpBlockEntity.getBlockState().setValue(PumpBlock.ON_OFF, false).setValue(PumpBlock.PROGRESS, PumpBlock.Progress.ZERO), 3);
+        if (!foundValidSluices) {
+            maybeSearchForSluices();
+        } else if (creative) {
+            handleCreativeInsertion();
+        } else if (++tickCounter >= TICK_RATE) {
+            runOneCycle();
         }
     }
 
-    private boolean provideFluidToSluice(BlockEntity blockEntity) {
-        boolean didFill = false;
+    @Override
+    protected Optional<ParticleOptions> getActiveParticle() {
+        return Optional.of(ParticleTypes.SPLASH);
+    }
 
-        // It's gone! Poof
-        if (!(blockEntity instanceof SluiceBlockEntity)) {
-            this.foundValidBlocks = false; // flag to update cache
-            this.targetBlocks.clear();
-            return false;
-        }
-
-        // Give it water!
-        PublicReadOnlyFluidTank tank = ((SluiceBlockEntity) blockEntity).getFluidTank();
-        if (tank.getFluidAmount() < tank.getCapacity()) {
-            int i = tank.internalFill(new FluidStack(this.creative ? this.creativeFluid : Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
-            if (i > 0) {
-                didFill = true;
+    private void maybeSearchForSluices() {
+        if (checkTimeout++ > CHECK_INTERVAL) {
+            for (Direction direction : Direction.values()) {
+                BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(direction));
+                if (blockEntity instanceof SluiceBlockEntity) {
+                    targetBlocks.add(getBlockPos().relative(direction));
+                    foundValidSluices = true;
+                }
             }
-            blockEntity.setChanged();
+            checkTimeout = 0;
+        }
+    }
+
+    private void handleCreativeInsertion() {
+        Set<BlockPos> invalidPos = new HashSet<>();
+        for (BlockPos pos : getTargetBlocks()) {
+            if (level.getBlockEntity(pos) instanceof SluiceBlockEntity sluice) {
+                provideFluidToSluice(sluice);
+                if (creativeItem != null) {
+                    IItemHandler handler = sluice.getItemHandler();
+                    if (handler != null && handler.getStackInSlot(0).isEmpty()) {
+                        handler.insertItem(0, new ItemStack(creativeItem), false);
+                    }
+                }
+            } else {
+                invalidPos.add(pos);
+            }
+        }
+        invalidPos.forEach(targetBlocks::remove);
+    }
+
+    private void runOneCycle() {
+        tickCounter = 0;
+
+        boolean didWork = false;
+        Set<BlockPos> invalidPos = new HashSet<>();
+        for (BlockPos pos : getTargetBlocks()) {
+            if (level.getBlockEntity(pos) instanceof SluiceBlockEntity sbe) {
+                if (provideFluidToSluice(sbe)) {
+                    didWork = true;
+                }
+            } else {
+                invalidPos.add(pos);
+            }
+        }
+        invalidPos.forEach(targetBlocks::remove);
+
+        if (didWork) {
+            timeLeft -= 20;
+            PumpBlock.computeStateForProgress(getBlockState(), getBlockPos(), level, timeLeft);
+            if (timeLeft < 0) {
+                timeLeft = 0;
+                level.setBlock(getBlockPos(), getBlockState()
+                        .setValue(AbstractMachineBlock.ACTIVE, false)
+                        .setValue(PumpBlock.PROGRESS, PumpBlock.Progress.ZERO), AbstractMachineBlock.UPDATE_ALL);
+            }
+        }
+    }
+
+    public void scanForSluices() {
+        foundValidSluices = false;
+    }
+
+    private boolean provideFluidToSluice(SluiceBlockEntity sluice) {
+        boolean didWork = false;
+
+        FluidTank tank = sluice.getFluidTank();
+        if (tank.getFluidAmount() < tank.getCapacity()) {
+            int filled = tank.fill(new FluidStack(this.creative ? this.creativeFluid : Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+            if (filled > 0) {
+                didWork = true;
+            }
         }
 
-        return didFill;
+        return didWork;
     }
 
     public Set<BlockPos> getTargetBlocks() {
@@ -219,5 +219,20 @@ public class PumpBlockEntity extends BlockEntity {
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         this.loadAdditional(pkt.getTag(), lookupProvider);
+    }
+
+    @Override
+    public @Nullable IItemHandler getItemHandler(@Nullable Direction side) {
+        return null;
+    }
+
+    @Override
+    public @Nullable IFluidHandler getFluidHandler(@Nullable Direction side) {
+        return null;
+    }
+
+    @Override
+    public @Nullable IEnergyStorage getEnergyHandler(@Nullable Direction side) {
+        return null;
     }
 }

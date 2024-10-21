@@ -1,13 +1,16 @@
 package dev.ftb.mods.ftbstuffnthings.client;
 
 import dev.ftb.mods.ftbstuffnthings.client.model.TubeModel;
-import dev.ftb.mods.ftbstuffnthings.client.renders.*;
-import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
-import dev.ftb.mods.ftbstuffnthings.registry.ContentRegistry;
-import dev.ftb.mods.ftbstuffnthings.registry.ItemsRegistry;
+import dev.ftb.mods.ftbstuffnthings.client.renders.AutoHammerRenderer;
+import dev.ftb.mods.ftbstuffnthings.client.renders.JarBlockEntityRenderer;
+import dev.ftb.mods.ftbstuffnthings.client.renders.SluiceBlockEntityRenderer;
+import dev.ftb.mods.ftbstuffnthings.client.renders.TemperedJarBlockEntityRenderer;
 import dev.ftb.mods.ftbstuffnthings.client.screens.FusingMachineScreen;
 import dev.ftb.mods.ftbstuffnthings.client.screens.SuperCoolerScreen;
 import dev.ftb.mods.ftbstuffnthings.client.screens.TemperedJarScreen;
+import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
+import dev.ftb.mods.ftbstuffnthings.registry.ContentRegistry;
+import dev.ftb.mods.ftbstuffnthings.registry.ItemsRegistry;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
@@ -28,8 +31,6 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.IRON_SLUICE.get(), SluiceBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.DIAMOND_SLUICE.get(), SluiceBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.NETHERITE_SLUICE.get(), SluiceBlockEntityRenderer::new);
-
-        event.registerBlockEntityRenderer(BlockEntitiesRegistry.PUMP.get(), PumpBlockEntityRender::new);
 
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.IRON_HAMMER.get(), AutoHammerRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.GOLD_HAMMER.get(), AutoHammerRenderer::new);

@@ -1,5 +1,6 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.pump;
 
+import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ModDamageSources;
 import dev.ftb.mods.ftbstuffnthings.util.VoxelShapeUtils;
@@ -14,19 +15,15 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -38,7 +35,10 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
-public class PumpBlock extends Block implements EntityBlock {
+import java.util.EnumMap;
+import java.util.Map;
+
+public class PumpBlock extends AbstractMachineBlock implements EntityBlock {
     public enum Progress implements StringRepresentable {
         ZERO(0),
         TWENTY(20),
@@ -47,7 +47,8 @@ public class PumpBlock extends Block implements EntityBlock {
         EIGHTY(80),
         HUNDRED(100);
 
-        int percentage;
+        private final int percentage;
+
         Progress(int percentage) {
             this.percentage = percentage;
         }
@@ -74,15 +75,14 @@ public class PumpBlock extends Block implements EntityBlock {
     private static final VoxelShape EAST = VoxelShapeUtils.rotateY(NORTH, 90);
     private static final VoxelShape SOUTH = VoxelShapeUtils.rotateY(EAST, 90);
     private static final VoxelShape WEST = VoxelShapeUtils.rotateY(SOUTH, 90);
-
-    //Stream.of(box(0, 0, 0, 16, 10, 16), box(7, 10, 3, 10, 13, 13), box(14, 10, 6, 16, 12, 10), box(0, 15, 0, 8, 16, 16), box(1, 10, 1, 7, 15, 15), box(0, 10, 0, 1, 15, 1), box(7, 10, 0, 8, 15, 1), box(7, 10, 15, 8, 15, 16), box(0, 10, 15, 1, 15, 16), box(11, 4, 2.5, 13, 15, 13.5), box(10, 9, 7, 14, 11, 9)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
-
-//    private static final VoxelShape SOUTH = Stream.of(box(0, 0, 0, 16, 10, 16), box(3, 10, 7, 13, 13, 10), box(6, 10, 14, 10, 12, 16), box(0, 15, 0, 16, 16, 8), box(1, 10, 1, 15, 15, 7), box(15, 10, 0, 16, 15, 1), box(15, 10, 7, 16, 15, 8), box(0, 10, 7, 1, 15, 8), box(0, 10, 0, 1, 15, 1), box(2.5, 4, 11, 13.5, 15, 13), box(7, 9, 10, 9, 11, 14)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
-//
-//    private static final VoxelShape WEST = Stream.of(box(0, 0, 0, 16, 10, 16), box(6, 10, 3, 9, 13, 13), box(0, 10, 6, 2, 12, 10), box(8, 15, 0, 16, 16, 16), box(9, 10, 1, 15, 15, 15), box(15, 10, 15, 16, 15, 16), box(8, 10, 15, 9, 15, 16), box(8, 10, 0, 9, 15, 1), box(15, 10, 0, 16, 15, 1), box(3, 4, 2.5, 5, 15, 13.5), box(2, 9, 7, 6, 11, 9)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+    private static final Map<Direction,VoxelShape> SHAPES = new EnumMap<>(Map.of(
+            Direction.NORTH, NORTH,
+            Direction.EAST, EAST,
+            Direction.SOUTH, SOUTH,
+            Direction.WEST, WEST
+    ));
 
     public static final EnumProperty<Progress> PROGRESS = EnumProperty.create("progress", Progress.class);
-    public static final BooleanProperty ON_OFF = BooleanProperty.create("on_off");
 
     public PumpBlock() {
         super(Properties.of().sound(SoundType.STONE).strength(1f, 1f));
@@ -90,7 +90,14 @@ public class PumpBlock extends Block implements EntityBlock {
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)
                 .setValue(PROGRESS, Progress.ZERO)
-                .setValue(ON_OFF, false));
+                .setValue(ACTIVE, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+
+        builder.add(PROGRESS);
     }
 
     @Override
@@ -100,11 +107,9 @@ public class PumpBlock extends Block implements EntityBlock {
         }
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (!(blockEntity instanceof PumpBlockEntity)) {
+        if (!(blockEntity instanceof PumpBlockEntity pump)) {
             return InteractionResult.PASS;
         }
-
-        PumpBlockEntity pump = ((PumpBlockEntity) blockEntity);
 
         if (!level.isClientSide) {
             if (pump.timeLeft < 6000) {
@@ -134,19 +139,17 @@ public class PumpBlock extends Block implements EntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (!(blockEntity instanceof PumpBlockEntity)) {
+        if (!(blockEntity instanceof PumpBlockEntity pump)) {
             return ItemInteractionResult.FAIL;
         }
 
-        PumpBlockEntity pump = ((PumpBlockEntity) blockEntity);
         if (pump.creative) {
             ItemStack itemInHand = player.getItemInHand(hand);
 
             ItemInteractionResult result = ItemInteractionResult.FAIL;
             // Try a normal bucket
             if (!itemInHand.isEmpty()) {
-                if (itemInHand.getItem() instanceof BucketItem) {
-                    BucketItem bucketItem = (BucketItem) itemInHand.getItem();
+                if (itemInHand.getItem() instanceof BucketItem bucketItem) {
                     pump.creativeFluid = bucketItem.content;
                     sendTileUpdate(level, pos, state, pump);
                     result = ItemInteractionResult.SUCCESS;
@@ -173,7 +176,7 @@ public class PumpBlock extends Block implements EntityBlock {
             return ItemInteractionResult.SUCCESS;
         }
 
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     private void sendTileUpdate(Level level, BlockPos pos, BlockState state, PumpBlockEntity tile) {
@@ -184,49 +187,43 @@ public class PumpBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return BlockEntitiesRegistry.PUMP.get().create(blockPos, blockState);
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return PumpBlockEntity::tick;
+        return new PumpBlockEntity(blockPos, blockState);
     }
 
     public static void computeStateForProgress(BlockState state, BlockPos pos, Level level, int timeLeft) {
-        if (!state.getValue(ON_OFF) && timeLeft > 0) {
-            level.setBlock(pos, state.setValue(PumpBlock.ON_OFF, true).setValue(PumpBlock.PROGRESS, Progress.ZERO), 3);
+        if (!state.getValue(ACTIVE) && timeLeft > 0) {
+            level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.ZERO), 3);
         } else {
             Progress value = state.getValue(PROGRESS);
-            if (timeLeft < 1200 && value != Progress.TWENTY) level.setBlock(pos, state.setValue(PumpBlock.ON_OFF, true).setValue(PumpBlock.PROGRESS, Progress.TWENTY), 3);
-            else if (timeLeft > 1200 && timeLeft < 2400 && value != Progress.FORTY) level.setBlock(pos, state.setValue(PumpBlock.ON_OFF, true).setValue(PumpBlock.PROGRESS, Progress.FORTY), 3);
-            else if (timeLeft > 2400 && timeLeft < 3600 && value != Progress.SIXTY) level.setBlock(pos, state.setValue(PumpBlock.ON_OFF, true).setValue(PumpBlock.PROGRESS, Progress.SIXTY), 3);
-            else if (timeLeft > 3600 && timeLeft < 4800 && value != Progress.EIGHTY) level.setBlock(pos, state.setValue(PumpBlock.ON_OFF, true).setValue(PumpBlock.PROGRESS, Progress.EIGHTY), 3);
-            else if (timeLeft > 4800 && timeLeft < 5500 && value != Progress.HUNDRED) level.setBlock(pos, state.setValue(PumpBlock.ON_OFF, true).setValue(PumpBlock.PROGRESS, Progress.HUNDRED), 3);
+            if (timeLeft < 1200 && value != Progress.TWENTY)
+                level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.TWENTY), 3);
+            else if (timeLeft >= 1200 && timeLeft < 2400 && value != Progress.FORTY)
+                level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.FORTY), 3);
+            else if (timeLeft >= 2400 && timeLeft < 3600 && value != Progress.SIXTY)
+                level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.SIXTY), 3);
+            else if (timeLeft >= 3600 && timeLeft < 4800 && value != Progress.EIGHTY)
+                level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.EIGHTY), 3);
+            else if (timeLeft >= 4800 && timeLeft < 5500 && value != Progress.HUNDRED)
+                level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.HUNDRED), 3);
         }
     }
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(PROGRESS, ON_OFF, BlockStateProperties.HORIZONTAL_FACING);
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
-    }
-
-    public VoxelShape getVisualShape(BlockState arg, BlockGetter arg2, BlockPos arg3, CollisionContext arg4) {
+    public VoxelShape getVisualShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
         Direction dir = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
-        if (dir == Direction.NORTH) return NORTH;
-        if (dir == Direction.EAST) return EAST;
-        if (dir == Direction.SOUTH) return SOUTH;
-        return WEST;
+        return SHAPES.getOrDefault(dir, NORTH);
+    }
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+
+        level.getBlockEntity(pos, BlockEntitiesRegistry.PUMP.get()).ifPresent(pump -> {
+            pump.scanForSluices();
+        });
     }
 }

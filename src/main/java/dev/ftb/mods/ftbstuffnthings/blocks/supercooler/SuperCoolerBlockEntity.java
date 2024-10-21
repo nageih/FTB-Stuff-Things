@@ -2,9 +2,11 @@ package dev.ftb.mods.ftbstuffnthings.blocks.supercooler;
 
 import com.google.common.collect.Sets;
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
+import dev.ftb.mods.ftbstuffnthings.blocks.FluidEnergyProcessorContainerData;
+import dev.ftb.mods.ftbstuffnthings.blocks.FluidEnergyProvider;
+import dev.ftb.mods.ftbstuffnthings.blocks.ProgressProvider;
 import dev.ftb.mods.ftbstuffnthings.capabilities.EmittingEnergy;
 import dev.ftb.mods.ftbstuffnthings.capabilities.EmittingFluidTank;
-import dev.ftb.mods.ftbstuffnthings.blocks.FluidEnergyProcessorContainerData;
 import dev.ftb.mods.ftbstuffnthings.capabilities.IOStackHandler;
 import dev.ftb.mods.ftbstuffnthings.crafting.EnergyComponent;
 import dev.ftb.mods.ftbstuffnthings.crafting.RecipeCaches;
@@ -15,12 +17,14 @@ import dev.ftb.mods.ftbstuffnthings.registry.RecipesRegistry;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -38,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class SuperCoolerBlockEntity extends AbstractMachineBlockEntity {
+public class SuperCoolerBlockEntity extends AbstractMachineBlockEntity implements MenuProvider, FluidEnergyProvider, ProgressProvider {
     private final EmittingEnergy energyHandler = new EmittingEnergy(1_000_000, 10_000, 10_000, (energy) -> setChanged());
     private final EmittingFluidTank fluidHandler = new EmittingFluidTank(10000, (tank) -> setChanged());
     private final IOStackHandler itemHandler = new IOStackHandler(3, 1, (container, ioType) -> itemHandlerChanged(ioType));
@@ -57,17 +61,17 @@ public class SuperCoolerBlockEntity extends AbstractMachineBlockEntity {
     }
 
     @Override
-    public IOStackHandler getItemHandler() {
+    public IOStackHandler getItemHandler(@Nullable Direction side) {
         return itemHandler;
     }
 
     @Override
-    public IFluidHandler getFluidHandler() {
+    public IFluidHandler getFluidHandler(@Nullable Direction side) {
         return fluidHandler;
     }
 
     @Override
-    public IEnergyStorage getEnergyHandler() {
+    public IEnergyStorage getEnergyHandler(@Nullable Direction side) {
         return energyHandler;
     }
 
@@ -400,10 +404,5 @@ public class SuperCoolerBlockEntity extends AbstractMachineBlockEntity {
     @Override
     public ContainerData getContainerData() {
         return containerData;
-    }
-
-    @Override
-    public void syncFluidTank() {
-        fluidHandler.sync(this);
     }
 }
