@@ -17,12 +17,12 @@
               "source": "block_entity"
             }
           ],
-          "name": "ftbstuff:iron_cobblegen"
+          "name": "ftbstuff:stone_cobblestone_generator"
         }
       ],
-      "name": "iron_cobblegen",
+      "name": "stone_cobblestone_generator",
       "rolls": 1.0
     }
   ],
-  "random_sequence": "ftbstuff:blocks/iron_cobblegen"
+  "random_sequence": "ftbstuff:blocks/stone_cobblestone_generator"
 }

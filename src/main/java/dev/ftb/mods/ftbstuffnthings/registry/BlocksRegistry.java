@@ -58,16 +58,18 @@ public class BlocksRegistry {
             = BLOCKS.register("netherite_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.NETHERITE));
 
 
-    public static final DeferredBlock<CobblegenBlock> STONE_COBBLEGEN
-            = BLOCKS.register("stone_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.STONE));
-    public static final DeferredBlock<CobblegenBlock> IRON_COBBLEGEN
-            = BLOCKS.register("iron_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.IRON));
-    public static final DeferredBlock<CobblegenBlock> GOLD_COBBLEGEN
-            = BLOCKS.register("gold_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.GOLD));
-    public static final DeferredBlock<CobblegenBlock> DIAMOND_COBBLEGEN
-            = BLOCKS.register("diamond_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.DIAMOND));
-    public static final DeferredBlock<CobblegenBlock> NETHERITE_COBBLEGEN
-            = BLOCKS.register("netherite_cobblegen", () -> new CobblegenBlock(CobbleGenProperties.NETHERITE));
+    public static final DeferredBlock<CobblegenBlock> STONE_COBBLESTONE_GENERATOR
+            = BLOCKS.register("stone_cobblestone_generator", () -> new CobblegenBlock(CobbleGenProperties.STONE));
+    public static final DeferredBlock<CobblegenBlock> IRON_COBBLESTONE_GENERATOR
+            = BLOCKS.register("iron_cobblestone_generator", () -> new CobblegenBlock(CobbleGenProperties.IRON));
+    public static final DeferredBlock<CobblegenBlock> GOLD_COBBLESTONE_GENERATOR
+            = BLOCKS.register("gold_cobblestone_generator", () -> new CobblegenBlock(CobbleGenProperties.GOLD));
+    public static final DeferredBlock<CobblegenBlock> DIAMOND_COBBLESTONE_GENERATOR
+            = BLOCKS.register("diamond_cobblestone_generator", () -> new CobblegenBlock(CobbleGenProperties.DIAMOND));
+    public static final DeferredBlock<CobblegenBlock> NETHERITE_COBBLESTONE_GENERATOR
+            = BLOCKS.register("netherite_cobblestone_generator", () -> new CobblegenBlock(CobbleGenProperties.NETHERITE));
+
+    public static final List<DeferredBlock<CobblegenBlock>> COBBLEGENS = List.of(STONE_COBBLESTONE_GENERATOR, IRON_COBBLESTONE_GENERATOR, GOLD_COBBLESTONE_GENERATOR, DIAMOND_COBBLESTONE_GENERATOR, NETHERITE_COBBLESTONE_GENERATOR);
 
     public static final DeferredBlock<FusingMachineBlock> FUSING_MACHINE
             = BLOCKS.register("fusing_machine", FusingMachineBlock::new);

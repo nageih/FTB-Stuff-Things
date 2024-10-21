@@ -17,12 +17,12 @@
               "source": "block_entity"
             }
           ],
-          "name": "ftbstuff:gold_cobblegen"
+          "name": "ftbstuff:gold_cobblestone_generator"
         }
       ],
-      "name": "gold_cobblegen",
+      "name": "gold_cobblestone_generator",
       "rolls": 1.0
     }
   ],
-  "random_sequence": "ftbstuff:blocks/gold_cobblegen"
+  "random_sequence": "ftbstuff:blocks/gold_cobblestone_generator"
 }

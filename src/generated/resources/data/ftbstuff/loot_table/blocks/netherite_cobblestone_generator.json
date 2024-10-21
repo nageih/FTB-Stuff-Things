@@ -17,12 +17,12 @@
               "source": "block_entity"
             }
           ],
-          "name": "ftbstuff:diamond_cobblegen"
+          "name": "ftbstuff:netherite_cobblestone_generator"
         }
       ],
-      "name": "diamond_cobblegen",
+      "name": "netherite_cobblestone_generator",
       "rolls": 1.0
     }
   ],
-  "random_sequence": "ftbstuff:blocks/diamond_cobblegen"
+  "random_sequence": "ftbstuff:blocks/netherite_cobblestone_generator"
 }

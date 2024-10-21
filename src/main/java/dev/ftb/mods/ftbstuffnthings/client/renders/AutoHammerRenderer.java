@@ -30,7 +30,7 @@ public class AutoHammerRenderer implements BlockEntityRenderer<AutoHammerBlockEn
         }
     }
 
-    static void renderBlock(PoseStack poseStack, MultiBufferSource bufferSource, int combinedLightIn, int combinedOverlayIn, ItemStack stack, int breakProgress) {
+    public static void renderBlock(PoseStack poseStack, MultiBufferSource bufferSource, int combinedLightIn, int combinedOverlayIn, ItemStack stack, int breakProgress) {
         if (!stack.isEmpty() && stack.getItem() instanceof BlockItem blockItem) {
             poseStack.scale(0.25f, 0.25f, 0.25f);
 

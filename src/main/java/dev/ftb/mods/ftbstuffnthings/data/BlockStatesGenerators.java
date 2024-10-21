@@ -2,7 +2,6 @@ package dev.ftb.mods.ftbstuffnthings.data;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.blocks.*;
-import dev.ftb.mods.ftbstuffnthings.blocks.cobblegen.CobblegenBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.JarAutomaterBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.pump.PumpBlock;
@@ -23,7 +22,6 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -115,18 +113,14 @@ public class BlockStatesGenerators extends BlockStateProvider {
         }
 
         // Cobble generators
-        Map<DeferredBlock<CobblegenBlock>, String> cobblegenModels = Map.of(
-                BlocksRegistry.STONE_COBBLEGEN, "block/stone_cobblestone_generator",
-                BlocksRegistry.IRON_COBBLEGEN, "block/iron_cobblestone_generator",
-                BlocksRegistry.GOLD_COBBLEGEN, "block/gold_cobblestone_generator",
-                BlocksRegistry.DIAMOND_COBBLEGEN, "block/diamond_cobblestone_generator",
-                BlocksRegistry.NETHERITE_COBBLEGEN, "block/netherite_cobblestone_generator"
-        );
-
-        for (DeferredBlock<CobblegenBlock> block : cobblegenModels.keySet()) {
-            String modelPath = cobblegenModels.get(block);
-            ModelFile cobblegenModel = models().withExistingParent("block/cobblegen", modLoc(modelPath));
-            simpleBlock(block.get(), cobblegenModel);
+        for (var block : List.of(BlocksRegistry.STONE_COBBLESTONE_GENERATOR, BlocksRegistry.IRON_COBBLESTONE_GENERATOR, BlocksRegistry.GOLD_COBBLESTONE_GENERATOR, BlocksRegistry.DIAMOND_COBBLESTONE_GENERATOR, BlocksRegistry.NETHERITE_COBBLESTONE_GENERATOR)) {
+            MultiPartBlockStateBuilder b = getMultipartBuilder(block.get());
+            String path = block.getId().getPath();
+            for (DirRotation d : HORIZONTALS) {
+                b.part().modelFile(models().getExistingFile(modLoc("block/" + path)))
+                        .rotationY(d.rotation).addModel()
+                        .condition(HORIZONTAL_FACING, d.direction);
+            }
         }
 
 

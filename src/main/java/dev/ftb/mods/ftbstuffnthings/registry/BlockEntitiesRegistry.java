@@ -40,15 +40,15 @@ public class BlockEntitiesRegistry {
 
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CobblegenBlockEntity.Stone>> STONE_COBBLEGEN
-            = BLOCK_ENTITIES.register("stone_cobblegen", () -> BlockEntityType.Builder.of(CobblegenBlockEntity.Stone::new, BlocksRegistry.STONE_COBBLEGEN.get()).build(null));
+            = BLOCK_ENTITIES.register("stone_cobblegen", () -> BlockEntityType.Builder.of(CobblegenBlockEntity.Stone::new, BlocksRegistry.STONE_COBBLESTONE_GENERATOR.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CobblegenBlockEntity.Iron>> IRON_COBBLEGEN
-            = BLOCK_ENTITIES.register("iron_cobblegen", () -> BlockEntityType.Builder.of(CobblegenBlockEntity.Iron::new, BlocksRegistry.IRON_COBBLEGEN.get()).build(null));
+            = BLOCK_ENTITIES.register("iron_cobblegen", () -> BlockEntityType.Builder.of(CobblegenBlockEntity.Iron::new, BlocksRegistry.IRON_COBBLESTONE_GENERATOR.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CobblegenBlockEntity.Gold>> GOLD_COBBLEGEN
-            = BLOCK_ENTITIES.register("gold_cobblegen", () -> BlockEntityType.Builder.of(CobblegenBlockEntity.Gold::new, BlocksRegistry.GOLD_COBBLEGEN.get()).build(null));
+            = BLOCK_ENTITIES.register("gold_cobblegen", () -> BlockEntityType.Builder.of(CobblegenBlockEntity.Gold::new, BlocksRegistry.GOLD_COBBLESTONE_GENERATOR.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CobblegenBlockEntity.Diamond>> DIAMOND_COBBLEGEN
-            = BLOCK_ENTITIES.register("diamond_cobblegen", () -> BlockEntityType.Builder.of(CobblegenBlockEntity.Diamond::new, BlocksRegistry.DIAMOND_COBBLEGEN.get()).build(null));
+            = BLOCK_ENTITIES.register("diamond_cobblegen", () -> BlockEntityType.Builder.of(CobblegenBlockEntity.Diamond::new, BlocksRegistry.DIAMOND_COBBLESTONE_GENERATOR.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CobblegenBlockEntity.Netherite>> NETHERITE_COBBLEGEN
-            = BLOCK_ENTITIES.register("netherite_cobblegen", () -> BlockEntityType.Builder.of(CobblegenBlockEntity.Netherite::new, BlocksRegistry.NETHERITE_COBBLEGEN.get()).build(null));
+            = BLOCK_ENTITIES.register("netherite_cobblegen", () -> BlockEntityType.Builder.of(CobblegenBlockEntity.Netherite::new, BlocksRegistry.NETHERITE_COBBLESTONE_GENERATOR.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PumpBlockEntity>> PUMP
             = BLOCK_ENTITIES.register("pump", () -> BlockEntityType.Builder.of(PumpBlockEntity::new, BlocksRegistry.PUMP.get()).build(null));

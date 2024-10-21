@@ -2,7 +2,10 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [256, 256],
 	"textures": {
-		"0": "ftbstuff:block/cobble_gen_tier_1"
+		"0": "ftbstuff:block/cobble_gen_tier_1",
+		"5": "block/lava_still",
+		"6": "block/water_still",
+		"particle": "block/cobblestone"
 	},
 	"render_type": "cutout",
 	"elements": [
@@ -166,12 +169,12 @@
 			"to": [6, 6, 10],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
-				"north": {"uv": [5.0625, 2.0625, 6.0625, 3.0625], "texture": "#0"},
-				"east": {"uv": [5.0625, 2.0625, 6.0625, 3.0625], "texture": "#0"},
-				"south": {"uv": [5.0625, 2.0625, 6.0625, 3.0625], "texture": "#0"},
-				"west": {"uv": [5.0625, 2.0625, 6.0625, 3.0625], "texture": "#0"},
-				"up": {"uv": [5.0625, 2.0625, 6.0625, 3.0625], "texture": "#0"},
-				"down": {"uv": [5.0625, 2.0625, 6.0625, 3.0625], "texture": "#0"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#5"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#5"},
+				"south": {"uv": [0, 0.125, 16, 16], "texture": "#5"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#5"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#5"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#5"}
 			}
 		},
 		{
@@ -180,12 +183,12 @@
 			"to": [14, 6, 10],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
-				"north": {"uv": [0, 3, 1, 4], "texture": "#0"},
-				"east": {"uv": [0, 3, 1, 4], "texture": "#0"},
-				"south": {"uv": [0, 3, 1, 4], "texture": "#0"},
-				"west": {"uv": [0, 3, 1, 4], "texture": "#0"},
-				"up": {"uv": [0, 3, 1, 4], "texture": "#0"},
-				"down": {"uv": [0, 3, 1, 4], "texture": "#0"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#6","tintindex": 1},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#6","tintindex": 1},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#6","tintindex": 1},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#6","tintindex": 1},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#6", "tintindex": 1},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#6", "tintindex": 1}
 			}
 		}
 	],
