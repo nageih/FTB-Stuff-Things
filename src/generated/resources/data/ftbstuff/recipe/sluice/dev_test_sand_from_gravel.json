@@ -14,8 +14,8 @@
   },
   "mesh_types": [
     "cloth",
-    "iron",
-    "diamond"
+    "diamond",
+    "iron"
   ],
   "results": [
     {
