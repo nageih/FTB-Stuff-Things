@@ -17,6 +17,7 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.any_block", "Any Block");
         add("ftbstuff.efficiency", "Efficiency: %s");
         add("ftbstuff.temperature", "Temperature: %s");
+        add("ftbstuff.fluid_usage", "Uses: %s mB");
         add("ftbstuff.temperature.normal", "Normal");
         add("ftbstuff.temperature.hot", "Hot");
         add("ftbstuff.temperature.superheated", "Superheated");
@@ -37,6 +38,7 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.tooltip.energy", "Energy: %s FE");
         add("ftbstuff.tooltip.fluid", "Fluid: %smB %s");
         add("ftbstuff.crook.limit", "Max drops per block broken: %s");
+        add("ftbstuff.sluice", "Sluice");
         add("ftbstuff.jade.processing", "Processing");
         add("ftbstuff.jade.buffer", "Buffer");
         add("ftbstuff.jade.time_left", "Time Left: %s");

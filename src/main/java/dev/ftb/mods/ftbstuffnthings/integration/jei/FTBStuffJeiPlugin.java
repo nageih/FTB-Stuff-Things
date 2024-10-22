@@ -64,7 +64,8 @@ public class FTBStuffJeiPlugin implements IModPlugin {
                 new HammerCategory(),
                 new FusingMachineCategory(),
                 new SuperCoolerCategory(),
-                new CrookCategory()
+                new CrookCategory(),
+                new SluiceCategory()
         );
     }
 
@@ -77,6 +78,7 @@ public class FTBStuffJeiPlugin implements IModPlugin {
         addRecipeType(registration, RecipesRegistry.HAMMER_TYPE.get(), RecipeTypes.HAMMER);
         addRecipeType(registration, RecipesRegistry.FUSING_MACHINE_TYPE.get(), RecipeTypes.FUSING_MACHINE);
         addRecipeType(registration, RecipesRegistry.SUPER_COOLER_TYPE.get(), RecipeTypes.SUPER_COOLER);
+        addRecipeType(registration, RecipesRegistry.SLUICE_TYPE.get(), RecipeTypes.SLUICE);
     }
 
     @Override
@@ -90,11 +92,17 @@ public class FTBStuffJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(ItemsRegistry.FUSING_MACHINE.toStack(), RecipeTypes.FUSING_MACHINE);
         registration.addRecipeCatalyst(ItemsRegistry.SUPER_COOLER.toStack(), RecipeTypes.SUPER_COOLER);
 
-        for (var item : List.of(ItemsRegistry.STONE_HAMMER, ItemsRegistry.IRON_HAMMER, ItemsRegistry.GOLD_HAMMER, ItemsRegistry.DIAMOND_HAMMER, ItemsRegistry.NETHERITE_HAMMER)) {
+        for (var item : ItemsRegistry.ALL_HAMMERS) {
             registration.addRecipeCatalyst(item.toStack(), RecipeTypes.HAMMER);
         }
-        for (var block : List.of(BlocksRegistry.IRON_AUTO_HAMMER, BlocksRegistry.GOLD_AUTO_HAMMER, BlocksRegistry.DIAMOND_AUTO_HAMMER, BlocksRegistry.NETHERITE_AUTO_HAMMER)) {
+        for (var block : BlocksRegistry.ALL_AUTO_HAMMERS) {
             registration.addRecipeCatalyst(block.toStack(), RecipeTypes.HAMMER);
+        }
+        for (var block : BlocksRegistry.ALL_SLUICES) {
+            registration.addRecipeCatalyst(block.toStack(), RecipeTypes.SLUICE);
+        }
+        for (var item : ItemsRegistry.ALL_MESHES) {
+            registration.addRecipeCatalyst(item.toStack(), RecipeTypes.SLUICE);
         }
     }
 
