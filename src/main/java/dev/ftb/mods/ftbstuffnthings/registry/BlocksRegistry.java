@@ -58,6 +58,7 @@ public class BlocksRegistry {
             = BLOCKS.register("diamond_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.DIAMOND));
     public static final DeferredBlock<AutoHammerBlock> NETHERITE_AUTO_HAMMER
             = BLOCKS.register("netherite_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.NETHERITE));
+    public static final List<DeferredBlock<AutoHammerBlock>> ALL_AUTO_HAMMERS = List.of(IRON_AUTO_HAMMER, GOLD_AUTO_HAMMER, DIAMOND_AUTO_HAMMER, NETHERITE_AUTO_HAMMER);
 
     public static final DeferredBlock<FusingMachineBlock> FUSING_MACHINE
             = BLOCKS.register("fusing_machine", FusingMachineBlock::new);
