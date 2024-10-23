@@ -13,7 +13,7 @@ public class I18nGenerator extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add("ftbstuff.itemGroup.tab", "FTB Ocean Building Blocks");
+        add("ftbstuff.itemGroup.tab", "FTB Stuff & Things");
         add("ftbstuff.any_block", "Any Block");
         add("ftbstuff.efficiency", "Efficiency: %s");
         add("ftbstuff.temperature", "Temperature: %s");
