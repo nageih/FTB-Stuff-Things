@@ -13,10 +13,11 @@ public class I18nGenerator extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        add("ftbstuff.itemGroup.tab", "FTB Ocean Building Blocks");
+        add("ftbstuff.itemGroup.tab", "FTB Stuff & Things");
         add("ftbstuff.any_block", "Any Block");
         add("ftbstuff.efficiency", "Efficiency: %s");
         add("ftbstuff.temperature", "Temperature: %s");
+        add("ftbstuff.fluid_usage", "Uses: %s mB");
         add("ftbstuff.temperature.normal", "Normal");
         add("ftbstuff.temperature.hot", "Hot");
         add("ftbstuff.temperature.superheated", "Superheated");
@@ -37,9 +38,12 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.tooltip.energy", "Energy: %s FE");
         add("ftbstuff.tooltip.fluid", "Fluid: %smB %s");
         add("ftbstuff.crook.limit", "Max drops per block broken: %s");
+        add("ftbstuff.sluice", "Sluice");
         add("ftbstuff.jade.processing", "Processing");
         add("ftbstuff.jade.buffer", "Buffer");
+        add("ftbstuff.jade.time_left", "Time Left: %s");
         add("config.jade.plugin_ftbstuff.autohammer", "Autohammer");
+        add("config.jade.plugin_ftbstuff.pump", "Pump");
         add("block.ftbstuff.fusing_machine.tooltip", "Used to fuse items together to produce new results");
         add("block.ftbstuff.super_cooler.tooltip", "Used to \"super\"-cool items to produce new results");
 
@@ -78,6 +82,11 @@ public class I18nGenerator extends LanguageProvider {
 
         addBlock(BlocksRegistry.CAST_IRON_BLOCK, "Cast Iron Block");
 
+        addBlock(BlocksRegistry.DUST_BLOCK, "Dust");
+        addBlock(BlocksRegistry.CRUSHED_BASALT, "Crushed Basalt");
+        addBlock(BlocksRegistry.CRUSHED_ENDSTONE, "Crushed Endstone");
+        addBlock(BlocksRegistry.CRUSHED_NETHERRACK, "Crushed Netherrack");
+
         addItem(ItemsRegistry.CLOTH_MESH, "Cloth Mesh");
         addItem(ItemsRegistry.IRON_MESH, "Iron Mesh");
         addItem(ItemsRegistry.GOLD_MESH, "Gold Mesh");
@@ -99,5 +108,17 @@ public class I18nGenerator extends LanguageProvider {
 
         addItem(ItemsRegistry.CROOK, "Stone Crook");
         addItem(ItemsRegistry.STONE_ROD, "Stone Rod");
+
+        BlocksRegistry.BARRELS.forEach((barrel) -> {
+            String name = barrel.getId().getPath().split("_")[0];
+            // Upper case first letter
+            name = name.substring(0, 1).toUpperCase() + name.substring(1);
+
+            addBlock(barrel, name + " Barrel");
+        });
+
+        addBlock(BlocksRegistry.CRATE, "Crate");
+        addBlock(BlocksRegistry.SMALL_CRATE, "Small Crate");
+        addBlock(BlocksRegistry.PULSATING_CRATE, "Pulsating Crate");
     }
 }

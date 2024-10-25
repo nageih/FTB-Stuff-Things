@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbstuffnthings.data;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
-import dev.ftb.mods.ftbstuffnthings.blocks.*;
+import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.JarAutomaterBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.pump.PumpBlock;
@@ -15,6 +15,7 @@ import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.*;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -63,35 +64,35 @@ public class BlockStatesGenerators extends BlockStateProvider {
         for (int d = 0; d < 4; d++) {
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_off")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, false)
+                    .condition(AbstractMachineBlock.ACTIVE, false)
                     .condition(HORIZONTAL_FACING, dirs[d]);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_on")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d]);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_20")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d])
                     .condition(PumpBlock.PROGRESS, PumpBlock.Progress.TWENTY);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_40")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d])
                     .condition(PumpBlock.PROGRESS, PumpBlock.Progress.FORTY);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_60")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d])
                     .condition(PumpBlock.PROGRESS, PumpBlock.Progress.SIXTY);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_80")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d])
                     .condition(PumpBlock.PROGRESS, PumpBlock.Progress.EIGHTY);
             builder.part().modelFile(this.models().getExistingFile(this.modLoc("block/pump_100")))
                     .rotationY(dirsRot2[d]).addModel()
-                    .condition(PumpBlock.ON_OFF, true)
+                    .condition(AbstractMachineBlock.ACTIVE, true)
                     .condition(HORIZONTAL_FACING, dirs[d])
                     .condition(PumpBlock.PROGRESS, PumpBlock.Progress.HUNDRED);
         }
@@ -181,6 +182,22 @@ public class BlockStatesGenerators extends BlockStateProvider {
                     .condition(prop, true);
         });
 
+        // Crates & Barrels
+        BlocksRegistry.BARRELS.forEach((block) -> {
+            var name = block.getId().getPath();
+            ModelFile model = models().getExistingFile(modLoc("block/" + name));
+            simpleBlock(block.get(), model);
+        });
+
+        simpleBlock(BlocksRegistry.CRATE.get(), models().getExistingFile(modLoc("block/crate")));
+        simpleBlock(BlocksRegistry.PULSATING_CRATE.get(), models().getExistingFile(modLoc("block/pulsating_crate")));
+
+        // Small crate supports rotations
+        var smallCrateModel = models().getExistingFile(modLoc("block/small_crate"));
+        getVariantBuilder(BlocksRegistry.SMALL_CRATE.get()).forAllStatesExcept(state -> ConfiguredModel.builder()
+                        .modelFile(smallCrateModel)
+                        .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build(),
+                BlockStateProperties.WATERLOGGED);
 
         // Misc simple blocks
 
@@ -190,6 +207,10 @@ public class BlockStatesGenerators extends BlockStateProvider {
         simpleBlock(BlocksRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE.get());
 
         simpleBlock(BlocksRegistry.CAST_IRON_BLOCK.get());
+        simpleBlock(BlocksRegistry.DUST_BLOCK.get());
+        simpleBlock(BlocksRegistry.CRUSHED_BASALT.get());
+        simpleBlock(BlocksRegistry.CRUSHED_ENDSTONE.get());
+        simpleBlock(BlocksRegistry.CRUSHED_NETHERRACK.get());
     }
 
     private ModelFile machineModel(DeferredBlock<? extends Block> block, boolean active) {

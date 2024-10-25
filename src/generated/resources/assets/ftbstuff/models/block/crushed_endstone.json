@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "ftbstuff:block/crushed_endstone"
+  }
+}

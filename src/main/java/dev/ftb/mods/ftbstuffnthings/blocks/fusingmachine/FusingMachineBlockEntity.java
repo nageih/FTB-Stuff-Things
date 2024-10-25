@@ -1,21 +1,25 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.fusingmachine;
 
 import com.google.common.collect.Sets;
-import dev.ftb.mods.ftbstuffnthings.blocks.*;
+import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
+import dev.ftb.mods.ftbstuffnthings.blocks.FluidEnergyProcessorContainerData;
+import dev.ftb.mods.ftbstuffnthings.blocks.FluidEnergyProvider;
+import dev.ftb.mods.ftbstuffnthings.blocks.ProgressProvider;
 import dev.ftb.mods.ftbstuffnthings.capabilities.EmittingEnergy;
 import dev.ftb.mods.ftbstuffnthings.capabilities.EmittingFluidTank;
 import dev.ftb.mods.ftbstuffnthings.capabilities.EmittingStackHandler;
-import dev.ftb.mods.ftbstuffnthings.crafting.recipe.FusingMachineRecipe;
 import dev.ftb.mods.ftbstuffnthings.crafting.RecipeCaches;
+import dev.ftb.mods.ftbstuffnthings.crafting.recipe.FusingMachineRecipe;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ComponentsRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.RecipesRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -33,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class FusingMachineBlockEntity extends AbstractMachineBlockEntity {
+public class FusingMachineBlockEntity extends AbstractMachineBlockEntity implements MenuProvider, FluidEnergyProvider, ProgressProvider {
     private final EmittingEnergy energyHandler = new EmittingEnergy(1_000_000, 10_000, 10_000, (energy) -> setChanged());
     private final ExtractOnlyFluidTank fluidHandler = new ExtractOnlyFluidTank(10000, (tank) -> setChanged());
     private final EmittingStackHandler itemHandler = new EmittingStackHandler(2, (contents) -> onItemHandlerChange());
@@ -190,11 +194,6 @@ public class FusingMachineBlockEntity extends AbstractMachineBlockEntity {
 
 //#region BlockEntity setup and syncing
 
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable("block.ftbstuff.fusing_machine");
-    }
-
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
@@ -308,28 +307,23 @@ public class FusingMachineBlockEntity extends AbstractMachineBlockEntity {
     }
 
     @Override
-    public EmittingStackHandler getItemHandler() {
+    public EmittingStackHandler getItemHandler(@Nullable Direction side) {
         return itemHandler;
     }
 
     @Override
-    public IFluidHandler getFluidHandler() {
+    public IFluidHandler getFluidHandler(@Nullable Direction side) {
         return fluidHandler;
     }
 
     @Override
-    public IEnergyStorage getEnergyHandler() {
+    public IEnergyStorage getEnergyHandler(@Nullable Direction side) {
         return energyHandler;
     }
 
     @Override
     public ContainerData getContainerData() {
         return containerData;
-    }
-
-    @Override
-    public void syncFluidTank() {
-        fluidHandler.sync(this);
     }
 
 //#endregion

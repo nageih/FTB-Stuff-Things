@@ -1,7 +1,12 @@
 package dev.ftb.mods.ftbstuffnthings.items;
 
+import com.mojang.serialization.Codec;
 import dev.ftb.mods.ftbstuffnthings.registry.ItemsRegistry;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
 
@@ -24,6 +30,9 @@ public enum MeshType implements StringRepresentable {
     IRON("iron", ItemsRegistry.IRON_MESH, () -> Tags.Items.INGOTS_IRON),
     GOLD("gold", ItemsRegistry.GOLD_MESH, () -> Tags.Items.INGOTS_GOLD),
     DIAMOND("diamond", ItemsRegistry.DIAMOND_MESH, () -> Tags.Items.GEMS_DIAMOND);
+
+    public static final Codec<MeshType> CODEC = StringRepresentable.fromEnum(MeshType::values);
+    public static final StreamCodec<ByteBuf, MeshType> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
     public static final MeshType[] VALUES = values();
     public static final List<MeshType> NON_EMPTY_VALUES = Arrays.stream(VALUES).filter(e -> e != EMPTY).toList();

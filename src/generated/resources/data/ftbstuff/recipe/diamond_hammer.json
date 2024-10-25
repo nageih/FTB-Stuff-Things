@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "H": {
+      "tag": "c:gems/diamond"
+    },
+    "R": {
+      "tag": "c:rods/wooden"
+    }
+  },
+  "pattern": [
+    "HRH",
+    " R ",
+    " R "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ftbstuff:diamond_hammer"
+  }
+}

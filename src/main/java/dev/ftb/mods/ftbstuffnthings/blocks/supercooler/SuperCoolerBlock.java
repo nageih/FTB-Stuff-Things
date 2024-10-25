@@ -12,6 +12,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SuperCoolerBlock extends AbstractMachineBlock implements SerializableComponentsProvider {
+    public SuperCoolerBlock() {
+        super(defaultMachineProps());
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

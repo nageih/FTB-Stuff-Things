@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "H": {
+      "item": "ftbstuff:iron_hammer"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "X": {
+      "tag": "c:glass_blocks"
+    }
+  },
+  "pattern": [
+    "IGI",
+    "XHX",
+    "RGR"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ftbstuff:iron_auto_hammer"
+  }
+}

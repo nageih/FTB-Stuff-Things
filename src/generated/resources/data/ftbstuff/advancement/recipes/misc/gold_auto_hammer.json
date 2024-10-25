@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_iron_auto_hammer": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ftbstuff:iron_auto_hammer"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ftbstuff:gold_auto_hammer"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_iron_auto_hammer"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ftbstuff:gold_auto_hammer"
+    ]
+  }
+}

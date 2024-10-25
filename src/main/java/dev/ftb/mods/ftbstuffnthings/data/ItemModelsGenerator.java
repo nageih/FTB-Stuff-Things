@@ -37,6 +37,22 @@ public class ItemModelsGenerator extends ItemModelProvider {
         withExistingParent("gold_auto_hammer", modLoc("block/gold_auto_hammer"));
         withExistingParent("diamond_auto_hammer", modLoc("block/diamond_auto_hammer"));
         withExistingParent("netherite_auto_hammer", modLoc("block/netherite_auto_hammer"));
+        withExistingParent("dust", modLoc("block/dust"));
+        withExistingParent("crushed_basalt", modLoc("block/crushed_basalt"));
+        withExistingParent("crushed_endstone", modLoc("block/crushed_endstone"));
+        withExistingParent("crushed_netherrack", modLoc("block/crushed_netherrack"));
+
+        withExistingParent("white_barrel", FTBStuffNThings.id("block/white_barrel"));
+        withExistingParent("green_barrel", FTBStuffNThings.id("block/green_barrel"));
+        withExistingParent("blue_barrel", FTBStuffNThings.id("block/blue_barrel"));
+        withExistingParent("purple_barrel", FTBStuffNThings.id("block/purple_barrel"));
+        withExistingParent("red_barrel", FTBStuffNThings.id("block/red_barrel"));
+        withExistingParent("black_barrel", FTBStuffNThings.id("block/black_barrel"));
+        withExistingParent("golden_barrel", FTBStuffNThings.id("block/golden_barrel"));
+
+        withExistingParent("crate", FTBStuffNThings.id("block/crate"));
+        withExistingParent("small_crate", FTBStuffNThings.id("block/small_crate"));
+        withExistingParent("pulsating_crate", FTBStuffNThings.id("block/pulsating_crate"));
 
         withExistingParent("stone_cobblestone_generator", modLoc("block/stone_cobblestone_generator"));
         withExistingParent("iron_cobblestone_generator", modLoc("block/iron_cobblestone_generator"));

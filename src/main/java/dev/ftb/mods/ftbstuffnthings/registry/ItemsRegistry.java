@@ -11,6 +11,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class ItemsRegistry {
@@ -20,6 +21,7 @@ public class ItemsRegistry {
     public static final DeferredItem<MeshItem> IRON_MESH = ITEMS.register("iron_mesh", () -> new MeshItem(MeshType.IRON));
     public static final DeferredItem<MeshItem> GOLD_MESH = ITEMS.register("gold_mesh", () -> new MeshItem(MeshType.GOLD));
     public static final DeferredItem<MeshItem> DIAMOND_MESH = ITEMS.register("diamond_mesh", () -> new MeshItem(MeshType.DIAMOND));
+    public static final List<DeferredItem<MeshItem>> ALL_MESHES = List.of(CLOTH_MESH, IRON_MESH, GOLD_MESH, DIAMOND_MESH);
 
     public static final DeferredItem<FluidCapsuleItem> FLUID_CAPSULE = ITEMS.register("fluid_capsule", FluidCapsuleItem::new);
     public static final DeferredItem<WaterBowlItem> WATER_BOWL = ITEMS.register("water_bowl", WaterBowlItem::new);
@@ -34,6 +36,7 @@ public class ItemsRegistry {
     public static final DeferredItem<HammerItem> GOLD_HAMMER = registerHammer("gold_hammer", Tiers.GOLD);
     public static final DeferredItem<HammerItem> DIAMOND_HAMMER = registerHammer("diamond_hammer", Tiers.DIAMOND);
     public static final DeferredItem<HammerItem> NETHERITE_HAMMER = registerHammer("netherite_hammer", Tiers.NETHERITE);
+    public static final List<DeferredItem<HammerItem>> ALL_HAMMERS = List.of(STONE_HAMMER, IRON_HAMMER, GOLD_HAMMER, DIAMOND_HAMMER, NETHERITE_HAMMER);
 
     public static final DeferredItem<CrookItem> CROOK = ITEMS.register("stone_crook",
             () -> new CrookItem(Tiers.STONE, new Item.Properties().attributes(
@@ -68,6 +71,11 @@ public class ItemsRegistry {
 
     public static final DeferredItem<BlockItem> CAST_IRON_BLOCK = blockItem("cast_iron_block", BlocksRegistry.CAST_IRON_BLOCK);
 
+    public static final DeferredItem<BlockItem> DUST = blockItem("dust", BlocksRegistry.DUST_BLOCK);
+    public static final DeferredItem<BlockItem> CRUSHED_BASALT = blockItem("crushed_basalt", BlocksRegistry.CRUSHED_BASALT);
+    public static final DeferredItem<BlockItem> CRUSHED_ENDSTONE = blockItem("crushed_endstone", BlocksRegistry.CRUSHED_ENDSTONE);
+    public static final DeferredItem<BlockItem> CRUSHED_NETHERRACK = blockItem("crushed_netherrack", BlocksRegistry.CRUSHED_NETHERRACK);
+
     public static final DeferredItem<BlockItem> TUBE = blockItem("tube", BlocksRegistry.TUBE);
     public static final DeferredItem<BlockItem> JAR = blockItem("jar", BlocksRegistry.JAR);
     public static final DeferredItem<BlockItem> TEMPERED_JAR = blockItem("tempered_jar", BlocksRegistry.TEMPERED_JAR);
@@ -81,6 +89,18 @@ public class ItemsRegistry {
             = blockItem("creative_high_temperature_source", BlocksRegistry.CREATIVE_SUPERHEATED_TEMPERATURE_SOURCE);
     public static final DeferredItem<BlockItem> CREATIVE_CHILLED_TEMPERATURE_SOURCE
             = blockItem("creative_subzero_temperature_source", BlocksRegistry.CREATIVE_CHILLED_TEMPERATURE_SOURCE);
+
+    public static final DeferredItem<BlockItem> WHITE_BARREL = blockItem("white_barrel", BlocksRegistry.WHITE_BARREL);
+    public static final DeferredItem<BlockItem> GREEN_BARREL = blockItem("green_barrel", BlocksRegistry.GREEN_BARREL);
+    public static final DeferredItem<BlockItem> BLUE_BARREL = blockItem("blue_barrel", BlocksRegistry.BLUE_BARREL);
+    public static final DeferredItem<BlockItem> PURPLE_BARREL = blockItem("purple_barrel", BlocksRegistry.PURPLE_BARREL);
+    public static final DeferredItem<BlockItem> RED_BARREL = blockItem("red_barrel", BlocksRegistry.RED_BARREL);
+    public static final DeferredItem<BlockItem> BLACK_BARREL = blockItem("black_barrel", BlocksRegistry.BLACK_BARREL);
+    public static final DeferredItem<BlockItem> GOLDEN_BARREL = blockItem("golden_barrel", BlocksRegistry.GOLDEN_BARREL);
+
+    public static final DeferredItem<BlockItem> SMALL_CRATE = blockItem("small_crate", BlocksRegistry.SMALL_CRATE);
+    public static final DeferredItem<BlockItem> CRATE = blockItem("crate", BlocksRegistry.CRATE);
+    public static final DeferredItem<BlockItem> PULSATING_CRATE = blockItem("pulsating_crate", BlocksRegistry.PULSATING_CRATE);
 
     //#endregion
 

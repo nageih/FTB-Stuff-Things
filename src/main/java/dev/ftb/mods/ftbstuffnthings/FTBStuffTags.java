@@ -10,6 +10,9 @@ public class FTBStuffTags {
     public static class Blocks {
         public static final TagKey<Block> MINEABLE_WITH_HAMMER = commonTag("mineable/hammer");
 
+        public static final TagKey<Block> CRATE = modTag("crate");
+        public static final TagKey<Block> BARREL = modTag("barrel");
+
         static TagKey<Block> tag(String modid, String name) {
             return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(modid, name));
         }

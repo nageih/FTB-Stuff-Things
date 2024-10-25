@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ClientUtil {
     public static <T> Optional<T> getBlockEntityAt(BlockPos pos, Class<T> cls) {
         Level level = Minecraft.getInstance().level;
-        if (level != null && pos != null) {
+        if (level != null && pos != null && level.isLoaded(pos)) {
             BlockEntity te = level.getBlockEntity(pos);
             if (te != null && cls.isAssignableFrom(te.getClass())) {
                 //noinspection unchecked

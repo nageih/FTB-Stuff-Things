@@ -42,17 +42,30 @@ import java.util.List;
 public abstract class AbstractMachineBlock extends Block implements EntityBlock {
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
-    public AbstractMachineBlock() {
-        super(Properties.of().mapColor(MapColor.STONE).strength(1F, 1F));
+    protected static Properties defaultMachineProps() {
+        return Properties.of().mapColor(MapColor.STONE).strength(1F, 1F);
+    }
 
-        registerDefaultState(getStateDefinition().any()
-                .setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)
-                .setValue(ACTIVE, false));
+    public AbstractMachineBlock(Properties props) {
+        super(props);
+
+        BlockState state = getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH);
+        if (state.hasProperty(ACTIVE)) {
+            state = state.setValue(ACTIVE, false);
+        }
+        registerDefaultState(state);
+    }
+
+    protected boolean hasActiveStateProperty() {
+        return true;
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.HORIZONTAL_FACING, ACTIVE);
+        builder.add(BlockStateProperties.HORIZONTAL_FACING);
+        if (hasActiveStateProperty()) {
+            builder.add(ACTIVE);
+        }
     }
 
     @Nullable
@@ -84,9 +97,9 @@ public abstract class AbstractMachineBlock extends Block implements EntityBlock 
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!level.isClientSide) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof AbstractMachineBlockEntity machine && machine.getFluidHandler() != null) {
+            if (blockEntity instanceof AbstractMachineBlockEntity machine && machine.getFluidHandler(hitResult.getDirection()) != null) {
                 // handle filling/emptying with bucket (or other fluid containing item)
-                if (FluidUtil.interactWithFluidHandler(player, hand, machine.getFluidHandler())) {
+                if (FluidUtil.interactWithFluidHandler(player, hand, machine.getFluidHandler(hitResult.getDirection()))) {
                     return ItemInteractionResult.CONSUME;
                 }
             }

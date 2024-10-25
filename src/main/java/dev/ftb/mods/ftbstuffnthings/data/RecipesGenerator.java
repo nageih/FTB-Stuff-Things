@@ -2,9 +2,12 @@ package dev.ftb.mods.ftbstuffnthings.data;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffTags;
+import dev.ftb.mods.ftbstuffnthings.blocks.hammer.AutoHammerBlock;
 import dev.ftb.mods.ftbstuffnthings.crafting.DevEnvironmentCondition;
 import dev.ftb.mods.ftbstuffnthings.crafting.ItemWithChance;
 import dev.ftb.mods.ftbstuffnthings.data.recipe.*;
+import dev.ftb.mods.ftbstuffnthings.items.HammerItem;
+import dev.ftb.mods.ftbstuffnthings.items.MeshType;
 import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ItemsRegistry;
 import dev.ftb.mods.ftbstuffnthings.temperature.Temperature;
@@ -33,6 +36,8 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.Arrays;
 import java.util.List;
@@ -114,13 +119,96 @@ public class RecipesGenerator extends RecipeProvider {
                 'S', ItemsRegistry.STONE_ROD
         ).save(output);
 
+        // sluices & meshes & pump
+        shaped(BlocksRegistry.PUMP.get(), Items.CLAY_BALL,
+                "WWW/SSS/BBB",
+                'W', Tags.Items.BUCKETS_WATER,
+                'S', Items.STONE,
+                'B', Items.OAK_PLANKS
+        ).save(output);
+
+        for (MeshType type : MeshType.NON_EMPTY_VALUES) {
+            shaped(type.getItemStack().getItem(), Items.STRING,
+                    "SIS/ICI/SIS",
+                    'S', Tags.Items.RODS_WOODEN,
+                    'I', type.getIngredient(),
+                    'C', Tags.Items.STRINGS
+            ).save(output);
+        }
+        shaped(BlocksRegistry.OAK_SLUICE.get(), Items.STICK,
+                "WS/WW",
+                'W', Items.OAK_LOG,
+                'S', Tags.Items.RODS_WOODEN
+        ).save(output);
+        shaped(BlocksRegistry.IRON_SLUICE.get(), Items.STICK,
+                "IC/SI",
+                'I', Tags.Items.INGOTS_IRON,
+                'C', Items.CHAIN,
+                'S', BlocksRegistry.OAK_SLUICE.get()
+        ).save(output);
+        shaped(BlocksRegistry.DIAMOND_SLUICE.get(), Items.STICK,
+                "DD/SD",
+                'D', Tags.Items.GEMS_DIAMOND,
+                'S', BlocksRegistry.IRON_SLUICE.get()
+        ).save(output);
+        netheriteSmithing(output, BlocksRegistry.DIAMOND_SLUICE.asItem(), RecipeCategory.TOOLS, BlocksRegistry.NETHERITE_SLUICE.asItem());
+
+        // hammers & autohammers
+        shapedHammer(ItemsRegistry.STONE_HAMMER, Items.COBBLESTONE, Tags.Items.COBBLESTONES, output);
+        shapedHammer(ItemsRegistry.IRON_HAMMER, Items.IRON_INGOT, Tags.Items.INGOTS_IRON, output);
+        shapedHammer(ItemsRegistry.GOLD_HAMMER, Items.GOLD_INGOT, Tags.Items.INGOTS_GOLD, output);
+        shapedHammer(ItemsRegistry.DIAMOND_HAMMER, Items.DIAMOND, Tags.Items.GEMS_DIAMOND, output);
+        shapedHammer(ItemsRegistry.NETHERITE_HAMMER, Items.NETHERITE_INGOT, Tags.Items.INGOTS_NETHERITE, output);
+
+        shaped(BlocksRegistry.IRON_AUTO_HAMMER, ItemsRegistry.IRON_AUTO_HAMMER.get(),
+                "IGI/XHX/RGR",
+                'I', Tags.Items.INGOTS_IRON,
+                'X', Tags.Items.GLASS_BLOCKS,
+                'R', Tags.Items.DUSTS_REDSTONE,
+                'G', Tags.Items.INGOTS_GOLD,
+                'H', ItemsRegistry.IRON_HAMMER.get()
+        ).save(output);
+        shapedAutoHammer(BlocksRegistry.GOLD_AUTO_HAMMER, BlocksRegistry.IRON_AUTO_HAMMER, ItemsRegistry.GOLD_HAMMER, output);
+        shapedAutoHammer(BlocksRegistry.DIAMOND_AUTO_HAMMER, BlocksRegistry.GOLD_AUTO_HAMMER, ItemsRegistry.DIAMOND_HAMMER, output);
+        shapedAutoHammer(BlocksRegistry.NETHERITE_AUTO_HAMMER, BlocksRegistry.DIAMOND_AUTO_HAMMER, ItemsRegistry.NETHERITE_HAMMER, output);
+
+        // a bunch of test recipes, only present in dev environment
         temperedJarRecipes(output);
         temperatureSourceRecipes(output);
         dripperRecipes(output);
         crookRecipes(output);
+        sluiceRecipes(output);
         hammerRecipes(output);
         fusingMachineRecipes(output);
         superCoolerRecipes(output);
+    }
+
+    private void shapedAutoHammer(DeferredBlock<AutoHammerBlock> result, DeferredBlock<AutoHammerBlock> prevAutoHammer, DeferredItem<HammerItem> hammer, RecipeOutput output) {
+        shaped(result, prevAutoHammer,
+                "ITI/XCX/RGR",
+                'I', Tags.Items.INGOTS_IRON,
+                'X', Tags.Items.GLASS_BLOCKS,
+                'R', Tags.Items.DUSTS_REDSTONE,
+                'G', Tags.Items.INGOTS_GOLD,
+                'T', hammer.asItem(),
+                'C', prevAutoHammer.asItem()
+        ).save(output);
+    }
+
+    private void shapedHammer(DeferredItem<HammerItem> result, ItemLike head, RecipeOutput output) {
+        shaped(result, head,
+                "HRH/ R / R ",
+                'H', head.asItem(),
+                'R', Tags.Items.RODS_WOODEN
+        ).save(output);
+    }
+
+    private void shapedHammer(DeferredItem<HammerItem> result, ItemLike required, TagKey<Item> head, RecipeOutput output) {
+        shaped(result, required,
+                "HRH/ R / R ",
+                'H', head,
+                'R', Tags.Items.RODS_WOODEN
+        ).save(output);
     }
 
     private void temperedJarRecipes(RecipeOutput output) {
@@ -236,6 +324,17 @@ public class RecipesGenerator extends RecipeProvider {
         new CrookRecipeBuilder(Ingredient.of(Blocks.SHORT_GRASS), List.of(
                 new ItemWithChance(new ItemStack(Items.STRING), 0.5)
         )).keepExistingDrops().saveTest(output, FTBStuffNThings.id("string_from_grass"));
+    }
+
+    private void sluiceRecipes(RecipeOutput output) {
+        new SluiceRecipeBuilder(Ingredient.of(Items.COBBLESTONE), List.of(
+                new ItemWithChance(new ItemStack(Blocks.GRAVEL), 1)
+        ), List.of(MeshType.CLOTH, MeshType.IRON)).saveTest(output, FTBStuffNThings.id("gravel_from_cobblestone"));
+        new SluiceRecipeBuilder(Ingredient.of(Items.GRAVEL), List.of(
+                new ItemWithChance(new ItemStack(Blocks.SAND), 0.5)
+        ), List.of(MeshType.CLOTH, MeshType.IRON, MeshType.DIAMOND))
+                .fluid(new FluidStack(Fluids.WATER, 1000)
+                ).saveTest(output, FTBStuffNThings.id("sand_from_gravel"));
     }
 
     private void hammerRecipes(RecipeOutput output) {

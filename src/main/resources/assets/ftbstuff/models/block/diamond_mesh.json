@@ -5,6 +5,7 @@
 		"0": "ftbstuff:block/diamond_mesh",
 		"particle": "ftbstuff:block/diamond_mesh"
 	},
+	"render_type": "cutout",
 	"elements": [
 		{
 			"from": [3, 9, 2],

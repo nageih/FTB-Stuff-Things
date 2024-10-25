@@ -6,8 +6,8 @@
         "y": 90
       },
       "when": {
-        "facing": "north",
-        "on_off": "false"
+        "active": "false",
+        "facing": "north"
       }
     },
     {
@@ -16,8 +16,8 @@
         "y": 90
       },
       "when": {
-        "facing": "north",
-        "on_off": "true"
+        "active": "true",
+        "facing": "north"
       }
     },
     {
@@ -26,8 +26,8 @@
         "y": 90
       },
       "when": {
+        "active": "true",
         "facing": "north",
-        "on_off": "true",
         "progress": "twenty"
       }
     },
@@ -37,8 +37,8 @@
         "y": 90
       },
       "when": {
+        "active": "true",
         "facing": "north",
-        "on_off": "true",
         "progress": "forty"
       }
     },
@@ -48,8 +48,8 @@
         "y": 90
       },
       "when": {
+        "active": "true",
         "facing": "north",
-        "on_off": "true",
         "progress": "sixty"
       }
     },
@@ -59,8 +59,8 @@
         "y": 90
       },
       "when": {
+        "active": "true",
         "facing": "north",
-        "on_off": "true",
         "progress": "eighty"
       }
     },
@@ -70,8 +70,8 @@
         "y": 90
       },
       "when": {
+        "active": "true",
         "facing": "north",
-        "on_off": "true",
         "progress": "hundred"
       }
     },
@@ -81,8 +81,8 @@
         "y": 270
       },
       "when": {
-        "facing": "south",
-        "on_off": "false"
+        "active": "false",
+        "facing": "south"
       }
     },
     {
@@ -91,8 +91,8 @@
         "y": 270
       },
       "when": {
-        "facing": "south",
-        "on_off": "true"
+        "active": "true",
+        "facing": "south"
       }
     },
     {
@@ -101,8 +101,8 @@
         "y": 270
       },
       "when": {
+        "active": "true",
         "facing": "south",
-        "on_off": "true",
         "progress": "twenty"
       }
     },
@@ -112,8 +112,8 @@
         "y": 270
       },
       "when": {
+        "active": "true",
         "facing": "south",
-        "on_off": "true",
         "progress": "forty"
       }
     },
@@ -123,8 +123,8 @@
         "y": 270
       },
       "when": {
+        "active": "true",
         "facing": "south",
-        "on_off": "true",
         "progress": "sixty"
       }
     },
@@ -134,8 +134,8 @@
         "y": 270
       },
       "when": {
+        "active": "true",
         "facing": "south",
-        "on_off": "true",
         "progress": "eighty"
       }
     },
@@ -145,8 +145,8 @@
         "y": 270
       },
       "when": {
+        "active": "true",
         "facing": "south",
-        "on_off": "true",
         "progress": "hundred"
       }
     },
@@ -155,8 +155,8 @@
         "model": "ftbstuff:block/pump_off"
       },
       "when": {
-        "facing": "west",
-        "on_off": "false"
+        "active": "false",
+        "facing": "west"
       }
     },
     {
@@ -164,8 +164,8 @@
         "model": "ftbstuff:block/pump_on"
       },
       "when": {
-        "facing": "west",
-        "on_off": "true"
+        "active": "true",
+        "facing": "west"
       }
     },
     {
@@ -173,8 +173,8 @@
         "model": "ftbstuff:block/pump_20"
       },
       "when": {
+        "active": "true",
         "facing": "west",
-        "on_off": "true",
         "progress": "twenty"
       }
     },
@@ -183,8 +183,8 @@
         "model": "ftbstuff:block/pump_40"
       },
       "when": {
+        "active": "true",
         "facing": "west",
-        "on_off": "true",
         "progress": "forty"
       }
     },
@@ -193,8 +193,8 @@
         "model": "ftbstuff:block/pump_60"
       },
       "when": {
+        "active": "true",
         "facing": "west",
-        "on_off": "true",
         "progress": "sixty"
       }
     },
@@ -203,8 +203,8 @@
         "model": "ftbstuff:block/pump_80"
       },
       "when": {
+        "active": "true",
         "facing": "west",
-        "on_off": "true",
         "progress": "eighty"
       }
     },
@@ -213,8 +213,8 @@
         "model": "ftbstuff:block/pump_100"
       },
       "when": {
+        "active": "true",
         "facing": "west",
-        "on_off": "true",
         "progress": "hundred"
       }
     },
@@ -224,8 +224,8 @@
         "y": 180
       },
       "when": {
-        "facing": "east",
-        "on_off": "false"
+        "active": "false",
+        "facing": "east"
       }
     },
     {
@@ -234,8 +234,8 @@
         "y": 180
       },
       "when": {
-        "facing": "east",
-        "on_off": "true"
+        "active": "true",
+        "facing": "east"
       }
     },
     {
@@ -244,8 +244,8 @@
         "y": 180
       },
       "when": {
+        "active": "true",
         "facing": "east",
-        "on_off": "true",
         "progress": "twenty"
       }
     },
@@ -255,8 +255,8 @@
         "y": 180
       },
       "when": {
+        "active": "true",
         "facing": "east",
-        "on_off": "true",
         "progress": "forty"
       }
     },
@@ -266,8 +266,8 @@
         "y": 180
       },
       "when": {
+        "active": "true",
         "facing": "east",
-        "on_off": "true",
         "progress": "sixty"
       }
     },
@@ -277,8 +277,8 @@
         "y": 180
       },
       "when": {
+        "active": "true",
         "facing": "east",
-        "on_off": "true",
         "progress": "eighty"
       }
     },
@@ -288,8 +288,8 @@
         "y": 180
       },
       "when": {
+        "active": "true",
         "facing": "east",
-        "on_off": "true",
         "progress": "hundred"
       }
     }

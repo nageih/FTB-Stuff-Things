@@ -13,6 +13,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -24,37 +26,38 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
     }
 
     @Override
-    public void render(SluiceBlockEntity te, float partialTick, PoseStack matrix, MultiBufferSource renderer, int light, int otherlight) {
-        if (!te.getFluidTank().isEmpty()) {
-            this.renderFluid(te, partialTick, matrix, renderer, light, otherlight);
+    public void render(SluiceBlockEntity sluice, float partialTick, PoseStack matrix, MultiBufferSource renderer, int light, int otherlight) {
+        FluidStack fluid = sluice.getFluidTank().getFluid();
+        if (!fluid.isEmpty()) {
+            this.renderFluid(sluice, fluid, matrix, renderer, light, otherlight);
         }
 
-//        ItemStack resource = te.inventory.getStackInSlot(0);
-//        if (resource.isEmpty()) {
-//            return;
-//        }
-//
-//        int progress = (te.processed * 100) / te.maxProcessed;
-//        float offset = te.processed < 0 ? 0 : progress;
-//
-//        float v = te.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
-//        matrix.pushPose();
-//        matrix.translate(.5F, .85F - (offset / 250F), .5F);
-//        matrix.scale(1.4F, 1.4F, 1.4F);
-//        matrix.mulPose(Axis.YN.rotationDegrees(45 + v));
-//
-//        Minecraft.getInstance().getItemRenderer().renderStatic(
-//                resource, ItemDisplayContext.FIRST_PERSON_LEFT_HAND, light, otherlight, matrix, renderer
-//        );
-//
-//        matrix.popPose();
+        if (sluice.getProcessingTime() == 0) {
+            return;
+        }
+        ItemStack resource = sluice.getDisplayedItem();
+        if (resource.isEmpty()) {
+            return;
+        }
+
+        int progress = (sluice.getProcessingProgress() * 100) / Math.max(1, sluice.getProcessingTime());
+        float offset = sluice.getProcessingProgress() < 0 ? 0 : progress;
+
+        float v = sluice.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
+        matrix.pushPose();
+        matrix.translate(.5F, .85F - (offset / 250F), .5F);
+        matrix.scale(1.4F, 1.4F, 1.4F);
+        matrix.mulPose(Axis.YN.rotationDegrees(45 + v));
+
+        Minecraft.getInstance().getItemRenderer().renderStatic(
+                resource, ItemDisplayContext.FIRST_PERSON_LEFT_HAND, light, otherlight, matrix,renderer, Minecraft.getInstance().level, 0
+        );
+
+        matrix.popPose();
     }
 
     // Lats code from jars (simpler this way)
-    private void renderFluid(SluiceBlockEntity te, float partialTick, PoseStack matrix, MultiBufferSource renderer, int light, int otherlight) {
-        Minecraft mc = Minecraft.getInstance();
-        FluidStack fluid = te.getFluidTank().getFluid();
-
+    private void renderFluid(SluiceBlockEntity te, FluidStack fluid, PoseStack matrix, MultiBufferSource renderer, int light, int otherlight) {
         VertexConsumer builder = renderer.getBuffer(RenderType.entityTranslucentCull(InventoryMenu.BLOCK_ATLAS));
 
         IClientFluidTypeExtensions renderProps = IClientFluidTypeExtensions.of(fluid.getFluid());
@@ -74,12 +77,11 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
         float u1top = sprite.getU(13F / 16F);
         float v1top = sprite.getV(13F / 16F);
 
-        Direction value = te.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-        float v = value.toYRot();
+        Direction facing = te.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 
         matrix.pushPose();
         matrix.translate(.5, 0, .5);
-        matrix.mulPose(Axis.YP.rotationDegrees(-v));
+        matrix.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
 
         PoseStack.Pose last = matrix.last();
 
@@ -93,14 +95,14 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
         // Second block fluid
         matrix.pushPose();
         matrix.translate(0, -.87F, 0);
+//        matrix.translate(facing.getStepX(), 0, facing.getStepZ());
+        matrix.translate((facing.getAxisDirection() == Direction.AxisDirection.POSITIVE && facing.getAxis() == Direction.Axis.X) || (facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE && facing.getAxis() == Direction.Axis.Z)
+                ? 1F : 0, 0, facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1F : 0);
 
-        matrix.translate((value.getAxisDirection() == Direction.AxisDirection.POSITIVE && value.getAxis() == Direction.Axis.X) || (value.getAxisDirection() == Direction.AxisDirection.NEGATIVE && value.getAxis() == Direction.Axis.Z)
-                ? 1F : 0, 0, value.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1F : 0);
-
-        if (value.getAxis() == Direction.Axis.Z) {
-            matrix.mulPose(Axis.YP.rotationDegrees(value.getAxisDirection() != Direction.AxisDirection.POSITIVE ? 180 : 0));
+        if (facing.getAxis() == Direction.Axis.Z) {
+            matrix.mulPose(Axis.YP.rotationDegrees(facing.getAxisDirection() != Direction.AxisDirection.POSITIVE ? 180 : 0));
         } else {
-            matrix.mulPose(Axis.YP.rotationDegrees(value.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 90 : -90));
+            matrix.mulPose(Axis.YP.rotationDegrees(facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 90 : -90));
         }
 
         last = matrix.last();

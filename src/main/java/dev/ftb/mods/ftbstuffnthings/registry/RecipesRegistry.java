@@ -40,6 +40,11 @@ public class RecipesRegistry {
     public static final Supplier<RecipeSerializer<CrookRecipe>> CROOK_SERIALIZER
             = RECIPE_SERIALIZERS.register("crook", () -> new CrookRecipe.Serializer<>(CrookRecipe::new));
 
+    public static final Supplier<RecipeType<SluiceRecipe>> SLUICE_TYPE
+            = registerType("sluice", FTBStuffRecipeType::new);
+    public static final Supplier<RecipeSerializer<SluiceRecipe>> SLUICE_SERIALIZER
+            = RECIPE_SERIALIZERS.register("sluice", () -> new SluiceRecipe.Serializer<>(SluiceRecipe::new));
+
     public static final Supplier<RecipeType<HammerRecipe>> HAMMER_TYPE
             = registerType("hammer", FTBStuffRecipeType::new);
     public static final Supplier<RecipeSerializer<HammerRecipe>> HAMMER_SERIALIZER

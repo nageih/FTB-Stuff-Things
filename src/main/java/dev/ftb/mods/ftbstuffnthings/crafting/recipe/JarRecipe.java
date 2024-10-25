@@ -232,13 +232,13 @@ public class JarRecipe implements Recipe<NoInventory>, Comparable<JarRecipe> {
 
 		public Serializer(IFactory<T> factory) {
 			codec = RecordCodecBuilder.<T>mapCodec(builder -> builder.group(
-							SizedIngredient.FLAT_CODEC.listOf(0, 3).fieldOf("input_items")
+							SizedIngredient.FLAT_CODEC.listOf(0, 3).optionalFieldOf("input_items", List.of())
 									.forGetter(JarRecipe::getInputItems),
-							SizedFluidIngredient.FLAT_CODEC.listOf(0, 3).fieldOf("input_fluids")
+							SizedFluidIngredient.FLAT_CODEC.listOf(0, 3).optionalFieldOf("input_fluids", List.of())
 									.forGetter(JarRecipe::getInputFluids),
-							ItemStack.CODEC.listOf(0, 3).fieldOf("output_items")
+							ItemStack.CODEC.listOf(0, 3).optionalFieldOf("output_items", List.of())
 									.forGetter(JarRecipe::getOutputItems),
-							FluidStack.CODEC.listOf(0, 3).fieldOf("output_fluids")
+							FluidStack.CODEC.listOf(0, 3).optionalFieldOf("output_fluids", List.of())
 									.forGetter(JarRecipe::getOutputFluids),
 							StringRepresentable.fromEnum(Temperature::values).optionalFieldOf("temperature", Temperature.NORMAL)
 									.forGetter(JarRecipe::getTemperature),

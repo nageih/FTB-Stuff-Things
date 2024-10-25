@@ -15,8 +15,6 @@
       "fluid": "minecraft:lava"
     }
   ],
-  "input_items": [],
-  "output_fluids": [],
   "output_items": [
     {
       "count": 1,

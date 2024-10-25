@@ -16,7 +16,9 @@ public class NetworkHandler {
         // clientbound
         registrar.playToClient(SyncJarContentsPacket.TYPE, SyncJarContentsPacket.STREAM_CODEC, SyncJarContentsPacket::handleData);
         registrar.playToClient(SyncJarRecipePacket.TYPE, SyncJarRecipePacket.STREAM_CODEC, SyncJarRecipePacket::handleData);
-        registrar.playToClient(FluidTankSync.TYPE, FluidTankSync.STREAM_CODEC, FluidTankSync::handleData);
+        registrar.playToClient(SyncDisplayFluidPacket.TYPE, SyncDisplayFluidPacket.STREAM_CODEC, SyncDisplayFluidPacket::handleData);
+        registrar.playToClient(SyncDisplayItemPacket.TYPE, SyncDisplayItemPacket.STREAM_CODEC, SyncDisplayItemPacket::handleData);
+        registrar.playToClient(SendSluiceStartPacket.TYPE, SendSluiceStartPacket.STREAM_CODEC, SendSluiceStartPacket::handleData);
 
         // serverbound
         registrar.playToServer(ToggleJarCraftingPacket.TYPE, ToggleJarCraftingPacket.STREAM_CODEC, ToggleJarCraftingPacket::handleData);

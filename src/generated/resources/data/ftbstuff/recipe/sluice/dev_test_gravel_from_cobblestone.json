@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbstuff:dev_environment"
+    }
+  ],
+  "type": "ftbstuff:sluice",
+  "fluid": {
+    "amount": 10,
+    "fluid": "minecraft:water"
+  },
+  "input": {
+    "item": "minecraft:cobblestone"
+  },
+  "mesh_types": [
+    "iron",
+    "cloth"
+  ],
+  "results": [
+    {
+      "chance": 1.0,
+      "item": {
+        "count": 1,
+        "id": "minecraft:gravel"
+      }
+    }
+  ]
+}
