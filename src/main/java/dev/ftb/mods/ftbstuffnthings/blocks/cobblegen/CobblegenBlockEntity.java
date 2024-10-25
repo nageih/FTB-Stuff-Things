@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.cobblegen;
 
 import dev.ftb.mods.ftbstuffnthings.Config;
+import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import net.minecraft.core.BlockPos;
@@ -23,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 public class CobblegenBlockEntity extends BlockEntity {
 
     private final CobbleGenProperties props;
-    private boolean active;
     protected ItemStackHandler inventory = new ItemStackHandler(1);
     private int ticks;
 
@@ -34,7 +34,6 @@ public class CobblegenBlockEntity extends BlockEntity {
 
     public void tickServer() {
         ticks++;
-
         boolean stateActive = getBlockState().getValue(BlockStateProperties.ENABLED);
         if (!stateActive) {
             return;
@@ -56,8 +55,25 @@ public class CobblegenBlockEntity extends BlockEntity {
             ItemHandlerHelper.insertItem(inventory, new ItemStack(Items.COBBLESTONE, amount), false);
         }
 
-
     }
+
+    public ItemStackHandler getInventory() {
+        return inventory;
+    }
+
+    public boolean isActive() {
+        if (!getBlockState().getValue(BlockStateProperties.ENABLED)) {
+            return false;
+        }
+
+        if (inventory.getStackInSlot(0).getCount() >= 64) {
+
+            IItemHandler connectedInventory = getConnectedInventory();
+            return connectedInventory != null && isInventoryFree(connectedInventory);
+        }
+        return true;
+    }
+
 
     @Nullable
     private IItemHandler getConnectedInventory() {

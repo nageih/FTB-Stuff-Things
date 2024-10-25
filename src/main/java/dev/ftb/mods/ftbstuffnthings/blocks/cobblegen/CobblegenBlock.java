@@ -1,10 +1,12 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.cobblegen;
 
-import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
-import dev.ftb.mods.ftbstuffnthings.blocks.hammer.AutoHammerBlock;
-import dev.ftb.mods.ftbstuffnthings.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -54,6 +57,16 @@ public class CobblegenBlock extends Block implements EntityBlock {
     @Override
     protected RenderShape getRenderShape(BlockState state) {
         return super.getRenderShape(state);
+    }
+
+    @Override
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof CobblegenBlockEntity cobbleGenBlockEntity && cobbleGenBlockEntity != null && player.getMainHandItem().is(Items.AIR)) {
+            ItemStack stack = cobbleGenBlockEntity.getInventory().getStackInSlot(0);
+            player.addItem(stack);
+        }
+
+        return InteractionResult.PASS;
     }
 
     @Nullable
