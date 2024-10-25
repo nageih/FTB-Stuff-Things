@@ -1,10 +1,7 @@
 package dev.ftb.mods.ftbstuffnthings.client;
 
 import dev.ftb.mods.ftbstuffnthings.client.model.TubeModel;
-import dev.ftb.mods.ftbstuffnthings.client.renders.AutoHammerRenderer;
-import dev.ftb.mods.ftbstuffnthings.client.renders.JarBlockEntityRenderer;
-import dev.ftb.mods.ftbstuffnthings.client.renders.SluiceBlockEntityRenderer;
-import dev.ftb.mods.ftbstuffnthings.client.renders.TemperedJarBlockEntityRenderer;
+import dev.ftb.mods.ftbstuffnthings.client.renders.*;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ContentRegistry;
