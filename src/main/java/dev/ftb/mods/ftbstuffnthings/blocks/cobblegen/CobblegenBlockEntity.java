@@ -1,20 +1,19 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.cobblegen;
 
 import dev.ftb.mods.ftbstuffnthings.Config;
-import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
-import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -25,6 +24,7 @@ public class CobblegenBlockEntity extends BlockEntity {
 
     private final CobbleGenProperties props;
     protected ItemStackHandler inventory = new ItemStackHandler(1);
+    private BlockCapabilityCache<IItemHandler, Direction> outputCache;
     private int ticks;
 
     protected CobblegenBlockEntity(BlockEntityType<?> type, CobbleGenProperties props, BlockPos pos, BlockState blockState) {
@@ -57,7 +57,7 @@ public class CobblegenBlockEntity extends BlockEntity {
 
     }
 
-    public ItemStackHandler getInventory() {
+    public ItemStackHandler getInternalInventory() {
         return inventory;
     }
 
@@ -77,15 +77,24 @@ public class CobblegenBlockEntity extends BlockEntity {
 
     @Nullable
     private IItemHandler getConnectedInventory() {
-        for (Direction direction : Direction.values()) {
-            var inventory = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, getBlockPos().relative(direction), null);
-            if (inventory == null) {
-                continue;
+        if (outputCache == null) {
+            for (Direction direction : Direction.values()) {
+                outputCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) getLevel(), getBlockPos().relative(direction), null);
+                IItemHandler dest = outputCache.getCapability();
+                if (dest == null) {
+                    continue;
+                }
+                if (!isInventoryFree(dest)) {
+                    continue;
+                }
+                return dest;
             }
-            if (!isInventoryFree(inventory)) {
-                continue;
+        } else {
+            IItemHandler dest = outputCache.getCapability();
+            if (dest != null && !isInventoryFree(dest)) {
+                outputCache = null;
             }
-            return inventory;
+            return dest;
         }
         return null;
     }

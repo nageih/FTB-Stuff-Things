@@ -3,16 +3,13 @@ package dev.ftb.mods.ftbstuffnthings.blocks.cobblegen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -35,7 +32,9 @@ public class CobblegenBlock extends Block implements EntityBlock {
 
         this.props = props;
 
-        this.registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(BlockStateProperties.ENABLED, false));
+        this.registerDefaultState(this.getStateDefinition().any()
+                .setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH)
+                .setValue(BlockStateProperties.ENABLED, false));
     }
 
     @Override
@@ -46,7 +45,9 @@ public class CobblegenBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(BlockStateProperties.ENABLED, true).setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
+        return defaultBlockState()
+                .setValue(BlockStateProperties.ENABLED, true)
+                .setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
@@ -55,14 +56,9 @@ public class CobblegenBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return super.getRenderShape(state);
-    }
-
-    @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof CobblegenBlockEntity cobbleGenBlockEntity && cobbleGenBlockEntity != null && player.getMainHandItem().is(Items.AIR)) {
-            ItemStack stack = cobbleGenBlockEntity.getInventory().getStackInSlot(0);
+            ItemStack stack = cobbleGenBlockEntity.getInternalInventory().getStackInSlot(0);
             player.addItem(stack);
         }
 
@@ -103,4 +99,13 @@ public class CobblegenBlock extends Block implements EntityBlock {
         return props.createBlockEntity(blockPos, blockState);
     }
 
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+    }
 }
