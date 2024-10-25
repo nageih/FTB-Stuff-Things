@@ -44,6 +44,7 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.DIAMOND_HAMMER.get(), AutoHammerRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.NETHERITE_HAMMER.get(), AutoHammerRenderer::new);
 
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.STONE_COBBLEGEN.get(), CobblegenBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.IRON_COBBLEGEN.get(), CobblegenBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.GOLD_COBBLEGEN.get(), CobblegenBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.DIAMOND_COBBLEGEN.get(), CobblegenBlockEntityRenderer::new);
