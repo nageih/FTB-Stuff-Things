@@ -8,6 +8,7 @@ import com.mojang.math.Axis;
 import dev.ftb.mods.ftbstuffnthings.blocks.cobblegen.CobblegenBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlockEntity;
+import dev.ftb.mods.ftbstuffnthings.client.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -46,7 +47,7 @@ public class CobblegenBlockEntityRenderer implements BlockEntityRenderer<Cobbleg
         if (blockEntity.getLevel().isLoaded(blockEntity.getBlockPos()) && blockEntity.getBlockState().getValue(BlockStateProperties.ENABLED)) {
             poseStack.pushPose();
             poseStack.translate(0.375, 0.125, 0.375);
-            AutoHammerRenderer.renderBlock(poseStack, bufferSource, packedLight, packedOverlay, Items.COBBLESTONE.getDefaultInstance(), time);
+            RenderUtil.renderBlock(poseStack, bufferSource, packedLight, packedOverlay, Items.COBBLESTONE.getDefaultInstance(), time);
             poseStack.popPose();
         }
 
