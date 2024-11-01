@@ -25,9 +25,11 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -52,6 +54,7 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
         fluidSyncNeeded = true;
     });
     private final EmittingEnergy energyStorage = new EmittingEnergy(100_000, energy -> setChanged());
+    private BlockCapabilityCache<IItemHandler, Direction> outputCache;
 
     private int processingProgress = 0;
     private int processingTime = 0;
@@ -63,8 +66,8 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
     }
 
     @Override
-    public void tickClient() {
-        super.tickClient();
+    public void tickClient(Level clientLevel) {
+        super.tickClient(clientLevel);
 
         if (processingTime > 0 && processingProgress++ > processingTime) {
             processingProgress = 0;
@@ -73,7 +76,7 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
     }
 
     @Override
-    public void tickServer() {
+    public void tickServer(ServerLevel serverLevel) {
         if (itemSyncNeeded) {
             syncItemToClients();
             itemSyncNeeded = false;
@@ -109,7 +112,7 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
 
                     for (var result : recipe.value().getResults()) {
                         // TODO luck upgrade
-                        if (level.random.nextFloat() <= result.chance()) {
+                        if (serverLevel.random.nextFloat() <= result.chance()) {
                             dropItemOrPushToInventory(result.item());
                         }
                     }
@@ -154,8 +157,8 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
         stack = stack.copy();
 
         // See if there is an inventory at the end of the sluice block
-        assert level != null;
-        var inventory = availableInventory();
+        assert level instanceof ServerLevel;
+        var inventory = getOutputInventory();
         if (inventory != null) {
             stack = ItemHandlerHelper.insertItem(inventory, stack, false);
         }
@@ -176,14 +179,22 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
     }
 
     @Nullable
-    private IItemHandler availableInventory() {
-        // TODO a block capability cache here
-        if (level != null) {
-            BlockPos pos = this.getBlockPos().relative(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), 2);
-
-            return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+    private IItemHandler getOutputInventory() {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return null;
         }
-        return null;
+        if (outputCache == null) {
+            Direction facing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+            outputCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, serverLevel,
+                    getBlockPos().relative(facing, 2), facing.getOpposite());
+        }
+        return outputCache.getCapability();
+//        if (level != null) {
+//            BlockPos pos = this.getBlockPos().relative(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), 2);
+//
+//            return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+//        }
+//        return null;
     }
 
     @Override

@@ -23,6 +23,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -89,7 +90,7 @@ public class SuperCoolerBlockEntity extends AbstractMachineBlockEntity implement
     }
 
     @Override
-    public void tickServer() {
+    public void tickServer(ServerLevel serverLevel) {
         if (tickLock) {
             return;
         }
@@ -101,7 +102,7 @@ public class SuperCoolerBlockEntity extends AbstractMachineBlockEntity implement
         }
 
         if (pendingRecipeId != null) {
-            level.getRecipeManager().byKey(pendingRecipeId).ifPresent(r -> {
+            serverLevel.getRecipeManager().byKey(pendingRecipeId).ifPresent(r -> {
                 if (r.value() instanceof SuperCoolerRecipe s) {
                     currentRecipe = new RecipeHolder<>(r.id(), s);
                 }

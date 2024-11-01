@@ -18,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -53,7 +54,7 @@ public class FusingMachineBlockEntity extends AbstractMachineBlockEntity impleme
     }
 
     @Override
-    public void tickServer() {
+    public void tickServer(ServerLevel serverLevel) {
         if (!hasEnoughEnergy() || !hasOccupiedInputSlots()) {
             setActive(false);
             return;

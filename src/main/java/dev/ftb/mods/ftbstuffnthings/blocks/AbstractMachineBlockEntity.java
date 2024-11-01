@@ -6,12 +6,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -86,13 +88,13 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
         }
     }
 
-    public void tickClient() {
+    public void tickClient(Level clientLevel) {
         getActiveParticle().ifPresent(particle -> {
             if (getBlockState().hasProperty(AbstractMachineBlock.ACTIVE)
                     && getBlockState().getValue(AbstractMachineBlock.ACTIVE)
-                    && level.random.nextInt(5) == 0) {
+                    && clientLevel.random.nextInt(5) == 0) {
                 Vec3 vec = Vec3.upFromBottomCenterOf(getBlockPos(), 1.05);
-                level.addParticle(particle, vec.x, vec.y, vec.z, 0, 0, 0);
+                clientLevel.addParticle(particle, vec.x, vec.y, vec.z, 0, 0, 0);
             }
         });
     }
@@ -101,7 +103,7 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
         return Optional.of(ParticleTypes.SMOKE);
     }
 
-    public abstract void tickServer();
+    public abstract void tickServer(ServerLevel serverLevel);
 
     public void dropItemContents() {
         IItemHandler handler = getItemHandler();
