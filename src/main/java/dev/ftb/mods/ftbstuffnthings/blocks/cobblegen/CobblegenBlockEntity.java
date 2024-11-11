@@ -23,7 +23,12 @@ import org.jetbrains.annotations.Nullable;
 public class CobblegenBlockEntity extends BlockEntity {
 
     private final CobbleGenProperties props;
-    protected ItemStackHandler inventory = new ItemStackHandler(1);
+    protected ItemStackHandler inventory = new ItemStackHandler(1) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+        }
+    };
     private BlockCapabilityCache<IItemHandler, Direction> outputCache;
     private int ticks;
 
