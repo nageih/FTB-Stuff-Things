@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            }
+          ],
+          "name": "ftbstuff:netherite_cobblestone_generator"
+        }
+      ],
+      "name": "netherite_cobblestone_generator",
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "ftbstuff:blocks/netherite_cobblestone_generator"
+}

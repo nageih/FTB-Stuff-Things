@@ -59,6 +59,11 @@ public class I18nGenerator extends LanguageProvider {
         addBlock(BlocksRegistry.DIAMOND_AUTO_HAMMER, "Diamond Auto-Hammer");
         addBlock(BlocksRegistry.NETHERITE_AUTO_HAMMER, "Netherite Auto-Hammer");
 
+        addBlock(BlocksRegistry.IRON_COBBLESTONE_GENERATOR, "Iron Cobble Generator");
+        addBlock(BlocksRegistry.GOLD_COBBLESTONE_GENERATOR, "Gold Cobble Generator");
+        addBlock(BlocksRegistry.DIAMOND_COBBLESTONE_GENERATOR, "Diamond Cobble Generator");
+        addBlock(BlocksRegistry.NETHERITE_COBBLESTONE_GENERATOR, "Netherite Cobble Generator");
+
         addBlock(BlocksRegistry.FUSING_MACHINE, "SlowMelter 9000");
         addBlock(BlocksRegistry.SUPER_COOLER, "\"Super\" Cooler");
 

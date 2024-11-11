@@ -56,6 +56,12 @@ public class ItemsRegistry {
     public static final DeferredItem<BlockItem> DIAMOND_AUTO_HAMMER = blockItem("diamond_auto_hammer", BlocksRegistry.DIAMOND_AUTO_HAMMER);
     public static final DeferredItem<BlockItem> NETHERITE_AUTO_HAMMER = blockItem("netherite_auto_hammer", BlocksRegistry.NETHERITE_AUTO_HAMMER);
 
+    public static final DeferredItem<BlockItem> STONE_COBBLESTONE_GENERATOR = blockItem("stone_cobblestone_generator", BlocksRegistry.STONE_COBBLESTONE_GENERATOR);
+    public static final DeferredItem<BlockItem> IRON_COBBLESTONE_GENERATOR = blockItem("iron_cobblestone_generator", BlocksRegistry.IRON_COBBLESTONE_GENERATOR);
+    public static final DeferredItem<BlockItem> GOLD_COBBLESTONE_GENERATOR = blockItem("gold_cobblestone_generator", BlocksRegistry.GOLD_COBBLESTONE_GENERATOR);
+    public static final DeferredItem<BlockItem> DIAMOND_COBBLESTONE_GENERATOR = blockItem("diamond_cobblestone_generator", BlocksRegistry.DIAMOND_COBBLESTONE_GENERATOR);
+    public static final DeferredItem<BlockItem> NETHERITE_COBBLESTONE_GENERATOR = blockItem("netherite_cobblestone_generator", BlocksRegistry.NETHERITE_COBBLESTONE_GENERATOR);
+
     public static final DeferredItem<BlockItem> PUMP = blockItem("pump", BlocksRegistry.PUMP);
 
     public static final DeferredItem<BlockItem> DRIPPER = blockItem("dripper", BlocksRegistry.DRIPPER);

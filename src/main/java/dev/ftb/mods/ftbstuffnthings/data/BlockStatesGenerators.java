@@ -113,6 +113,18 @@ public class BlockStatesGenerators extends BlockStateProvider {
             }
         }
 
+        // Cobble generators
+        for (var block : List.of(BlocksRegistry.STONE_COBBLESTONE_GENERATOR, BlocksRegistry.IRON_COBBLESTONE_GENERATOR, BlocksRegistry.GOLD_COBBLESTONE_GENERATOR, BlocksRegistry.DIAMOND_COBBLESTONE_GENERATOR, BlocksRegistry.NETHERITE_COBBLESTONE_GENERATOR)) {
+            MultiPartBlockStateBuilder b = getMultipartBuilder(block.get());
+            String path = block.getId().getPath();
+            for (DirRotation d : HORIZONTALS) {
+                b.part().modelFile(models().getExistingFile(modLoc("block/" + path)))
+                        .rotationY(d.rotation).addModel()
+                        .condition(HORIZONTAL_FACING, d.direction);
+            }
+        }
+
+
         // Fusing Machine & Super Cooler
         for (var block: List.of(BlocksRegistry.FUSING_MACHINE, BlocksRegistry.SUPER_COOLER)) {
             var model = machineModel(block, false);

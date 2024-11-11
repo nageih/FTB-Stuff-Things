@@ -38,6 +38,22 @@ public class Config {
     public static final IntValue NETHERITE_HAMMER_SPEED = AUTOHAMMER_CONFIG.addInt("netherite_hammer_speed", 15, 1, 100000)
             .comment("Speed of the netherite auto-hammer as ticks taken to process a block");
 
+    private static final SNBTConfig COBBLEGEN_CONFIG = CONFIG.addGroup("cobblegen");
+
+    public static final IntValue DELAY_PER_OPERATION = COBBLEGEN_CONFIG.addInt("operations_per_tick", 20, 1, Integer.MAX_VALUE)
+            .comment("The delay between each cobble generation in ticks");
+
+    public static final IntValue STONE_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("stone_cobblegen_amount", 1, 1, 1000)
+            .comment("Amount of cobble the stone cobblegen produces per tick");
+    public static final IntValue IRON_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("iron_cobblegen_amount", 8, 1, 1000)
+            .comment("Amount of cobble the iron cobblegen produces per tick");
+    public static final IntValue GOLD_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("gold_cobblegen_amount", 16, 1, 1000)
+            .comment("Amount of cobble the gold cobblegen produces per tick");
+    public static final IntValue DIAMOND_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("diamond_cobblegen_amount", 32, 1, 1000)
+            .comment("Amount of cobble the diamond cobblegen produces per tick");
+    public static final IntValue NETHERITE_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("netherite_cobblegen_amount", 64, 1, 1000)
+            .comment("Amount of cobble the netherite cobblegen produces per tick");
+
     public static void init() {
         loadDefaulted(CONFIG, CONFIG_DIR, FTBStuffNThings.MODID, FTBStuffNThings.MODID + ".snbt");
     }

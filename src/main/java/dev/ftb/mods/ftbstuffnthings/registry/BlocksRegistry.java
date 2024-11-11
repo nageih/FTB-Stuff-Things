@@ -1,6 +1,8 @@
 package dev.ftb.mods.ftbstuffnthings.registry;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
+import dev.ftb.mods.ftbstuffnthings.blocks.cobblegen.CobbleGenProperties;
+import dev.ftb.mods.ftbstuffnthings.blocks.cobblegen.CobblegenBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.SimpleFallingBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.dripper.DripperBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.fusingmachine.FusingMachineBlock;
@@ -50,6 +52,7 @@ public class BlocksRegistry {
     public static final DeferredBlock<DripperBlock> DRIPPER
             = BLOCKS.register("dripper", DripperBlock::new);
 
+
     public static final DeferredBlock<AutoHammerBlock> IRON_AUTO_HAMMER
             = BLOCKS.register("iron_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.IRON));
     public static final DeferredBlock<AutoHammerBlock> GOLD_AUTO_HAMMER
@@ -59,6 +62,20 @@ public class BlocksRegistry {
     public static final DeferredBlock<AutoHammerBlock> NETHERITE_AUTO_HAMMER
             = BLOCKS.register("netherite_auto_hammer", () -> new AutoHammerBlock(AutoHammerProperties.NETHERITE));
     public static final List<DeferredBlock<AutoHammerBlock>> ALL_AUTO_HAMMERS = List.of(IRON_AUTO_HAMMER, GOLD_AUTO_HAMMER, DIAMOND_AUTO_HAMMER, NETHERITE_AUTO_HAMMER);
+
+
+    public static final DeferredBlock<CobblegenBlock> STONE_COBBLESTONE_GENERATOR
+            = BLOCKS.register("stone_cobblestone_generator", () -> new CobblegenBlock(CobbleGenProperties.STONE));
+    public static final DeferredBlock<CobblegenBlock> IRON_COBBLESTONE_GENERATOR
+            = BLOCKS.register("iron_cobblestone_generator", () -> new CobblegenBlock(CobbleGenProperties.IRON));
+    public static final DeferredBlock<CobblegenBlock> GOLD_COBBLESTONE_GENERATOR
+            = BLOCKS.register("gold_cobblestone_generator", () -> new CobblegenBlock(CobbleGenProperties.GOLD));
+    public static final DeferredBlock<CobblegenBlock> DIAMOND_COBBLESTONE_GENERATOR
+            = BLOCKS.register("diamond_cobblestone_generator", () -> new CobblegenBlock(CobbleGenProperties.DIAMOND));
+    public static final DeferredBlock<CobblegenBlock> NETHERITE_COBBLESTONE_GENERATOR
+            = BLOCKS.register("netherite_cobblestone_generator", () -> new CobblegenBlock(CobbleGenProperties.NETHERITE));
+
+    public static final List<DeferredBlock<CobblegenBlock>> COBBLEGENS = List.of(STONE_COBBLESTONE_GENERATOR, IRON_COBBLESTONE_GENERATOR, GOLD_COBBLESTONE_GENERATOR, DIAMOND_COBBLESTONE_GENERATOR, NETHERITE_COBBLESTONE_GENERATOR);
 
     public static final DeferredBlock<FusingMachineBlock> FUSING_MACHINE
             = BLOCKS.register("fusing_machine", FusingMachineBlock::new);
