@@ -102,6 +102,18 @@ public class ItemsRegistry {
     public static final DeferredItem<BlockItem> CRATE = blockItem("crate", BlocksRegistry.CRATE);
     public static final DeferredItem<BlockItem> PULSATING_CRATE = blockItem("pulsating_crate", BlocksRegistry.PULSATING_CRATE);
 
+    public static final DeferredItem<BlockItem> ACACIA_STRAINER = blockItem("acacia_water_strainer", BlocksRegistry.ACACIA_STRAINER);
+    public static final DeferredItem<BlockItem> BAMBOO_STRAINER = blockItem("bamboo_water_strainer", BlocksRegistry.BAMBOO_STRAINER);
+    public static final DeferredItem<BlockItem> BIRCH_STRAINER = blockItem("birch_water_strainer", BlocksRegistry.BIRCH_STRAINER);
+    public static final DeferredItem<BlockItem> CHERRY_STRAINER = blockItem("cherry_water_strainer", BlocksRegistry.CHERRY_STRAINER);
+    public static final DeferredItem<BlockItem> CRIMSON_STRAINER = blockItem("crimson_water_strainer", BlocksRegistry.CRIMSON_STRAINER);
+    public static final DeferredItem<BlockItem> DARK_OAK_STRAINER = blockItem("dark_oak_water_strainer", BlocksRegistry.DARK_OAK_STRAINER);
+    public static final DeferredItem<BlockItem> JUNGLE_STRAINER = blockItem("jungle_water_strainer", BlocksRegistry.JUNGLE_STRAINER);
+    public static final DeferredItem<BlockItem> MANGROVE_STRAINER = blockItem("mangrove_water_strainer", BlocksRegistry.MANGROVE_STRAINER);
+    public static final DeferredItem<BlockItem> OAK_STRAINER = blockItem("oak_water_strainer", BlocksRegistry.OAK_STRAINER);
+    public static final DeferredItem<BlockItem> SPRUCE_STRAINER = blockItem("spruce_water_strainer", BlocksRegistry.SPRUCE_STRAINER);
+    public static final DeferredItem<BlockItem> WARPED_STRAINER = blockItem("warped_water_strainer", BlocksRegistry.WARPED_STRAINER);
+
     //#endregion
 
     public static void init(IEventBus bus) {
@@ -109,15 +121,15 @@ public class ItemsRegistry {
     }
 
     public static DeferredItem<Item> simpleItem(String id) {
-        return ITEMS.register(id, () -> new Item(new Item.Properties()));
+        return ITEMS.registerSimpleItem(id, new Item.Properties());
     }
 
     public static DeferredItem<BlockItem> blockItem(String id, Supplier<? extends Block> sup) {
-        return ITEMS.register(id, () -> new BlockItem(sup.get(), new Item.Properties()));
+        return ITEMS.registerSimpleBlockItem(id, sup);
     }
 
     private static DeferredItem<HammerItem> registerHammer(String name, Tiers tier) {
-        return ITEMS.register(name, () -> new HammerItem(tier,
+        return ITEMS.registerItem(name, props -> new HammerItem(tier,
                 new Item.Properties().attributes(DiggerItem.createAttributes(tier, 1.0F, -2.8F))
         ));
     }

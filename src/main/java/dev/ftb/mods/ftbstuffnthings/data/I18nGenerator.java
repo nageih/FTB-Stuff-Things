@@ -39,6 +39,7 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.tooltip.fluid", "Fluid: %smB %s");
         add("ftbstuff.crook.limit", "Max drops per block broken: %s");
         add("ftbstuff.sluice", "Sluice");
+        add("ftbstuff.strainer.empty", "Water Strainer is empty!");
         add("ftbstuff.jade.processing", "Processing");
         add("ftbstuff.jade.buffer", "Buffer");
         add("ftbstuff.jade.time_left", "Time Left: %s");
@@ -70,6 +71,18 @@ public class I18nGenerator extends LanguageProvider {
         addBlock(BlocksRegistry.PUMP, "Pump");
 
         addBlock(BlocksRegistry.DRIPPER, "Dripper");
+
+        addBlock(BlocksRegistry.ACACIA_STRAINER, "Acacia Water Strainer");
+        addBlock(BlocksRegistry.BAMBOO_STRAINER, "Bamboo Water Strainer");
+        addBlock(BlocksRegistry.BIRCH_STRAINER, "Birch Water Strainer");
+        addBlock(BlocksRegistry.CHERRY_STRAINER, "Cherry Water Strainer");
+        addBlock(BlocksRegistry.CRIMSON_STRAINER, "Crimson Water Strainer");
+        addBlock(BlocksRegistry.DARK_OAK_STRAINER, "Dark Oak Water Strainer");
+        addBlock(BlocksRegistry.JUNGLE_STRAINER, "Jungle Water Strainer");
+        addBlock(BlocksRegistry.MANGROVE_STRAINER, "Mangrove Water Strainer");
+        addBlock(BlocksRegistry.OAK_STRAINER, "Oak Water Strainer");
+        addBlock(BlocksRegistry.SPRUCE_STRAINER, "Spruce Water Strainer");
+        addBlock(BlocksRegistry.WARPED_STRAINER, "Warped Water Strainer");
 
         addBlock(BlocksRegistry.TUBE, "Cast Iron Tube");
         addBlock(BlocksRegistry.JAR, "Glass Jar");

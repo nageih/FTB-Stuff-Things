@@ -30,7 +30,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -242,21 +245,6 @@ public class SluiceBlock extends AbstractMachineBlock implements EntityBlock, Se
     }
 
     @Override
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
-    }
-
-    @Override
-    public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation) {
-        return state.setValue(HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)));
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, Mirror mirror) {
-        return state.setValue(HORIZONTAL_FACING, mirror.mirror(state.getValue(HORIZONTAL_FACING)));
-    }
-
-    @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         Direction direction = state.getValue(HORIZONTAL_FACING);
 
@@ -278,22 +266,9 @@ public class SluiceBlock extends AbstractMachineBlock implements EntityBlock, Se
             BlockPos otherPos = pos.relative(state.getValue(PART) == Part.FUNNEL
                     ? direction.getOpposite()
                     : direction);
-//            BlockState endState = world.getBlockState(endPos);
 
             // Don't act on the funnel
             if (state.getValue(PART) != Part.FUNNEL) {
-//                BlockEntity tileEntity = world.getBlockEntity(pos);
-//                if (tileEntity instanceof SluiceBlockEntity) {
-//                    SluiceBlockEntity sluice = (SluiceBlockEntity) tileEntity;
-//                    popResource(world, pos, sluice.inventory.getStackInSlot(0));
-//                    world.updateNeighbourForOutputSignal(pos, this);
-//
-//                    // Drop the upgrade inventory
-//                    for (int i = 0; i < sluice.upgradeInventory.getSlots(); i++) {
-//                        popResource(world, pos, sluice.upgradeInventory.getStackInSlot(i));
-//                    }
-//                }
-
                 world.removeBlock(otherPos, false);
                 popResource(world, pos, state.getValue(MESH).getItemStack());
 

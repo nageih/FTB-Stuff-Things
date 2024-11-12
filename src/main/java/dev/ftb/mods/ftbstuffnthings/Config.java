@@ -3,13 +3,16 @@ package dev.ftb.mods.ftbstuffnthings;
 import dev.ftb.mods.ftblibrary.snbt.config.BooleanValue;
 import dev.ftb.mods.ftblibrary.snbt.config.IntValue;
 import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig;
+import dev.ftb.mods.ftblibrary.snbt.config.StringValue;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceProperties;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceType;
 import net.minecraft.Util;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.util.Lazy;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static dev.ftb.mods.ftblibrary.snbt.config.ConfigUtil.CONFIG_DIR;
 import static dev.ftb.mods.ftblibrary.snbt.config.ConfigUtil.loadDefaulted;
@@ -40,7 +43,7 @@ public class Config {
 
     private static final SNBTConfig COBBLEGEN_CONFIG = CONFIG.addGroup("cobblegen");
 
-    public static final IntValue DELAY_PER_OPERATION = COBBLEGEN_CONFIG.addInt("operations_per_tick", 20, 1, Integer.MAX_VALUE)
+    public static final IntValue DELAY_PER_OPERATION = COBBLEGEN_CONFIG.addInt("cobblegen_tick_rate", 20, 1, Integer.MAX_VALUE)
             .comment("The delay between each cobble generation in ticks");
 
     public static final IntValue STONE_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("stone_cobblegen_amount", 1, 1, 1000)
@@ -53,6 +56,12 @@ public class Config {
             .comment("Amount of cobble the diamond cobblegen produces per tick");
     public static final IntValue NETHERITE_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("netherite_cobblegen_amount", 64, 1, 1000)
             .comment("Amount of cobble the netherite cobblegen produces per tick");
+
+    private static final SNBTConfig WATER_STRAINER_CONFIG = CONFIG.addGroup("water_strainer");
+    public static final IntValue STRAINER_TICK_RATE = COBBLEGEN_CONFIG.addInt("strainer_tick_rate", 20, 1, Integer.MAX_VALUE)
+            .comment("The delay between each strainer generation in ticks");
+    public static final StringValue STRAINER_LOOT_TABLE = COBBLEGEN_CONFIG.addString("strainer_loot_table", FTBStuffNThings.MODID + ":custom/water_strainer_test")
+            .comment("The delay between each strainer generation in ticks");
 
     public static void init() {
         loadDefaulted(CONFIG, CONFIG_DIR, FTBStuffNThings.MODID, FTBStuffNThings.MODID + ".snbt");
@@ -77,5 +86,9 @@ public class Config {
                 config.addInt("fe cost per use", type.defEnergyUsage)
                         .comment("FE cost per use")
         ));
+    }
+
+    public static Optional<ResourceLocation> getStrainerLootTable() {
+        return Optional.ofNullable(ResourceLocation.tryParse(STRAINER_LOOT_TABLE.get()));
     }
 }

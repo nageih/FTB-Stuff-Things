@@ -3,11 +3,12 @@ package dev.ftb.mods.ftbstuffnthings.registry;
 import com.mojang.serialization.MapCodec;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.blocks.fusingmachine.FusingMachineMenu;
+import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarMenu;
+import dev.ftb.mods.ftbstuffnthings.blocks.strainer.WaterStrainerMenu;
 import dev.ftb.mods.ftbstuffnthings.blocks.supercooler.SuperCoolerMenu;
+import dev.ftb.mods.ftbstuffnthings.crafting.DevEnvironmentCondition;
 import dev.ftb.mods.ftbstuffnthings.lootmodifiers.CrookModifier;
 import dev.ftb.mods.ftbstuffnthings.lootmodifiers.HammerModifier;
-import dev.ftb.mods.ftbstuffnthings.crafting.DevEnvironmentCondition;
-import dev.ftb.mods.ftbstuffnthings.client.screens.TemperedJarMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -48,6 +49,7 @@ public class ContentRegistry {
     public static final Supplier<MenuType<TemperedJarMenu>> TEMPERED_JAR_MENU = registerMenu("tempered_jar", TemperedJarMenu::fromNetwork);
     public static final Supplier<MenuType<FusingMachineMenu>> FUSING_MACHINE_MENU = registerMenu("fusing_machine", FusingMachineMenu::new);
     public static final Supplier<MenuType<SuperCoolerMenu>> SUPER_COOLER_MENU = registerMenu("super_cooler", SuperCoolerMenu::new);
+    public static final Supplier<MenuType<WaterStrainerMenu>> WATER_STRAINER_MENU = registerMenu("water_strainer", WaterStrainerMenu::new);
 
     //-----------------------------------------------
 

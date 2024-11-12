@@ -60,6 +60,11 @@ public class ItemModelsGenerator extends ItemModelProvider {
         withExistingParent("diamond_cobblestone_generator", modLoc("block/diamond_cobblestone_generator"));
         withExistingParent("netherite_cobblestone_generator", modLoc("block/netherite_cobblestone_generator"));
 
+        BlocksRegistry.waterStrainers().forEach(block -> {
+            String type = block.get().getWoodType().name();
+            withExistingParent(type + "_water_strainer", modLoc("block/" + type + "_water_strainer"));
+        });
+
         simpleItem(ItemsRegistry.FLUID_CAPSULE, "item/fluid_container_base", "item/fluid_container_overlay");
         simpleItem(ItemsRegistry.DRIPPER, "item/dripper");
         simpleItem(ItemsRegistry.WATER_BOWL, "item/water_bowl");

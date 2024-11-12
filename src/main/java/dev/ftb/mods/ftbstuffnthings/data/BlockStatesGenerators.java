@@ -6,6 +6,7 @@ import dev.ftb.mods.ftbstuffnthings.blocks.jar.JarAutomaterBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.pump.PumpBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.strainer.WaterStrainerBlock;
 import dev.ftb.mods.ftbstuffnthings.client.model.TubeModel;
 import dev.ftb.mods.ftbstuffnthings.items.MeshType;
 import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
@@ -16,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.neoforged.neoforge.client.model.generators.*;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -23,6 +25,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -199,6 +202,9 @@ public class BlockStatesGenerators extends BlockStateProvider {
                         .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360).build(),
                 BlockStateProperties.WATERLOGGED);
 
+        // Water Strainers
+        BlocksRegistry.waterStrainers().forEach(this::waterStrainer);
+
         // Misc simple blocks
 
         simpleBlock(BlocksRegistry.BLUE_MAGMA_BLOCK.get());
@@ -222,6 +228,13 @@ public class BlockStatesGenerators extends BlockStateProvider {
                 .texture("front", modLoc("block/" + name + "_front" + suffix));
     }
 
+    private void waterStrainer(Supplier<WaterStrainerBlock> blockSupplier) {
+        WoodType type = blockSupplier.get().getWoodType();
+        simpleBlock(blockSupplier.get(), models().withExistingParent(type.name() + "_water_strainer", modLoc("block/water_strainer_base"))
+                .texture("0", "block/water_strainer/water_strainer_" + type.name())
+                .texture("particle", "block/water_strainer/water_strainer_" + type.name())
+        );
+    }
     private static class TubeLoaderBuilder extends CustomLoaderBuilder<BlockModelBuilder> {
         public TubeLoaderBuilder(BlockModelBuilder parent, ExistingFileHelper existingFileHelper) {
             super(TubeModel.Loader.ID, parent, existingFileHelper, false);
@@ -230,5 +243,4 @@ public class BlockStatesGenerators extends BlockStateProvider {
 
     private record DirRotation(Direction direction, int rotation) {
     }
-
 }

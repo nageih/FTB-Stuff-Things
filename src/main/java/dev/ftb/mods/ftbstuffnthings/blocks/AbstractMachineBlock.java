@@ -27,6 +27,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -40,6 +42,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
+
 public abstract class AbstractMachineBlock extends Block implements EntityBlock {
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
@@ -50,9 +54,15 @@ public abstract class AbstractMachineBlock extends Block implements EntityBlock 
     public AbstractMachineBlock(Properties props) {
         super(props);
 
-        BlockState state = getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH);
+        BlockState state = getStateDefinition().any();
+        if (isDirectional()) {
+            state = state.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH);
+        }
         if (state.hasProperty(ACTIVE)) {
             state = state.setValue(ACTIVE, false);
+        }
+        if (defaultBlockState().hasProperty(WATERLOGGED)) {
+            state = state.setValue(WATERLOGGED, false);
         }
         registerDefaultState(state);
     }
@@ -61,9 +71,15 @@ public abstract class AbstractMachineBlock extends Block implements EntityBlock 
         return true;
     }
 
+    protected boolean isDirectional() {
+        return true;
+    }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.HORIZONTAL_FACING);
+        if (isDirectional()) {
+            builder.add(BlockStateProperties.HORIZONTAL_FACING);
+        }
         if (hasActiveStateProperty()) {
             builder.add(ACTIVE);
         }
@@ -72,7 +88,15 @@ public abstract class AbstractMachineBlock extends Block implements EntityBlock 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
+        BlockState state = defaultBlockState();
+        if (isDirectional()) {
+            state = state.setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
+        }
+        if (state.hasProperty(WATERLOGGED)) {
+            FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
+            state = state.setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+        }
+        return state;
     }
 
     @Override
@@ -98,10 +122,13 @@ public abstract class AbstractMachineBlock extends Block implements EntityBlock 
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!level.isClientSide) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof AbstractMachineBlockEntity machine && machine.getFluidHandler(hitResult.getDirection()) != null) {
-                // handle filling/emptying with bucket (or other fluid containing item)
-                if (FluidUtil.interactWithFluidHandler(player, hand, machine.getFluidHandler(hitResult.getDirection()))) {
-                    return ItemInteractionResult.CONSUME;
+            if (blockEntity instanceof AbstractMachineBlockEntity machine) {
+                IFluidHandler handler = machine.getFluidHandler(hitResult.getDirection());
+                if (handler != null) {
+                    // handle filling/emptying with bucket (or other fluid containing item)
+                    if (FluidUtil.interactWithFluidHandler(player, hand, handler)) {
+                        return ItemInteractionResult.CONSUME;
+                    }
                 }
             }
             if (blockEntity instanceof MenuProvider menuProvider) {
@@ -160,11 +187,15 @@ public abstract class AbstractMachineBlock extends Block implements EntityBlock 
 
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+        return isDirectional() ?
+                state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING))) :
+                state;
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+        return isDirectional() ?
+                state.setValue(BlockStateProperties.HORIZONTAL_FACING, mirror.mirror(state.getValue(BlockStateProperties.HORIZONTAL_FACING))) :
+                state;
     }
 }

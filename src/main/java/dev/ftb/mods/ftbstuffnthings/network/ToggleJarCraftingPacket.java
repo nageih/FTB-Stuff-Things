@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbstuffnthings.network;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
-import dev.ftb.mods.ftbstuffnthings.client.screens.TemperedJarMenu;
+import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

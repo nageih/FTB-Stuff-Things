@@ -34,5 +34,6 @@ public class BlockTagsGenerator extends BlockTagsProvider {
 
         BlocksRegistry.CRATES.forEach(crate -> tag(FTBStuffTags.Blocks.CRATE).add(crate.get()));
         BlocksRegistry.BARRELS.forEach(barrel -> tag(FTBStuffTags.Blocks.BARREL).add(barrel.get()));
+        BlocksRegistry.waterStrainers().forEach(strainer -> tag(FTBStuffTags.Blocks.WATER_STRAINER).add(strainer.get()));
     }
 }

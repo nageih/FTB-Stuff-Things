@@ -9,9 +9,11 @@ import dev.ftb.mods.ftbstuffnthings.blocks.jar.JarBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.pump.PumpBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlockEntity;
+import dev.ftb.mods.ftbstuffnthings.blocks.strainer.WaterStrainerBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.supercooler.SuperCoolerBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.tube.TubeBlockEntity;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -67,6 +69,13 @@ public class BlockEntitiesRegistry {
             = BLOCK_ENTITIES.register("fusing_machine", () -> BlockEntityType.Builder.of(FusingMachineBlockEntity::new, BlocksRegistry.FUSING_MACHINE.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SuperCoolerBlockEntity>> SUPER_COOLER
             = BLOCK_ENTITIES.register("super_cooler", () -> BlockEntityType.Builder.of(SuperCoolerBlockEntity::new, BlocksRegistry.SUPER_COOLER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaterStrainerBlockEntity>> WATER_STRAINER
+            = BLOCK_ENTITIES.register("water_strainer", () -> BlockEntityType.Builder.of(WaterStrainerBlockEntity::new, strainerBlocks()).build(null));
+
+    private static Block[] strainerBlocks() {
+        return BlocksRegistry.waterStrainers().stream().map(DeferredHolder::get).toArray(Block[]::new);
+    }
 
     public static void init(IEventBus bus) {
         BLOCK_ENTITIES.register(bus);

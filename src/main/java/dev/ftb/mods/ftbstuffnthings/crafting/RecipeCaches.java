@@ -1,5 +1,6 @@
 package dev.ftb.mods.ftbstuffnthings.crafting;
 
+import dev.ftb.mods.ftbstuffnthings.blocks.strainer.WaterStrainerBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.crafting.recipe.*;
 
 public interface RecipeCaches {
@@ -15,5 +16,7 @@ public interface RecipeCaches {
         FUSING_MACHINE.clear();
         SUPER_COOLER.clear();
         SLUICE.clear();
+
+        WaterStrainerBlockEntity.clearCachedLootTable();
     }
 }

@@ -39,6 +39,17 @@
     "ftbstuff:golden_barrel",
     "ftbstuff:small_crate",
     "ftbstuff:crate",
-    "ftbstuff:pulsating_crate"
+    "ftbstuff:pulsating_crate",
+    "ftbstuff:acacia_water_strainer",
+    "ftbstuff:bamboo_water_strainer",
+    "ftbstuff:birch_water_strainer",
+    "ftbstuff:cherry_water_strainer",
+    "ftbstuff:crimson_water_strainer",
+    "ftbstuff:dark_oak_water_strainer",
+    "ftbstuff:jungle_water_strainer",
+    "ftbstuff:mangrove_water_strainer",
+    "ftbstuff:oak_water_strainer",
+    "ftbstuff:spruce_water_strainer",
+    "ftbstuff:warped_water_strainer"
   ]
 }

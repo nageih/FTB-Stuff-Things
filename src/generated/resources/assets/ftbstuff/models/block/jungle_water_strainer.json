@@ -1,0 +1,7 @@
+{
+  "parent": "ftbstuff:block/water_strainer_base",
+  "textures": {
+    "0": "ftbstuff:block/water_strainer/water_strainer_jungle",
+    "particle": "ftbstuff:block/water_strainer/water_strainer_jungle"
+  }
+}

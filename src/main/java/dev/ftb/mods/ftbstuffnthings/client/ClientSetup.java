@@ -2,13 +2,14 @@ package dev.ftb.mods.ftbstuffnthings.client;
 
 import dev.ftb.mods.ftbstuffnthings.client.model.TubeModel;
 import dev.ftb.mods.ftbstuffnthings.client.renders.*;
+import dev.ftb.mods.ftbstuffnthings.client.screens.FusingMachineScreen;
+import dev.ftb.mods.ftbstuffnthings.client.screens.SuperCoolerScreen;
+import dev.ftb.mods.ftbstuffnthings.client.screens.TemperedJarScreen;
+import dev.ftb.mods.ftbstuffnthings.client.screens.WaterStrainerScreen;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ContentRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ItemsRegistry;
-import dev.ftb.mods.ftbstuffnthings.client.screens.FusingMachineScreen;
-import dev.ftb.mods.ftbstuffnthings.client.screens.SuperCoolerScreen;
-import dev.ftb.mods.ftbstuffnthings.client.screens.TemperedJarScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.world.item.ItemStack;
@@ -60,6 +61,7 @@ public class ClientSetup {
         event.register(ContentRegistry.TEMPERED_JAR_MENU.get(), TemperedJarScreen::new);
         event.register(ContentRegistry.FUSING_MACHINE_MENU.get(), FusingMachineScreen::new);
         event.register(ContentRegistry.SUPER_COOLER_MENU.get(), SuperCoolerScreen::new);
+        event.register(ContentRegistry.WATER_STRAINER_MENU.get(), WaterStrainerScreen::new);
     }
 
     private static void registerColorHandlers(RegisterColorHandlersEvent.Item event) {

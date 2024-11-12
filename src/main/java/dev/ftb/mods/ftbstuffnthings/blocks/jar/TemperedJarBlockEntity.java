@@ -1,16 +1,15 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.jar;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
+import dev.ftb.mods.ftbstuffnthings.crafting.RecipeCaches;
+import dev.ftb.mods.ftbstuffnthings.crafting.recipe.JarRecipe;
 import dev.ftb.mods.ftbstuffnthings.items.FluidCapsuleItem;
 import dev.ftb.mods.ftbstuffnthings.network.SyncJarContentsPacket;
 import dev.ftb.mods.ftbstuffnthings.network.SyncJarRecipePacket;
-import dev.ftb.mods.ftbstuffnthings.crafting.recipe.JarRecipe;
-import dev.ftb.mods.ftbstuffnthings.crafting.RecipeCaches;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ComponentsRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.RecipesRegistry;
-import dev.ftb.mods.ftbstuffnthings.client.screens.TemperedJarMenu;
 import dev.ftb.mods.ftbstuffnthings.temperature.TemperatureAndEfficiency;
 import dev.ftb.mods.ftbstuffnthings.util.DirectionUtil;
 import dev.ftb.mods.ftbstuffnthings.util.MiscUtil;

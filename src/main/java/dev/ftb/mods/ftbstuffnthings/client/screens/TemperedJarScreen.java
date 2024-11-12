@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbstuffnthings.client.screens;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlockEntity;
+import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarMenu;
 import dev.ftb.mods.ftbstuffnthings.client.GuiUtil;
 import dev.ftb.mods.ftbstuffnthings.network.ToggleJarCraftingPacket;
 import dev.ftb.mods.ftbstuffnthings.temperature.TemperatureAndEfficiency;

@@ -3,6 +3,7 @@ package dev.ftb.mods.ftbstuffnthings.data;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffTags;
 import dev.ftb.mods.ftbstuffnthings.blocks.hammer.AutoHammerBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.strainer.WaterStrainerBlock;
 import dev.ftb.mods.ftbstuffnthings.crafting.DevEnvironmentCondition;
 import dev.ftb.mods.ftbstuffnthings.crafting.ItemWithChance;
 import dev.ftb.mods.ftbstuffnthings.data.recipe.*;
@@ -127,6 +128,19 @@ public class RecipesGenerator extends RecipeProvider {
                 'B', Items.OAK_PLANKS
         ).save(output);
 
+        // water strainers
+        waterStrainer(BlocksRegistry.ACACIA_STRAINER, Blocks.ACACIA_PLANKS, output);
+        waterStrainer(BlocksRegistry.BAMBOO_STRAINER, Blocks.BAMBOO_PLANKS, output);
+        waterStrainer(BlocksRegistry.BIRCH_STRAINER, Blocks.BIRCH_PLANKS, output);
+        waterStrainer(BlocksRegistry.CHERRY_STRAINER, Blocks.CHERRY_PLANKS, output);
+        waterStrainer(BlocksRegistry.CRIMSON_STRAINER, Blocks.CRIMSON_PLANKS, output);
+        waterStrainer(BlocksRegistry.DARK_OAK_STRAINER, Blocks.DARK_OAK_PLANKS, output);
+        waterStrainer(BlocksRegistry.JUNGLE_STRAINER, Blocks.JUNGLE_PLANKS, output);
+        waterStrainer(BlocksRegistry.MANGROVE_STRAINER, Blocks.MANGROVE_PLANKS, output);
+        waterStrainer(BlocksRegistry.OAK_STRAINER, Blocks.OAK_PLANKS, output);
+        waterStrainer(BlocksRegistry.SPRUCE_STRAINER, Blocks.SPRUCE_PLANKS, output);
+        waterStrainer(BlocksRegistry.WARPED_STRAINER, Blocks.WARPED_PLANKS, output);
+
         for (MeshType type : MeshType.NON_EMPTY_VALUES) {
             shaped(type.getItemStack().getItem(), Items.STRING,
                     "SIS/ICI/SIS",
@@ -208,6 +222,15 @@ public class RecipesGenerator extends RecipeProvider {
                 "HRH/ R / R ",
                 'H', head,
                 'R', Tags.Items.RODS_WOODEN
+        ).save(output);
+    }
+
+    private void waterStrainer(DeferredBlock<WaterStrainerBlock> result, Block plankBlock, RecipeOutput output) {
+        shaped(result, ItemsRegistry.CLOTH_MESH.get(),
+                "S S/M M/PMP",
+                'S', Tags.Items.RODS_WOODEN,
+                'M', ItemsRegistry.CLOTH_MESH,
+                'P', plankBlock
         ).save(output);
     }
 

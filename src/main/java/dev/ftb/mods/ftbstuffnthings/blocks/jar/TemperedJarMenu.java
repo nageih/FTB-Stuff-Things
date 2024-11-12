@@ -1,6 +1,5 @@
-package dev.ftb.mods.ftbstuffnthings.client.screens;
+package dev.ftb.mods.ftbstuffnthings.blocks.jar;
 
-import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ContentRegistry;
 import net.minecraft.core.BlockPos;
