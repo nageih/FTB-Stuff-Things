@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "ftbstuff:cloth_mesh"
+    },
+    "P": {
+      "item": "minecraft:dark_oak_planks"
+    },
+    "S": {
+      "tag": "c:rods/wooden"
+    }
+  },
+  "pattern": [
+    "S S",
+    "M M",
+    "PMP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ftbstuff:dark_oak_water_strainer"
+  }
+}

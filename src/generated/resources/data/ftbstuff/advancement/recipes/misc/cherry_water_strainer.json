@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cloth_mesh": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ftbstuff:cloth_mesh"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ftbstuff:cherry_water_strainer"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cloth_mesh"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ftbstuff:cherry_water_strainer"
+    ]
+  }
+}
