@@ -61,7 +61,7 @@ public class Config {
     public static final IntValue STRAINER_TICK_RATE = WATER_STRAINER_CONFIG.addInt("strainer_tick_rate", 20, 1, Integer.MAX_VALUE)
             .comment("The delay between each strainer generation in ticks");
     public static final StringValue STRAINER_LOOT_TABLE = WATER_STRAINER_CONFIG.addString("strainer_loot_table", FTBStuffNThings.MODID + ":custom/water_strainer_test")
-            .comment("The delay between each strainer generation in ticks");
+            .comment("Location of the loot table used to generate strainer loot from");
 
     public static void init() {
         loadDefaulted(CONFIG, CONFIG_DIR, FTBStuffNThings.MODID, FTBStuffNThings.MODID + ".snbt");
