@@ -58,9 +58,9 @@ public class Config {
             .comment("Amount of cobble the netherite cobblegen produces per tick");
 
     private static final SNBTConfig WATER_STRAINER_CONFIG = CONFIG.addGroup("water_strainer");
-    public static final IntValue STRAINER_TICK_RATE = COBBLEGEN_CONFIG.addInt("strainer_tick_rate", 20, 1, Integer.MAX_VALUE)
+    public static final IntValue STRAINER_TICK_RATE = WATER_STRAINER_CONFIG.addInt("strainer_tick_rate", 20, 1, Integer.MAX_VALUE)
             .comment("The delay between each strainer generation in ticks");
-    public static final StringValue STRAINER_LOOT_TABLE = COBBLEGEN_CONFIG.addString("strainer_loot_table", FTBStuffNThings.MODID + ":custom/water_strainer_test")
+    public static final StringValue STRAINER_LOOT_TABLE = WATER_STRAINER_CONFIG.addString("strainer_loot_table", FTBStuffNThings.MODID + ":custom/water_strainer_test")
             .comment("The delay between each strainer generation in ticks");
 
     public static void init() {
