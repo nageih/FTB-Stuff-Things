@@ -1,8 +1,8 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.dripper;
 
-import dev.ftb.mods.ftbstuffnthings.crafting.recipe.DripperRecipe;
 import dev.ftb.mods.ftbstuffnthings.crafting.NoInventory;
 import dev.ftb.mods.ftbstuffnthings.crafting.RecipeCaches;
+import dev.ftb.mods.ftbstuffnthings.crafting.recipe.DripperRecipe;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.RecipesRegistry;
 import net.minecraft.Util;

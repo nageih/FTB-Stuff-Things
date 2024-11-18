@@ -65,7 +65,8 @@ public class FTBStuffJeiPlugin implements IModPlugin {
                 new FusingMachineCategory(),
                 new SuperCoolerCategory(),
                 new CrookCategory(),
-                new SluiceCategory()
+                new SluiceCategory(),
+                new LootSummaryCategory()
         );
     }
 
@@ -104,6 +105,8 @@ public class FTBStuffJeiPlugin implements IModPlugin {
         for (var item : ItemsRegistry.ALL_MESHES) {
             registration.addRecipeCatalyst(item.toStack(), RecipeTypes.SLUICE);
         }
+
+//        BlocksRegistry.waterStrainers().forEach(b -> registration.addRecipeCatalyst(b.toStack(), RecipeTypes.LOOT_SUMMARY));
     }
 
     @Override
@@ -111,6 +114,11 @@ public class FTBStuffJeiPlugin implements IModPlugin {
         registration.addGuiContainerHandler(TemperedJarScreen.class, TemperedJarCategory.ContainerHandler.INSTANCE);
         registration.addGuiContainerHandler(FusingMachineScreen.class, FusingMachineCategory.ContainerHandler.INSTANCE);
         registration.addGuiContainerHandler(SuperCoolerScreen.class, SuperCoolerCategory.ContainerHandler.INSTANCE);
+    }
+
+    @Override
+    public void registerAdvanced(IAdvancedRegistration registration) {
+        registration.addTypedRecipeManagerPlugin(RecipeTypes.LOOT_SUMMARY, LootSummaryPlugin.INSTANCE);
     }
 
     @Override

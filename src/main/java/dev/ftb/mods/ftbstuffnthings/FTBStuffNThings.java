@@ -8,11 +8,21 @@ import dev.ftb.mods.ftbstuffnthings.client.ClientSetup;
 import dev.ftb.mods.ftbstuffnthings.crafting.RecipeCaches;
 import dev.ftb.mods.ftbstuffnthings.items.FluidCapsuleItem;
 import dev.ftb.mods.ftbstuffnthings.items.WaterBowlItem;
+import dev.ftb.mods.ftbstuffnthings.network.SyncLootSummaryPacket;
 import dev.ftb.mods.ftbstuffnthings.registry.*;
+import dev.ftb.mods.ftbstuffnthings.util.lootsummary.LootSummaryCollection;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -22,6 +32,9 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -53,6 +66,43 @@ public class FTBStuffNThings {
         modEventBus.addListener(this::registerCapabilities);
 
         NeoForge.EVENT_BUS.addListener(this::addReloadListeners);
+        NeoForge.EVENT_BUS.addListener(this::onPlayerJoin);
+    }
+
+    private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            syncLootSummaries(serverPlayer);
+        }
+    }
+
+    public static void syncLootSummaries(ServerPlayer serverPlayer) {
+        // sent to players when they log in, and when a /reload is done on the server
+        LootSummaryCollection lsc = new LootSummaryCollection();
+
+        Config.getStrainerLootTable().ifPresent(lootTableId -> BlocksRegistry.waterStrainers().forEach(b -> {
+            lsc.addEntry(b.getKey(), lootTableId, makeBlockParams(serverPlayer, b.get().defaultBlockState()));
+        }));
+        BlocksRegistry.BARRELS.forEach(b -> {
+            lsc.addEntry(b.getKey(), blockLootTable(b), makeBlockParams(serverPlayer, b.get().defaultBlockState()));
+        });
+        BlocksRegistry.CRATES.forEach(b -> {
+            lsc.addEntry(b.getKey(), blockLootTable(b), makeBlockParams(serverPlayer, b.get().defaultBlockState()));
+        });
+
+        PacketDistributor.sendToPlayer(serverPlayer, new SyncLootSummaryPacket(lsc));
+    }
+
+    private static LootParams makeBlockParams(ServerPlayer serverPlayer, BlockState state) {
+        return new LootParams.Builder(serverPlayer.serverLevel())
+                .withParameter(LootContextParams.BLOCK_STATE, state)
+                .withParameter(LootContextParams.ORIGIN, Vec3.ZERO)
+                .withParameter(LootContextParams.TOOL, Items.DIAMOND_PICKAXE.getDefaultInstance())
+                .withOptionalParameter(LootContextParams.THIS_ENTITY, serverPlayer)
+                .create(LootContextParamSets.BLOCK);
+    }
+
+    private static ResourceLocation blockLootTable(DeferredBlock<Block> db) {
+        return ResourceLocation.fromNamespaceAndPath(db.getId().getNamespace(), "blocks/" + db.getId().getPath());
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

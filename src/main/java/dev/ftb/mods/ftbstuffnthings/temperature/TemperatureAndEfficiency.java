@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbstuffnthings.temperature;
 
-import dev.ftb.mods.ftbstuffnthings.crafting.recipe.JarRecipe;
 import dev.ftb.mods.ftbstuffnthings.crafting.NoInventory;
+import dev.ftb.mods.ftbstuffnthings.crafting.recipe.JarRecipe;
 import dev.ftb.mods.ftbstuffnthings.crafting.recipe.TemperatureSourceRecipe;
 import dev.ftb.mods.ftbstuffnthings.registry.RecipesRegistry;
 import net.minecraft.ChatFormatting;

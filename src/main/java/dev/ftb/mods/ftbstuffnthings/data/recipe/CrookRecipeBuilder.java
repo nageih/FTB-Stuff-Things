@@ -1,7 +1,7 @@
 package dev.ftb.mods.ftbstuffnthings.data.recipe;
 
-import dev.ftb.mods.ftbstuffnthings.crafting.recipe.CrookRecipe;
 import dev.ftb.mods.ftbstuffnthings.crafting.ItemWithChance;
+import dev.ftb.mods.ftbstuffnthings.crafting.recipe.CrookRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;

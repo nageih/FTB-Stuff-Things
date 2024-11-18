@@ -19,6 +19,7 @@ public class NetworkHandler {
         registrar.playToClient(SyncDisplayFluidPacket.TYPE, SyncDisplayFluidPacket.STREAM_CODEC, SyncDisplayFluidPacket::handleData);
         registrar.playToClient(SyncDisplayItemPacket.TYPE, SyncDisplayItemPacket.STREAM_CODEC, SyncDisplayItemPacket::handleData);
         registrar.playToClient(SendSluiceStartPacket.TYPE, SendSluiceStartPacket.STREAM_CODEC, SendSluiceStartPacket::handleData);
+        registrar.playToClient(SyncLootSummaryPacket.TYPE, SyncLootSummaryPacket.STREAM_CODEC, SyncLootSummaryPacket::handleData);
 
         // serverbound
         registrar.playToServer(ToggleJarCraftingPacket.TYPE, ToggleJarCraftingPacket.STREAM_CODEC, ToggleJarCraftingPacket::handleData);
