@@ -13,8 +13,8 @@
     "item": "minecraft:cobblestone"
   },
   "mesh_types": [
-    "iron",
-    "cloth"
+    "cloth",
+    "iron"
   ],
   "results": [
     {

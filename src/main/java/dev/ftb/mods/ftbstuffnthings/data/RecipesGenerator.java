@@ -367,6 +367,9 @@ public class RecipesGenerator extends RecipeProvider {
         new HammerRecipeBuilder(Ingredient.of(Items.GRAVEL), List.of(
                 new ItemStack(Blocks.SAND)
         )).saveTest(output, FTBStuffNThings.id("sand_from_gravel"));
+        new HammerRecipeBuilder(Ingredient.of(Items.SAND), List.of(
+                new ItemStack(BlocksRegistry.DUST_BLOCK.get())
+        )).saveTest(output, FTBStuffNThings.id("dust_from_sand"));
         new HammerRecipeBuilder(Ingredient.of(Items.COBBLED_DEEPSLATE), List.of(
                 new ItemStack(Blocks.GRAVEL, 64),
                 new ItemStack(Blocks.GRAVEL, 64),

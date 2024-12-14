@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbstuff:dev_environment"
+    }
+  ],
+  "type": "ftbstuff:hammer",
+  "input": {
+    "item": "minecraft:sand"
+  },
+  "results": [
+    {
+      "count": 1,
+      "id": "ftbstuff:dust"
+    }
+  ]
+}
