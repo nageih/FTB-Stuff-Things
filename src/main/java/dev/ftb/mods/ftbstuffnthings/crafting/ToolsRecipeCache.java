@@ -1,5 +1,6 @@
 package dev.ftb.mods.ftbstuffnthings.crafting;
 
+import com.google.common.collect.ImmutableList;
 import dev.ftb.mods.ftbstuffnthings.crafting.recipe.CrookRecipe;
 import dev.ftb.mods.ftbstuffnthings.crafting.recipe.HammerRecipe;
 import dev.ftb.mods.ftbstuffnthings.registry.RecipesRegistry;
@@ -56,15 +57,15 @@ public class ToolsRecipeCache {
 
     public static List<ItemStack> getHammerDrops(Level level, ItemStack input) {
         return hammerCache.computeIfAbsent(input.getItem(), key -> {
-            List<ItemStack> drops = new ArrayList<>();
+            ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
             for (RecipeHolder<HammerRecipe> holder : level.getRecipeManager().getRecipesFor(RecipesRegistry.HAMMER_TYPE.get(), NoInventory.INSTANCE, level)) {
                 HammerRecipe value = holder.value();
                 if (value.getIngredient().test(input)) {
-                    value.getResults().forEach(e -> drops.add(e.copy()));
+                    value.getResults().forEach(e -> builder.add(e.copy()));
                 }
             }
 
-            return drops;
+            return builder.build();
         });
     }
 
@@ -78,7 +79,7 @@ public class ToolsRecipeCache {
 
     public static CrookRecipe.CrookDrops getCrookDrops(Level level, ItemStack input) {
         return crookCache.computeIfAbsent(input.getItem(), key -> {
-            List<ItemWithChance> drops = new ArrayList<>();
+            ImmutableList.Builder<ItemWithChance> drops = ImmutableList.builder();
             int max = -1;
             boolean replaceDrops = false;
             for (RecipeHolder<CrookRecipe> holder : level.getRecipeManager().getRecipesFor(RecipesRegistry.CROOK_TYPE.get(), NoInventory.INSTANCE, level)) {
@@ -94,7 +95,7 @@ public class ToolsRecipeCache {
                 }
             }
 
-            return new CrookRecipe.CrookDrops(drops, max, replaceDrops);
+            return new CrookRecipe.CrookDrops(drops.build(), max, replaceDrops);
         });
     }
 

@@ -194,7 +194,9 @@ public class AutoHammerBlockEntity extends BlockEntity {
         IItemHandler dest = outputCache.getCapability();
         if (dest != null) {
             for (ItemStack stack : outputs) {
-                ItemStack excess = ItemHandlerHelper.insertItem(dest, stack, false);
+                // it _shouldn't be necessary to copy the stack here, but seems like not everyone plays nice...
+                //   https://github.com/FTBTesting/Testing-Issues/issues/2491
+                ItemStack excess = ItemHandlerHelper.insertItem(dest, stack.copy(), false);
                 if (!excess.isEmpty()) {
                     overflow.addLast(excess);
                 }
