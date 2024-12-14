@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -60,6 +61,7 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
     private int processingTime = 0;
     private boolean itemSyncNeeded;
     private boolean fluidSyncNeeded;
+    private ItemStack overflow = ItemStack.EMPTY;
 
     public SluiceBlockEntity(BlockEntityType<?> entity, BlockPos pos, BlockState blockState) {
         super(entity, pos, blockState);
@@ -86,8 +88,11 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
             fluidSyncNeeded = false;
         }
 
-        // Step one, are we processing, if we're processing, we need to process, not check for items
-        if (processingTime > 0) {
+        if (!overflow.isEmpty()) {
+            // Nothing else happens until the overflow is cleared
+            dropItemOrPushToInventory(overflow);
+        } else if (processingTime > 0) {
+            // If we're processing, we need to process, not check for items
             processingProgress++;
             setChanged();
 
@@ -149,6 +154,13 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
         return energyStorage.getEnergyStored() >= getProps().energyCost().get();
     }
 
+    private void setOverflowItem(ItemStack stack) {
+        if (!ItemStack.isSameItemSameComponents(overflow, stack)) {
+            setChanged();
+        }
+        overflow = stack;
+    }
+
     private void dropItemOrPushToInventory(ItemStack stack) {
         if (stack.isEmpty()) {
             return;
@@ -161,6 +173,11 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
         var inventory = getOutputInventory();
         if (inventory != null) {
             stack = ItemHandlerHelper.insertItem(inventory, stack, false);
+            if (!stack.isEmpty()) {
+                // can't push to inventory? mark it as overflow, which stops processing until it's cleared
+                setOverflowItem(stack);
+                return;
+            }
         }
 
         if (!stack.isEmpty()) {
@@ -172,10 +189,22 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
             itemEntity.setDeltaMovement(0, my, 0);
             level.addFreshEntity(itemEntity);
         }
+
+        // if we got here, the output was cleared, one way or another
+        setOverflowItem(ItemStack.EMPTY);
     }
 
     public int getProgress() {
         return processingProgress;
+    }
+
+    @Override
+    public void dropItemContents() {
+        super.dropItemContents();
+
+        if (!overflow.isEmpty()) {
+            Block.popResource(getLevel(), getBlockPos(), overflow);
+        }
     }
 
     @Nullable
@@ -189,12 +218,6 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
                     getBlockPos().relative(facing, 2), facing.getOpposite());
         }
         return outputCache.getCapability();
-//        if (level != null) {
-//            BlockPos pos = this.getBlockPos().relative(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), 2);
-//
-//            return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-//        }
-//        return null;
     }
 
     @Override
@@ -205,6 +228,10 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
         fluidTank.writeToNBT(registries, tag);
         tag.put("inputInventory", inputInventory.serializeNBT(registries));
         if (energyStorage.getEnergyStored() > 0) tag.put("energy", energyStorage.serializeNBT(registries));
+
+        if (!overflow.isEmpty()) {
+            tag.put("overflow", overflow.save(registries));
+        }
     }
 
     @Override
@@ -217,6 +244,11 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
         if (tag.get("energy") instanceof IntTag intTag) {
             energyStorage.deserializeNBT(registries, intTag);
         }
+
+        //noinspection DataFlowIssue
+        overflow = tag.contains("overflow") ?
+                ItemStack.parse(registries, tag.get("overflow")).orElse(ItemStack.EMPTY) :
+                ItemStack.EMPTY;
     }
 
     @Override
