@@ -65,7 +65,8 @@ public class LootSummary {
                     );
                 }
             }
-            map.computeIfAbsent(pool.getName(), k -> new ArrayList<>()).addAll(builder.build());
+            String tblName = Objects.requireNonNullElse(pool.getName(), String.format("pool:%X", pool.hashCode()));
+            map.computeIfAbsent(tblName, k -> new ArrayList<>()).addAll(builder.build());
         }
     }
 
