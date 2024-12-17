@@ -40,8 +40,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -272,6 +274,9 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         List<ItemStack> excessList = new ArrayList<>();
         boolean anyHandler = false;
         for (Direction dir : DirectionUtil.VALUES) {
+            if (!suitableOutputBlock(dir)) {
+                continue;
+            }
             IItemHandler dest = itemOutputs.computeIfAbsent(dir, k ->
                             BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) getLevel(), getBlockPos().relative(dir), dir.getOpposite()))
                     .getCapability();
@@ -291,6 +296,15 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
             }
         }
         return anyHandler ? excessList : items;
+    }
+
+    private boolean suitableOutputBlock(Direction dir) {
+        BlockState state = level.getBlockState(getBlockPos().relative(dir));
+        if (state.getBlock() == Blocks.HOPPER && state.getValue(BlockStateProperties.FACING_HOPPER) == dir.getOpposite()) {
+            // don't push output to a hopper which is facing us, it's obviously intended as an input hopper
+            return false;
+        }
+        return true;
     }
 
     private List<FluidStack> distributeOutputFluids(JarRecipe recipe) {
