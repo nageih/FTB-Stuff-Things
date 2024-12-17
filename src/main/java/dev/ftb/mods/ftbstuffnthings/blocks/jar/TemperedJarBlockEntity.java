@@ -378,7 +378,15 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         return itemHandler;
     }
 
+    public IItemHandler getInputItemHandler(Direction ignoredSide) {
+        return itemHandler;
+    }
+
     public IFluidHandler getFluidHandler() {
+        return fluidHandler;
+    }
+
+    public IFluidHandler getFluidHandler(Direction ignoredSide) {
         return fluidHandler;
     }
 
@@ -449,6 +457,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         protected void onContentsChanged(int slot) {
             if (!level.isClientSide) {
                 setChanged();
+                syncNeeded = true;
                 if (!ItemStack.isSameItemSameComponents(prevStack[slot], getStackInSlot(slot))) {
                     needRecipeSearch = true;
                 }
@@ -514,6 +523,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
             }
             if (filled > 0 && action.execute()) {
                 setChanged();
+                syncNeeded = true;
             }
             return filled;
         }
@@ -575,6 +585,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         protected void onContentsChanged() {
             if (!level.isClientSide) {
                 setChanged();
+                syncNeeded = true;
                 if (!FluidStack.isSameFluidSameComponents(prevFluid, getFluid())) {
                     needRecipeSearch = true;
                 }

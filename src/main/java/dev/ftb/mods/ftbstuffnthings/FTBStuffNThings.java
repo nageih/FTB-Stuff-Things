@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbstuffnthings;
 
 import com.mojang.logging.LogUtils;
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
+import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.strainer.WaterStrainerBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.client.ClientSetup;
@@ -127,6 +128,17 @@ public class FTBStuffNThings {
                 Capabilities.ItemHandler.BLOCK,
                 BlockEntitiesRegistry.WATER_STRAINER.get(),
                 WaterStrainerBlockEntity::getItemHandler
+        );
+
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                BlockEntitiesRegistry.TEMPERED_JAR.get(),
+                TemperedJarBlockEntity::getInputItemHandler
+        );
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                BlockEntitiesRegistry.TEMPERED_JAR.get(),
+                TemperedJarBlockEntity::getFluidHandler
         );
 
         List.of(BlockEntitiesRegistry.FUSING_MACHINE, BlockEntitiesRegistry.SUPER_COOLER).forEach(machine ->
