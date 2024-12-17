@@ -176,14 +176,15 @@ public class JarRecipe implements Recipe<NoInventory>, Comparable<JarRecipe> {
 	}
 
 	/**
-	 * Test if this given items and fluids match this recipe; does not check for amounts here, just an item/fluid match.
+	 * Test if the given item and fluids match this recipe, optionally taking item/fluid amounts into consideration.
 	 *
-	 * @param jarTemperature the current jar temperature
-	 * @param jarItems       the items to test
-	 * @param jarFluids      the fluids to test
+	 * @param jarTemperature	the current jar temperature
+	 * @param jarItems			the items to test
+	 * @param jarFluids			the fluids to test
+	 * @param checkAmounts		true to check ingredient amounts too, false to just check for the right items/fluids
 	 * @return true if the recipe matches, false otherwise
 	 */
-	public boolean test(Temperature jarTemperature, IItemHandler jarItems, IFluidHandler jarFluids) {
+	public boolean test(Temperature jarTemperature, IItemHandler jarItems, IFluidHandler jarFluids, boolean checkAmounts) {
 		if (jarTemperature != getTemperature()) {
 			return false;
 		}
@@ -191,7 +192,8 @@ public class JarRecipe implements Recipe<NoInventory>, Comparable<JarRecipe> {
 		int matched = 0;
 		for (SizedIngredient inputItem : inputItems) {
 			for (int i = 0; i < jarItems.getSlots(); i++) {
-				if (inputItem.ingredient().test(jarItems.getStackInSlot(i))) {
+				ItemStack toTest = jarItems.getStackInSlot(i);
+				if (checkAmounts ? inputItem.test(toTest) : inputItem.ingredient().test(toTest)) {
 					matched++;
 					break;
 				}
@@ -202,7 +204,8 @@ public class JarRecipe implements Recipe<NoInventory>, Comparable<JarRecipe> {
 		matched = 0;
 		for (SizedFluidIngredient inputFluid : inputFluids) {
 			for (int i = 0; i < jarFluids.getTanks(); i++) {
-				if (inputFluid.ingredient().test(jarFluids.getFluidInTank(i))) {
+				FluidStack toTest = jarFluids.getFluidInTank(i);
+				if (checkAmounts ? inputFluid.test(toTest) : inputFluid.ingredient().test(toTest)) {
 					matched++;
 					break;
 				}
@@ -217,9 +220,25 @@ public class JarRecipe implements Recipe<NoInventory>, Comparable<JarRecipe> {
 
 	@Override
 	public int compareTo(@NotNull JarRecipe o) {
-		// compare by temperature, then by number of input ingredients
+		// compare by temperature, then by number of input ingredients, then by total item count, then by total fluid count
+		// the largest number and/or count of ingredients sorts first
+
 		int c = getTemperature().compareTo(o.getTemperature());
-        return c == 0 ? Integer.compare(o.inputIngredientCount(), inputIngredientCount()) : c;
+		if (c != 0) return c;
+
+		c = Integer.compare(o.inputIngredientCount(), inputIngredientCount());
+		if (c != 0) return c;
+
+		c = Integer.compare(
+				o.getInputItems().stream().mapToInt(SizedIngredient::count).sum(),
+				getInputItems().stream().mapToInt(SizedIngredient::count).sum()
+		);
+		if (c != 0) return c;
+
+		return Integer.compare(
+				o.getInputFluids().stream().mapToInt(SizedFluidIngredient::amount).sum(),
+				getInputFluids().stream().mapToInt(SizedFluidIngredient::amount).sum()
+		);
 	}
 
 	public interface IFactory<T extends JarRecipe> {

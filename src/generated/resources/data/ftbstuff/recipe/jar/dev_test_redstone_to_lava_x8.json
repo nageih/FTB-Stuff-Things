@@ -1,0 +1,27 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbstuff:dev_environment"
+    }
+  ],
+  "type": "ftbstuff:jar",
+  "input_fluids": [
+    {
+      "amount": 8000,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "input_items": [
+    {
+      "count": 8,
+      "tag": "c:dusts/redstone"
+    }
+  ],
+  "output_fluids": [
+    {
+      "amount": 8000,
+      "id": "minecraft:lava"
+    }
+  ],
+  "temperature": "hot"
+}

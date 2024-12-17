@@ -250,6 +250,13 @@ public class RecipesGenerator extends RecipeProvider {
                 Temperature.HOT
         ).saveTest(output, FTBStuffNThings.id("redstone_to_lava"));
         temperedJar(
+                List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 8)),
+                List.of(SizedFluidIngredient.of(Fluids.WATER, 8000)),
+                List.of(),
+                List.of(new FluidStack(Fluids.LAVA, 8000)),
+                Temperature.HOT
+        ).saveTest(output, FTBStuffNThings.id("redstone_to_lava_x8"));
+        temperedJar(
                 List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1), SizedIngredient.of(Tags.Items.DUSTS_GLOWSTONE, 1)),
                 List.of(SizedFluidIngredient.of(Fluids.WATER, 1000)),
                 List.of(),

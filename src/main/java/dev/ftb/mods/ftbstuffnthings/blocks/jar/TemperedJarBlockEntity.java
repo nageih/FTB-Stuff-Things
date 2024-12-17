@@ -174,8 +174,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
 
         if (needRecipeSearch) {
             ResourceLocation prevId = currentRecipe == null ? NO_RECIPE : currentRecipe.id();
-            currentRecipe = RecipeCaches.TEMPERED_JAR.getCachedRecipe(this::searchForRecipe, this::genIngredientHash)
-                    .orElse(null);
+            currentRecipe = findSuitableRecipe();
             setChanged();
             ResourceLocation newId = currentRecipe == null ? NO_RECIPE : currentRecipe.id();
 
@@ -219,6 +218,21 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         boolean active = getBlockState().getValue(TemperedJarBlock.ACTIVE);
         if (active && status != JarStatus.CRAFTING || !active && status == JarStatus.CRAFTING) {
             level.setBlock(getBlockPos(), getBlockState().setValue(TemperedJarBlock.ACTIVE, status == JarStatus.CRAFTING), Block.UPDATE_CLIENTS);
+        }
+    }
+
+    @Nullable
+    private RecipeHolder<JarRecipe> findSuitableRecipe() {
+        var recipes = RecipeCaches.TEMPERED_JAR.getCachedRecipes(this::searchForRecipe, this::genIngredientHash);
+        if (recipes.isEmpty()) {
+            return null;
+        } else if (recipes.size() == 1) {
+            return recipes.getFirst();
+        } else {
+            return recipes.stream()
+                    .filter(r -> r.value().test(getTemperature().temperature(), itemHandler, fluidHandler, true))
+                    .findFirst()
+                    .orElse(null);
         }
     }
 
@@ -305,13 +319,14 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         return anyHandler ? excessList : fluids;
     }
 
-    private Optional<RecipeHolder<JarRecipe>> searchForRecipe() {
+    private List<RecipeHolder<JarRecipe>> searchForRecipe() {
         // Note: we sort recipes with most input ingredients first, because items in the jar which don't match a
         //   recipe don't necessarily make the recipe invalid. Thus, recipes with more ingredients should be checked
         //   first to resolve potential ambiguity.
         return getLevel().getRecipeManager().getAllRecipesFor(RecipesRegistry.TEMPERED_JAR_TYPE.get()).stream()
-                .filter(r -> r.value().test(getTemperature().temperature(), itemHandler, fluidHandler))
-                .min(Comparator.comparing(RecipeHolder::value));
+                .filter(r -> r.value().test(getTemperature().temperature(), itemHandler, fluidHandler, false))
+                .sorted(Comparator.comparing(RecipeHolder::value))
+                .toList();
     }
 
     private int genIngredientHash() {

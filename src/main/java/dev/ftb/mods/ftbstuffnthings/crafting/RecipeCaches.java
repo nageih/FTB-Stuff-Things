@@ -8,7 +8,7 @@ import net.minecraft.server.TickTask;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 public interface RecipeCaches {
-    RecipeCache<JarRecipe> TEMPERED_JAR = new RecipeCache<>();
+    RecipeMultiCache<JarRecipe> TEMPERED_JAR = new RecipeMultiCache<>();
     RecipeCache<DripperRecipe> DRIPPER = new RecipeCache<>();
     RecipeCache<FusingMachineRecipe> FUSING_MACHINE = new RecipeCache<>();
     RecipeCache<SuperCoolerRecipe> SUPER_COOLER = new RecipeCache<>();
