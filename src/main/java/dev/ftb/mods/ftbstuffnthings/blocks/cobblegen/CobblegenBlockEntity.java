@@ -96,7 +96,7 @@ public class CobblegenBlockEntity extends BlockEntity {
             }
         } else {
             IItemHandler dest = outputCache.getCapability();
-            if (dest != null && !isInventoryFree(dest)) {
+            if (dest == null || !isInventoryFree(dest)) {
                 outputCache = null;
             }
             return dest;
