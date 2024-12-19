@@ -114,6 +114,10 @@ public class ItemsRegistry {
     public static final DeferredItem<BlockItem> SPRUCE_STRAINER = blockItem("spruce_water_strainer", BlocksRegistry.SPRUCE_STRAINER);
     public static final DeferredItem<BlockItem> WARPED_STRAINER = blockItem("warped_water_strainer", BlocksRegistry.WARPED_STRAINER);
 
+    static {
+        BlocksRegistry.allCompressedBlocks().forEach(ITEMS::registerSimpleBlockItem);
+    }
+
     //#endregion
 
     public static void init(IEventBus bus) {

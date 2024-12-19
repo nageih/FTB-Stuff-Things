@@ -205,6 +205,9 @@ public class BlockStatesGenerators extends BlockStateProvider {
         // Water Strainers
         BlocksRegistry.waterStrainers().forEach(this::waterStrainer);
 
+        // Compressed Blocks
+        BlocksRegistry.allCompressedBlocks().forEach(db -> simpleBlock(db.get()));
+
         // Misc simple blocks
 
         simpleBlock(BlocksRegistry.BLUE_MAGMA_BLOCK.get());

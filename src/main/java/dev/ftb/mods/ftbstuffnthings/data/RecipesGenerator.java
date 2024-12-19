@@ -42,6 +42,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class RecipesGenerator extends RecipeProvider {
@@ -186,6 +187,8 @@ public class RecipesGenerator extends RecipeProvider {
         shapedAutoHammer(BlocksRegistry.DIAMOND_AUTO_HAMMER, BlocksRegistry.GOLD_AUTO_HAMMER, ItemsRegistry.DIAMOND_HAMMER, output);
         shapedAutoHammer(BlocksRegistry.NETHERITE_AUTO_HAMMER, BlocksRegistry.DIAMOND_AUTO_HAMMER, ItemsRegistry.NETHERITE_HAMMER, output);
 
+        BlocksRegistry.compressedBlockTranslations().keySet().forEach(id -> compressedBlockRecipe(output, id));
+
         // a bunch of test recipes, only present in dev environment
         temperedJarRecipes(output);
         temperatureSourceRecipes(output);
@@ -195,6 +198,30 @@ public class RecipesGenerator extends RecipeProvider {
         hammerRecipes(output);
         fusingMachineRecipes(output);
         superCoolerRecipes(output);
+    }
+
+    private void compressedBlockRecipe(RecipeOutput output, String id) {
+        BlocksRegistry.compressedBlocks(id).forEach(block -> {
+            Block baseBlock = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.withDefaultNamespace(id))
+                    .orElseGet(() -> BuiltInRegistries.BLOCK.getOptional(FTBStuffNThings.id(id)).orElseThrow());
+            Block prevBlock = null;
+            String path = block.getId().getPath();
+            char lastChr = path.charAt(path.length() - 1);
+            if (Character.isDigit(lastChr)) {
+                int n = Character.getNumericValue(lastChr);
+                if (n > 2) {
+                    prevBlock = BuiltInRegistries.BLOCK.getOptional(FTBStuffNThings.id("compressed_" + id + "_" + (n - 1))).orElseThrow();
+                } else if (n == 2) {
+                    prevBlock = BuiltInRegistries.BLOCK.getOptional(FTBStuffNThings.id("compressed_" + id)).orElseThrow();
+                }
+            }
+
+            prevBlock = Objects.requireNonNullElse(prevBlock, baseBlock);
+            shaped(block.get(), baseBlock, "AAA/AAA/AAA", 'A', prevBlock)
+                    .save(output, FTBStuffNThings.id("compressed/" + block.getId().getPath() + "_3x3"));
+            shapeless(prevBlock, 9, baseBlock, block.get())
+                    .save(output, FTBStuffNThings.id("compressed/" + BuiltInRegistries.BLOCK.getKey(prevBlock).getPath() + "_shapeless"));
+        });
     }
 
     private void shapedAutoHammer(DeferredBlock<AutoHammerBlock> result, DeferredBlock<AutoHammerBlock> prevAutoHammer, DeferredItem<HammerItem> hammer, RecipeOutput output) {

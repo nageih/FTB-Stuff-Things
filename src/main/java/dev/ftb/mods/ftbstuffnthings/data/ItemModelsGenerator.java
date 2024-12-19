@@ -82,6 +82,8 @@ public class ItemModelsGenerator extends ItemModelProvider {
 
         simpleItem(ItemsRegistry.CROOK, "item/stone_crook");
         simpleItem(ItemsRegistry.STONE_ROD, "item/stone_rod");
+
+        BlocksRegistry.allCompressedBlocks().forEach(db -> simpleBlockItem(db.get()));
     }
 
     private ItemModelBuilder simpleItem(DeferredItem<? extends Item> item, String... textures) {
