@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class I18nGenerator extends LanguageProvider {
-    private static final String[] COMPRESSED_PREFIXES = new String[] { "", "Double", "Triple" };
+    private static final String[] COMPRESSED_PREFIXES = new String[] { "", "Double ", "Triple " };
     private static final Map<String, String> COMPRESSED_BLOCKS = Util.make(new HashMap<>(), map -> {
         map.put("sand", "Sand");
     });
@@ -161,6 +161,6 @@ public class I18nGenerator extends LanguageProvider {
 
     private String compressedBlockName(String name, int level) {
         String prefix = level >= COMPRESSED_PREFIXES.length ? "???" : COMPRESSED_PREFIXES[level];
-        return prefix + " Compressed " + name;
+        return prefix + "Compressed " + name;
     }
 }
