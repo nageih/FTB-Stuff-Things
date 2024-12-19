@@ -21,7 +21,6 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class CobblegenBlockEntity extends BlockEntity {
-
     private final CobbleGenProperties props;
     protected ItemStackHandler inventory = new ItemStackHandler(1) {
         @Override
@@ -39,8 +38,8 @@ public class CobblegenBlockEntity extends BlockEntity {
 
     public void tickServer() {
         ticks++;
-        boolean stateActive = getBlockState().getValue(BlockStateProperties.ENABLED);
-        if (!stateActive) {
+
+        if (!getBlockState().getValue(BlockStateProperties.ENABLED)) {
             return;
         }
 
@@ -54,12 +53,14 @@ public class CobblegenBlockEntity extends BlockEntity {
         if (inv != null) {
             ItemStack excess = ItemHandlerHelper.insertItem(inv, new ItemStack(Items.COBBLESTONE, amount), false);
             if (!excess.isEmpty()) {
+                // output handler too full, store excess internally and clear the output cache so a new output inv
+                //   is searched for on the next tick
                 ItemHandlerHelper.insertItem(inventory, excess, false);
+                outputCache = null;
             }
         } else {
             ItemHandlerHelper.insertItem(inventory, new ItemStack(Items.COBBLESTONE, amount), false);
         }
-
     }
 
     public ItemStackHandler getInternalInventory() {
@@ -72,39 +73,28 @@ public class CobblegenBlockEntity extends BlockEntity {
         }
 
         if (inventory.getStackInSlot(0).getCount() >= 64) {
-
             IItemHandler connectedInventory = getConnectedInventory();
-            return connectedInventory != null && isInventoryFree(connectedInventory);
+            return connectedInventory != null && hasSpaceInInventory(connectedInventory);
         }
+
         return true;
     }
 
-
     @Nullable
     private IItemHandler getConnectedInventory() {
-        if (outputCache == null) {
+        if (outputCache == null || outputCache.getCapability() == null) {
             for (Direction direction : Direction.values()) {
                 outputCache = BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) getLevel(), getBlockPos().relative(direction), null);
                 IItemHandler dest = outputCache.getCapability();
-                if (dest == null) {
-                    continue;
+                if (dest != null && hasSpaceInInventory(dest)) {
+                    return dest;
                 }
-                if (!isInventoryFree(dest)) {
-                    continue;
-                }
-                return dest;
             }
-        } else {
-            IItemHandler dest = outputCache.getCapability();
-            if (dest == null || !isInventoryFree(dest)) {
-                outputCache = null;
-            }
-            return dest;
         }
-        return null;
+        return outputCache == null ? null : outputCache.getCapability();
     }
 
-    private boolean isInventoryFree(IItemHandler inventory) {
+    private boolean hasSpaceInInventory(IItemHandler inventory) {
         for (int i = 0; i < inventory.getSlots(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (stack.isEmpty()) {

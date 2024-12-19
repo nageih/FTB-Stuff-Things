@@ -2,10 +2,11 @@ package dev.ftb.mods.ftbstuffnthings.blocks.cobblegen;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -60,9 +61,13 @@ public class CobblegenBlock extends Block implements EntityBlock {
 
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof CobblegenBlockEntity cobbleGenBlockEntity && cobbleGenBlockEntity != null && player.getMainHandItem().is(Items.AIR)) {
-            ItemStack stack = cobbleGenBlockEntity.getInternalInventory().getStackInSlot(0);
-            player.addItem(stack);
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof CobblegenBlockEntity cobbleGen && player.getMainHandItem().isEmpty()) {
+            ItemStack stack = cobbleGen.getInternalInventory().extractItem(0, 64, false);
+            if (!stack.isEmpty()) {
+                player.addItem(stack);
+                player.level().playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.2f, 1f);
+            }
+            return InteractionResult.CONSUME;
         }
 
         return InteractionResult.PASS;
