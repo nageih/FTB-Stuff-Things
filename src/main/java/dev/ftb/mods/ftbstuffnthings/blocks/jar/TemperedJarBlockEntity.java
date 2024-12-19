@@ -291,7 +291,8 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
                 if (excessList.isEmpty()) {
                     break;
                 } else {
-                    items = excessList;
+                    items = List.copyOf(excessList);
+                    excessList.clear();
                 }
             }
         }
