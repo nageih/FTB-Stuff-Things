@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "ftbstuff:block/compressed_basalt_2_top",
+    "side": "ftbstuff:block/compressed_basalt_2_side"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "ftbstuff:block/compressed_basalt_2_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "ftbstuff:block/compressed_basalt_2"
+    },
+    "axis=z": {
+      "model": "ftbstuff:block/compressed_basalt_2_horizontal",
+      "x": 90
+    }
+  }
+}

@@ -15,7 +15,9 @@ import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.neoforged.neoforge.client.model.generators.*;
@@ -206,7 +208,15 @@ public class BlockStatesGenerators extends BlockStateProvider {
         BlocksRegistry.waterStrainers().forEach(this::waterStrainer);
 
         // Compressed Blocks
-        BlocksRegistry.allCompressedBlocks().forEach(db -> simpleBlock(db.get()));
+        BlocksRegistry.allCompressedBlocks().forEach(db -> {
+            if (db.get() instanceof RotatedPillarBlock pillar) {
+                ResourceLocation side = FTBStuffNThings.id("block/" + db.getId().getPath() + "_side");
+                ResourceLocation end = FTBStuffNThings.id("block/" + db.getId().getPath() + "_top");
+                axisBlock(pillar, side, end);
+            } else {
+                simpleBlock(db.get());
+            }
+        });
 
         // Misc simple blocks
 

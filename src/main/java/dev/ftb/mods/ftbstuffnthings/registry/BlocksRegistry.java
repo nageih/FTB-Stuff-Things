@@ -171,6 +171,9 @@ public class BlocksRegistry {
     private static final Map<String, List<DeferredBlock<Block>>> COMPRESSED_BY_NAME = new HashMap<>();
     private static final Map<String, String> COMPRESSED_XLATE = new HashMap<>();
 
+    private static final List<DeferredBlock<Block>> COMPRESSED_BASALTS
+            = registerCompressed("basalt", "Basalt", BlockBehaviour.Properties.ofFullCopy(Blocks.BASALT),
+            1.25f, 3, RotatedPillarBlock::new);
     private static final List<DeferredBlock<Block>> COMPRESSED_CLAYS
             = registerCompressed("clay", "Clay", Blocks.CLAY, 3);
     private static final List<DeferredBlock<Block>> COMPRESSED_COBBLESTONES
@@ -192,6 +195,8 @@ public class BlocksRegistry {
     private static final List<DeferredBlock<Block>> COMPRESSED_SANDS
             = registerCompressed("sand", "Sand", BlockBehaviour.Properties.ofFullCopy(Blocks.SAND),
             0.5f, 3, properties -> new ColoredFallingBlock(new ColorRGBA(0xDBD3A0), properties));
+    private static final List<DeferredBlock<Block>> COMPRESSED_STONES
+            = registerCompressed("stone", "Stone", Blocks.STONE, 3);
     private static final List<DeferredBlock<Block>> COMPRESSED_SOUL_SANDS
             = registerCompressed("soul_sand", "Soul Sand", Blocks.SOUL_SAND, 3);
     private static final List<DeferredBlock<Block>> COMPRESSED_SOUL_SOILS
