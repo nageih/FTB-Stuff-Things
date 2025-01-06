@@ -146,7 +146,7 @@ public class RecipesGenerator extends RecipeProvider {
             shaped(type.getItemStack().getItem(), Items.STRING,
                     "SIS/ICI/SIS",
                     'S', Tags.Items.RODS_WOODEN,
-                    'I', type.getIngredient(),
+                    'I', type.getIngredientTag(),
                     'C', Tags.Items.STRINGS
             ).save(output);
         }

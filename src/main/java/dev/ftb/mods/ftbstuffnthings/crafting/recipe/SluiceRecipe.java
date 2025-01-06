@@ -15,9 +15,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class SluiceRecipe extends BaseRecipe<SluiceRecipe> {
@@ -26,7 +24,7 @@ public class SluiceRecipe extends BaseRecipe<SluiceRecipe> {
     private final int maxResults;
     private final Optional<SizedFluidIngredient> fluid;
     private final float processingTimeMultiplier;
-    private final HashSet<MeshType> meshTypes;
+    private final Set<MeshType> meshTypes;
 
     public SluiceRecipe(Ingredient ingredient, List<ItemWithChance> results, int maxResults, Optional<SizedFluidIngredient> fluid, float processingTimeMultiplier, List<MeshType> meshTypes) {
         super(RecipesRegistry.SLUICE_SERIALIZER, RecipesRegistry.SLUICE_TYPE);
@@ -36,7 +34,7 @@ public class SluiceRecipe extends BaseRecipe<SluiceRecipe> {
         this.maxResults = maxResults;
         this.fluid = fluid;
         this.processingTimeMultiplier = processingTimeMultiplier;
-        this.meshTypes = new HashSet<>(meshTypes);
+        this.meshTypes = EnumSet.copyOf(meshTypes);
     }
 
     public Ingredient getIngredient() {
@@ -65,8 +63,8 @@ public class SluiceRecipe extends BaseRecipe<SluiceRecipe> {
         return processingTimeMultiplier;
     }
 
-    public HashSet<MeshType> getMeshTypes() {
-        return meshTypes;
+    public Set<MeshType> getMeshTypes() {
+        return Collections.unmodifiableSet(meshTypes);
     }
 
     public List<MeshType> getMeshTypesAsList() {

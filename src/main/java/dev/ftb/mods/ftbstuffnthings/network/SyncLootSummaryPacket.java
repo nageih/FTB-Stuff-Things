@@ -20,7 +20,7 @@ public record SyncLootSummaryPacket(LootSummaryCollection summary) implements Cu
         return TYPE;
     }
 
-    public static void handleData(SyncLootSummaryPacket packet, IPayloadContext context) {
+    public static void handleData(SyncLootSummaryPacket packet, IPayloadContext ignoredContext) {
         LootSummaryCollection.syncFromServer(packet.summary);
     }
 }
