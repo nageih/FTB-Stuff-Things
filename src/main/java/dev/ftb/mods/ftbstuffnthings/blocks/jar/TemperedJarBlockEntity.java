@@ -270,33 +270,30 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     private List<ItemStack> distributeOutputItems(JarRecipe recipe) {
-        List<ItemStack> items = recipe.getOutputItems().stream().map(ItemStack::copy).toList();
+        List<ItemStack> toDistribute = recipe.getOutputItems().stream().map(ItemStack::copy).toList();
         List<ItemStack> excessList = new ArrayList<>();
-        boolean anyHandler = false;
         for (Direction dir : DirectionUtil.VALUES) {
-            if (!suitableOutputBlock(dir)) {
-                continue;
-            }
-            IItemHandler dest = itemOutputs.computeIfAbsent(dir, k ->
-                            BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) getLevel(), getBlockPos().relative(dir), dir.getOpposite()))
-                    .getCapability();
-            if (dest != null) {
-                anyHandler = true;
-                for (ItemStack stack : items) {
-                    ItemStack excess = ItemHandlerHelper.insertItem(dest, stack, false);
-                    if (!excess.isEmpty()) {
-                        excessList.add(excess);
+            if (suitableOutputBlock(dir)) {
+                IItemHandler handler = itemOutputs.computeIfAbsent(dir, k ->
+                                BlockCapabilityCache.create(Capabilities.ItemHandler.BLOCK, (ServerLevel) getLevel(),
+                                        getBlockPos().relative(dir), dir.getOpposite()))
+                        .getCapability();
+                if (handler != null) {
+                    for (ItemStack stack : toDistribute) {
+                        ItemStack excess = ItemHandlerHelper.insertItem(handler, stack, false);
+                        if (!excess.isEmpty()) {
+                            excessList.add(excess);
+                        }
                     }
-                }
-                if (excessList.isEmpty()) {
-                    break;
-                } else {
-                    items = List.copyOf(excessList);
+                    toDistribute = List.copyOf(excessList);
+                    if (toDistribute.isEmpty()) {
+                        break;
+                    }
                     excessList.clear();
                 }
             }
         }
-        return anyHandler ? excessList : items;
+        return toDistribute;
     }
 
     private boolean suitableOutputBlock(Direction dir) {
@@ -309,29 +306,27 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     private List<FluidStack> distributeOutputFluids(JarRecipe recipe) {
-        List<FluidStack> fluids = recipe.getOutputFluids().stream().map(FluidStack::copy).toList();
+        List<FluidStack> toDistribute = recipe.getOutputFluids().stream().map(FluidStack::copy).toList();
         List<FluidStack> excessList = new ArrayList<>();
-        boolean anyHandler = false;
         for (Direction dir : DirectionUtil.VALUES) {
             IFluidHandler dest = fluidOutputs.computeIfAbsent(dir, k ->
                             BlockCapabilityCache.create(Capabilities.FluidHandler.BLOCK, (ServerLevel) getLevel(), getBlockPos().relative(dir), dir.getOpposite()))
                     .getCapability();
             if (dest != null) {
-                anyHandler = true;
-                for (FluidStack stack : fluids) {
+                for (FluidStack stack : toDistribute) {
                     int filled = dest.fill(stack, IFluidHandler.FluidAction.EXECUTE);
                     if (filled < stack.getAmount()) {
                         excessList.add(stack.copyWithAmount(stack.getAmount() - filled));
                     }
                 }
-                if (excessList.isEmpty()) {
+                toDistribute = List.copyOf(excessList);
+                if (toDistribute.isEmpty()) {
                     break;
-                } else {
-                    fluids = excessList;
                 }
+                excessList.clear();
             }
         }
-        return anyHandler ? excessList : fluids;
+        return toDistribute;
     }
 
     private List<RecipeHolder<JarRecipe>> searchForRecipe() {
