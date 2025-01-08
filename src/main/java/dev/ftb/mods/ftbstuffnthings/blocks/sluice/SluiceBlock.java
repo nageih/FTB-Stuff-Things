@@ -193,12 +193,16 @@ public class SluiceBlock extends AbstractMachineBlock implements EntityBlock, Se
 
         if (stack.is(FTBStuffTags.Items.MESHES)) {
             if (stack.getItem() instanceof MeshItem meshItem) {
-                MeshType type = meshItem.mesh;
-                ItemStack current = state.getValue(MESH).getItemStack();
-                level.setBlock(pos, state.setValue(MESH, type), Block.UPDATE_ALL);
-                if (!player.isCreative()) {
-                    stack.shrink(1);
-                    ItemHandlerHelper.giveItemToPlayer(player, current);
+                if (isMeshCompatibleWith(meshItem.mesh)) {
+                    ItemStack current = state.getValue(MESH).getItemStack();
+                    level.setBlock(pos, state.setValue(MESH, meshItem.mesh), Block.UPDATE_ALL);
+                    if (!player.isCreative()) {
+                        stack.shrink(1);
+                        ItemHandlerHelper.giveItemToPlayer(player, current);
+                    }
+                } else {
+                    player.displayClientMessage(Component.translatable("ftbstuff.wrong_mesh").withStyle(ChatFormatting.GOLD), true);
+                    return ItemInteractionResult.FAIL;
                 }
             } else {
                 FTBStuffNThings.LOGGER.error("item {} wrongly added added to item tag {} (not a MeshItem)!", stack.getHoverName().getString(), FTBStuffTags.Items.MESHES);
@@ -222,6 +226,10 @@ public class SluiceBlock extends AbstractMachineBlock implements EntityBlock, Se
         }
 
         return ItemInteractionResult.CONSUME;
+    }
+
+    private boolean isMeshCompatibleWith(MeshType type) {
+        return builtInRegistryHolder().is(FTBStuffTags.Blocks.allowedMeshes(type));
     }
 
     @Override

@@ -13,9 +13,9 @@
     "item": "minecraft:gravel"
   },
   "mesh_types": [
+    "cloth",
     "iron",
-    "diamond",
-    "cloth"
+    "diamond"
   ],
   "results": [
     {

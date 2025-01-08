@@ -52,6 +52,7 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.crook.limit", "Max drops per block broken: %s");
         add("ftbstuff.sluice", "Sluice");
         add("ftbstuff.strainer.empty", "Water Strainer is empty!");
+        add("ftbstuff.wrong_mesh", "This Mesh doesn't fit in this Sluice!");
         add("ftbstuff.jade.processing", "Processing");
         add("ftbstuff.jade.buffer", "Buffer");
         add("ftbstuff.jade.time_left", "Time Left: %s");
@@ -120,6 +121,7 @@ public class I18nGenerator extends LanguageProvider {
         addItem(ItemsRegistry.IRON_MESH, "Iron Mesh");
         addItem(ItemsRegistry.GOLD_MESH, "Gold Mesh");
         addItem(ItemsRegistry.DIAMOND_MESH, "Diamond Mesh");
+        addItem(ItemsRegistry.BLAZING_MESH, "Blazing Mesh");
 
         addItem(ItemsRegistry.FLUID_CAPSULE, "Fluid Capsule");
         addItem(ItemsRegistry.WATER_BOWL, "Water Bowl");

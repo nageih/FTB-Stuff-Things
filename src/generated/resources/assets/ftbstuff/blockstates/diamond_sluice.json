@@ -60,6 +60,16 @@
     },
     {
       "apply": {
+        "model": "ftbstuff:block/blazing_mesh"
+      },
+      "when": {
+        "facing": "north",
+        "mesh": "blazing",
+        "part": "main"
+      }
+    },
+    {
+      "apply": {
         "model": "ftbstuff:block/diamond_sluice_body",
         "y": 180
       },
@@ -124,6 +134,17 @@
     },
     {
       "apply": {
+        "model": "ftbstuff:block/blazing_mesh",
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "mesh": "blazing",
+        "part": "main"
+      }
+    },
+    {
+      "apply": {
         "model": "ftbstuff:block/diamond_sluice_body",
         "y": 270
       },
@@ -188,6 +209,17 @@
     },
     {
       "apply": {
+        "model": "ftbstuff:block/blazing_mesh",
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "mesh": "blazing",
+        "part": "main"
+      }
+    },
+    {
+      "apply": {
         "model": "ftbstuff:block/diamond_sluice_body",
         "y": 90
       },
@@ -247,6 +279,17 @@
       "when": {
         "facing": "east",
         "mesh": "diamond",
+        "part": "main"
+      }
+    },
+    {
+      "apply": {
+        "model": "ftbstuff:block/blazing_mesh",
+        "y": 90
+      },
+      "when": {
+        "facing": "east",
+        "mesh": "blazing",
         "part": "main"
       }
     }

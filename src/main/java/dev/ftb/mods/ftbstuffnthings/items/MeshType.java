@@ -23,7 +23,8 @@ public enum MeshType implements StringRepresentable {
     CLOTH("cloth", ItemsRegistry.CLOTH_MESH, Tags.Items.STRINGS),
     IRON("iron", ItemsRegistry.IRON_MESH, Tags.Items.INGOTS_IRON),
     GOLD("gold", ItemsRegistry.GOLD_MESH, Tags.Items.INGOTS_GOLD),
-    DIAMOND("diamond", ItemsRegistry.DIAMOND_MESH, Tags.Items.GEMS_DIAMOND);
+    DIAMOND("diamond", ItemsRegistry.DIAMOND_MESH, Tags.Items.GEMS_DIAMOND),
+    BLAZING("blazing", ItemsRegistry.BLAZING_MESH, Tags.Items.RODS_BLAZE);
 
     public static final Codec<MeshType> CODEC = StringRepresentable.fromEnum(MeshType::values);
     public static final StreamCodec<ByteBuf, MeshType> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);

@@ -21,6 +21,7 @@ public class ItemsRegistry {
     public static final DeferredItem<MeshItem> IRON_MESH = ITEMS.register("iron_mesh", () -> new MeshItem(MeshType.IRON));
     public static final DeferredItem<MeshItem> GOLD_MESH = ITEMS.register("gold_mesh", () -> new MeshItem(MeshType.GOLD));
     public static final DeferredItem<MeshItem> DIAMOND_MESH = ITEMS.register("diamond_mesh", () -> new MeshItem(MeshType.DIAMOND));
+    public static final DeferredItem<MeshItem> BLAZING_MESH = ITEMS.register("blazing_mesh", () -> new MeshItem(MeshType.BLAZING));
     public static final List<DeferredItem<MeshItem>> ALL_MESHES = List.of(CLOTH_MESH, IRON_MESH, GOLD_MESH, DIAMOND_MESH);
 
     public static final DeferredItem<FluidCapsuleItem> FLUID_CAPSULE = ITEMS.register("fluid_capsule", FluidCapsuleItem::new);

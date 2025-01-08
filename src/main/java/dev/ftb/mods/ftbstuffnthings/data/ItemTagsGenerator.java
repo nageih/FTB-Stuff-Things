@@ -38,7 +38,11 @@ public class ItemTagsGenerator extends ItemTagsProvider {
         );
 
         addItemsToTag(FTBStuffTags.Items.CROOKS, ItemsRegistry.CROOK);
-        addItemsToTag(FTBStuffTags.Items.MESHES, ItemsRegistry.CLOTH_MESH, ItemsRegistry.IRON_MESH, ItemsRegistry.GOLD_MESH, ItemsRegistry.DIAMOND_MESH);
+
+        addItemsToTag(FTBStuffTags.Items.MESHES,
+                ItemsRegistry.CLOTH_MESH, ItemsRegistry.IRON_MESH, ItemsRegistry.GOLD_MESH,
+                ItemsRegistry.DIAMOND_MESH, ItemsRegistry.BLAZING_MESH
+        );
     }
 
     @SafeVarargs

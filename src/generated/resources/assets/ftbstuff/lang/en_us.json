@@ -127,6 +127,8 @@
   "ftbstuff.tooltip.energy": "Energy: %s FE",
   "ftbstuff.tooltip.fluid": "Fluid: %smB %s",
   "ftbstuff.tooltip.hammers": "Crushes materials down to their core components",
+  "ftbstuff.wrong_mesh": "This Mesh doesn't fit in this Sluice!",
+  "item.ftbstuff.blazing_mesh": "Blazing Mesh",
   "item.ftbstuff.cast_iron_gear": "Cast Iron Gear",
   "item.ftbstuff.cast_iron_ingot": "Cast Iron Ingot",
   "item.ftbstuff.cast_iron_nugget": "Cast Iron Nugget",
