@@ -25,9 +25,25 @@ public class Config {
             .comment("If true, dev/testing recipes will be available outside a development environment", "Leave this false unless actually testing the mod.");
 
     private static final SNBTConfig SLUICE_CONFIG = CONFIG.addGroup("sluice");
-    private static final Map<SluiceType,SNBTConfig> SLUICE_TYPES = Util.make(new EnumMap<>(SluiceType.class), map -> {
+    private static final Map<SluiceType,SluiceProperties> SLUICE_PROPERTIES = Util.make(new EnumMap<>(SluiceType.class), map -> {
         for (SluiceType type : SluiceType.values()) {
-            map.put(type, SLUICE_CONFIG.addGroup(type.getSerializedName()));
+            SNBTConfig config = SLUICE_CONFIG.addGroup(type.getSerializedName());
+            map.put(type, new SluiceProperties(
+                    config.addDouble("timeMultiplier", type.defTimeMod)
+                            .comment("How long it takes to process a resource in this Sluice (multiplier for recipe base tick time)"),
+                    config.addDouble("fluidMultiplier", type.defFluidMod)
+                            .comment("How much fluid is used per recipe (multiplier for recipe's fluid consumption rate)"),
+                    config.addInt("tankCapacity", type.defCapacity)
+                            .comment("How much fluid this sluice's tank can carry (in mB)"),
+                    config.addBoolean("allowsIO", type.defItemIO)
+                            .comment("Can items be piped in? False = items only clicked in manually"),
+                    config.addBoolean("allowsTank", type.defFluidIO)
+                            .comment("Can fluid be piped in? False = need to use adjacent Pump"),
+                    config.addBoolean("upgradeable", type.defUpgradeable)
+                            .comment("Can sluice be upgraded?"),
+                    config.addInt("energyUsage", type.defEnergyUsage)
+                            .comment("FE cost per use")
+            ));
         }
     });
 
@@ -68,24 +84,7 @@ public class Config {
     }
 
     public static Lazy<SluiceProperties> makeSluiceProperties(SluiceType type) {
-        SNBTConfig config = SLUICE_TYPES.get(type);
-
-        return Lazy.of(() -> new SluiceProperties(
-                config.addDouble("processing time multiplier", type.defTimeMod)
-                        .comment("How long it takes to process a resource in this Sluice (multiplier for recipe base tick time)"),
-                config.addDouble("fluid multiplier", type.defFluidMod)
-                        .comment("How much fluid is used per recipe (multiplier for recipe's fluid consumption rate)"),
-                config.addInt("tank capacity", type.defCapacity)
-                        .comment("How much fluid this sluice's tank can carry (in mB)"),
-                config.addBoolean("allowsIO", type.defItemIO)
-                        .comment("Can items be piped in? False = items only clicked in manually"),
-                config.addBoolean("allowsTank", type.defFluidIO)
-                        .comment("Can fluid be piped in? False = need to use adjacent Pump"),
-                config.addBoolean("upgradeable", type.defUpgradeable)
-                        .comment("Can sluice be upgraded?"),
-                config.addInt("fe cost per use", type.defEnergyUsage)
-                        .comment("FE cost per use")
-        ));
+        return Lazy.of(() -> SLUICE_PROPERTIES.get(type));
     }
 
     public static Optional<ResourceLocation> getStrainerLootTable() {
