@@ -392,6 +392,9 @@ public class RecipesGenerator extends RecipeProvider {
         ), List.of(MeshType.CLOTH, MeshType.IRON, MeshType.DIAMOND))
                 .fluid(new FluidStack(Fluids.WATER, 1000)
                 ).saveTest(output, FTBStuffNThings.id("sand_from_gravel"));
+        new SluiceRecipeBuilder(Ingredient.of(Items.SOUL_SAND), List.of(
+                new ItemWithChance(new ItemStack(Items.BLAZE_POWDER), 1)
+        ), List.of(MeshType.BLAZING)).saveTest(output, FTBStuffNThings.id("blaze_from_soul_sand"));
     }
 
     private void hammerRecipes(RecipeOutput output) {
