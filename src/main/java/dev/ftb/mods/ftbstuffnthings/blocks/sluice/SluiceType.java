@@ -10,13 +10,13 @@ public enum SluiceType implements StringRepresentable {
     OAK("oak", 1.0, 1.0, 12000,
             false, false, false, 0,
             SluiceBlockEntity.Oak::new),
-    IRON("iron", .8, .6, 12000,
+    IRON("iron", 0.8, 0.6, 12000,
             true, false, false, 0,
             SluiceBlockEntity.Iron::new),
-    DIAMOND("diamond", .6, .75, 12000,
+    DIAMOND("diamond", 0.6, 0.75, 12000,
             true, true, false, 0,
             SluiceBlockEntity.Diamond::new),
-    NETHERITE("netherite", 4, .5, 12000,
+    NETHERITE("netherite", 0.4, 0.5, 12000,
             true, true, true, 40,
             SluiceBlockEntity.Netherite::new);
 
