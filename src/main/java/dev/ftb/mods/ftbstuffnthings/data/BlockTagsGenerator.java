@@ -48,7 +48,11 @@ public class BlockTagsGenerator extends BlockTagsProvider {
         BlocksRegistry.waterStrainers().forEach(strainer -> tag(FTBStuffTags.Blocks.WATER_STRAINER).add(strainer.get()));
 
         MeshType.NON_EMPTY_VALUES.forEach(mesh -> {
-            tag(FTBStuffTags.Blocks.allowedMeshes(mesh)).addTag(FTBStuffTags.Blocks.SLUICE);
+            if (mesh == MeshType.BLAZING) {
+                tag(FTBStuffTags.Blocks.allowedMeshes(mesh)).add(BlocksRegistry.NETHERITE_SLUICE.get());
+            } else {
+                tag(FTBStuffTags.Blocks.allowedMeshes(mesh)).addTag(FTBStuffTags.Blocks.SLUICE);
+            }
         });
     }
 }

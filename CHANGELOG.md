@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [21.1.4]
 
 ### Added
-* Added back the Blazing Mesh
+* Added back the Blazing Mesh, by default only usable in the Netherite Sluice
 * Added control via block tags over which meshes may go in which sluice types
   * See `ftbstuff:allowed_meshes/<mesh_type>` tags
 
