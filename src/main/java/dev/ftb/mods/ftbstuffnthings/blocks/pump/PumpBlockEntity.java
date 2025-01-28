@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -40,7 +41,10 @@ public class PumpBlockEntity extends AbstractMachineBlockEntity {
     private static final int CHECK_INTERVAL = 50;
     private static final int TICK_RATE = 20;
 
-    public int timeLeft= 0;
+    public static final int MAX_PUMP_CHARGE = 6000;
+    public static final int PUMP_CHARGE_AMOUNT = 14;
+
+    private int timeLeft= 0;
     private int checkTimeout = CHECK_INTERVAL;
     private boolean foundValidSluices = false;
     private int tickCounter = 0;
@@ -130,10 +134,9 @@ public class PumpBlockEntity extends AbstractMachineBlockEntity {
         invalidPos.forEach(targetBlocks::remove);
 
         if (didWork) {
-            timeLeft -= 20;
-            PumpBlock.computeStateForProgress(getBlockState(), getBlockPos(), level, timeLeft);
-            if (timeLeft < 0) {
-                timeLeft = 0;
+            timeLeft = Math.max(0, timeLeft - 20);
+            updatePumpProgress();
+            if (timeLeft == 0) {
                 level.setBlock(getBlockPos(), getBlockState()
                         .setValue(AbstractMachineBlock.ACTIVE, false)
                         .setValue(PumpBlock.PROGRESS, PumpBlock.Progress.ZERO), AbstractMachineBlock.UPDATE_ALL);
@@ -235,5 +238,45 @@ public class PumpBlockEntity extends AbstractMachineBlockEntity {
     @Override
     public @Nullable IEnergyStorage getEnergyHandler(@Nullable Direction side) {
         return null;
+    }
+
+    public int getTimeLeft() {
+        return timeLeft;
+    }
+
+    public boolean windUp() {
+        if (timeLeft >= MAX_PUMP_CHARGE) {
+            return false;
+        }
+        timeLeft = Math.min(MAX_PUMP_CHARGE, timeLeft + PUMP_CHARGE_AMOUNT);
+
+        updatePumpProgress();
+        setChanged();
+//        level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
+
+        return true;
+    }
+
+    private void updatePumpProgress() {
+        if (!getBlockState().getValue(AbstractMachineBlock.ACTIVE) && timeLeft > 0) {
+            setPumpProgress(PumpBlock.Progress.ZERO);
+        } else {
+            PumpBlock.Progress value = getBlockState().getValue(PumpBlock.PROGRESS);
+            if (timeLeft < 1200 && value != PumpBlock.Progress.TWENTY) {
+                setPumpProgress(PumpBlock.Progress.TWENTY);
+            } else if (timeLeft >= 1200 && timeLeft < 2400 && value != PumpBlock.Progress.FORTY) {
+                setPumpProgress(PumpBlock.Progress.FORTY);
+            } else if (timeLeft >= 2400 && timeLeft < 3600 && value != PumpBlock.Progress.SIXTY) {
+                setPumpProgress(PumpBlock.Progress.SIXTY);
+            } else if (timeLeft >= 3600 && timeLeft < 4800 && value != PumpBlock.Progress.EIGHTY) {
+                setPumpProgress(PumpBlock.Progress.EIGHTY);
+            } else if (timeLeft >= 4800 && timeLeft < 5500 && value != PumpBlock.Progress.HUNDRED) {
+                setPumpProgress(PumpBlock.Progress.HUNDRED);
+            }
+        }
+    }
+
+    private void setPumpProgress(PumpBlock.Progress progress) {
+        level.setBlock(getBlockPos(), getBlockState().setValue(AbstractMachineBlock.ACTIVE, true).setValue(PumpBlock.PROGRESS, progress), Block.UPDATE_ALL);
     }
 }

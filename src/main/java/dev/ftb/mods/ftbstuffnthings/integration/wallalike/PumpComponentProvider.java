@@ -27,7 +27,7 @@ public enum PumpComponentProvider implements IBlockComponentProvider, IServerDat
     @Override
     public void appendServerData(CompoundTag compoundTag, BlockAccessor blockAccessor) {
         if (blockAccessor.getBlockEntity() instanceof PumpBlockEntity pump) {
-            compoundTag.putInt("timeLeft", pump.timeLeft);
+            compoundTag.putInt("timeLeft", pump.getTimeLeft());
         }
     }
 

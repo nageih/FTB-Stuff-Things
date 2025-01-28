@@ -6,6 +6,8 @@ import dev.ftb.mods.ftbstuffnthings.registry.ModDamageSources;
 import dev.ftb.mods.ftbstuffnthings.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -59,6 +61,8 @@ public class PumpBlock extends AbstractMachineBlock implements EntityBlock {
         }
     }
 
+    public static final int PUMP_DAMAGE_AMOUNT = 2;
+
     private static final VoxelShape NORTH = VoxelShapeUtils.or(
             box(0, 0, 0, 16, 10, 16),
             box(3, 10, 6, 13, 13, 9),
@@ -111,25 +115,20 @@ public class PumpBlock extends AbstractMachineBlock implements EntityBlock {
             return InteractionResult.PASS;
         }
 
-        if (!level.isClientSide) {
-            if (pump.timeLeft < 6000) {
-                pump.timeLeft += 14;
-                if (pump.timeLeft > 6000) {
-                    pump.timeLeft = 6000;
+        if (!level.isClientSide && !pump.windUp()) {
+            // overwound, oops!
+            player.hurt(level.damageSources().source(ModDamageSources.STATIC_ELECTRIC, player), PUMP_DAMAGE_AMOUNT);
+            if (player.getHealth() - PUMP_DAMAGE_AMOUNT < 0) {
+                LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(level);
+                if (lightning != null) {
+                    lightning.moveTo(Vec3.atBottomCenterOf(player.blockPosition()));
+                    lightning.setVisualOnly(true);
+                    level.addFreshEntity(lightning);
                 }
-
-                computeStateForProgress(state, pos, level, pump.timeLeft);
-                sendTileUpdate(level, pos, state, pump);
-            } else {
-                player.hurt(level.damageSources().source(ModDamageSources.STATIC_ELECTRIC, player), 2);
-                if (player.getHealth() - 2 < 0) {
-                    LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(level);
-                    if (lightning != null) {
-                        lightning.moveTo(Vec3.atBottomCenterOf(player.blockPosition()));
-                        lightning.setVisualOnly(true);
-                        level.addFreshEntity(lightning);
-                    }
-                }
+            } else if (level instanceof ServerLevel serverLevel) {
+                Vec3 vec = Vec3.atCenterOf(pos.above());
+                serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK, vec.x, vec.y, vec.z,
+                        15, 0.2, 0.2, 0.2, 0.5);
             }
         }
 
@@ -190,24 +189,6 @@ public class PumpBlock extends AbstractMachineBlock implements EntityBlock {
         return new PumpBlockEntity(blockPos, blockState);
     }
 
-    public static void computeStateForProgress(BlockState state, BlockPos pos, Level level, int timeLeft) {
-        if (!state.getValue(ACTIVE) && timeLeft > 0) {
-            level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.ZERO), 3);
-        } else {
-            Progress value = state.getValue(PROGRESS);
-            if (timeLeft < 1200 && value != Progress.TWENTY)
-                level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.TWENTY), 3);
-            else if (timeLeft >= 1200 && timeLeft < 2400 && value != Progress.FORTY)
-                level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.FORTY), 3);
-            else if (timeLeft >= 2400 && timeLeft < 3600 && value != Progress.SIXTY)
-                level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.SIXTY), 3);
-            else if (timeLeft >= 3600 && timeLeft < 4800 && value != Progress.EIGHTY)
-                level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.EIGHTY), 3);
-            else if (timeLeft >= 4800 && timeLeft < 5500 && value != Progress.HUNDRED)
-                level.setBlock(pos, state.setValue(ACTIVE, true).setValue(PumpBlock.PROGRESS, Progress.HUNDRED), 3);
-        }
-    }
-
     public VoxelShape getVisualShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
     }
@@ -222,8 +203,7 @@ public class PumpBlock extends AbstractMachineBlock implements EntityBlock {
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
 
-        level.getBlockEntity(pos, BlockEntitiesRegistry.PUMP.get()).ifPresent(pump -> {
-            pump.scanForSluices();
-        });
+        level.getBlockEntity(pos, BlockEntitiesRegistry.PUMP.get())
+                .ifPresent(PumpBlockEntity::scanForSluices);
     }
 }
