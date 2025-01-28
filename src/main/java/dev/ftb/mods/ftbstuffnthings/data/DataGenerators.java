@@ -41,6 +41,8 @@ public class DataGenerators {
         RegistrySetBuilder builder = new RegistrySetBuilder()
                 .add(Registries.DAMAGE_TYPE, DamageTypesGenerator::bootstrap);
 
-        generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(packOutput, lookupProvider, builder, Set.of(FTBStuffNThings.MODID)));
+        DatapackBuiltinEntriesProvider provider = generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(packOutput, lookupProvider, builder, Set.of(FTBStuffNThings.MODID)));
+
+        generator.addProvider(event.includeServer(), new DamageTypeTagsGenerator(packOutput, provider.getRegistryProvider(), existingFileHelper));
     }
 }
