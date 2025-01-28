@@ -36,6 +36,7 @@ public class DataGenerators {
         generator.addProvider(event.includeServer(), new RecipesGenerator(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new LootTablesGenerator(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new LootModifiersGenerator(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new AdvancementsGenerator(packOutput, lookupProvider,existingFileHelper));
 
         RegistrySetBuilder builder = new RegistrySetBuilder()
                 .add(Registries.DAMAGE_TYPE, DamageTypesGenerator::bootstrap);

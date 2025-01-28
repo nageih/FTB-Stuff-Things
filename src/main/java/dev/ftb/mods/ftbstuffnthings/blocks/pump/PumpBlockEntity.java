@@ -252,7 +252,6 @@ public class PumpBlockEntity extends AbstractMachineBlockEntity {
 
         updatePumpProgress();
         setChanged();
-//        level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_ALL);
 
         return true;
     }

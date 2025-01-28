@@ -2,12 +2,14 @@ package dev.ftb.mods.ftbstuffnthings.blocks.pump;
 
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
+import dev.ftb.mods.ftbstuffnthings.registry.CriterionTriggerRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ModDamageSources;
 import dev.ftb.mods.ftbstuffnthings.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -118,6 +120,7 @@ public class PumpBlock extends AbstractMachineBlock implements EntityBlock {
         if (!level.isClientSide && !pump.windUp()) {
             // overwound, oops!
             player.hurt(level.damageSources().source(ModDamageSources.STATIC_ELECTRIC, player), PUMP_DAMAGE_AMOUNT);
+            if (player instanceof ServerPlayer sp) CriterionTriggerRegistry.SUPERCHARGED.get().trigger(sp);
             if (player.getHealth() - PUMP_DAMAGE_AMOUNT < 0) {
                 LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(level);
                 if (lightning != null) {

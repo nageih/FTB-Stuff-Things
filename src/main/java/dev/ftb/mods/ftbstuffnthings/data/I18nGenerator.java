@@ -63,8 +63,11 @@ public class I18nGenerator extends LanguageProvider {
         add("config.jade.plugin_ftbstuff.pump", "Pump");
         add("block.ftbstuff.fusing_machine.tooltip", "Used to fuse items together to produce new results");
         add("block.ftbstuff.super_cooler.tooltip", "Used to \"super\"-cool items to produce new results");
-
         add("death.attack.static_electric", "%1$s was killed by static electricity");
+        add("ftbstuff.advancement.root", "FTB Stuff & Things");
+        add("ftbstuff.advancement.root.desc", "Just a collection of useful stuff... and things");
+        add("ftbstuff.advancement.supercharged", "Supercharged");
+        add("ftbstuff.advancement.supercharged.desc", "Over-wind a Pump and suffer the consequences");
 
         addBlock(BlocksRegistry.OAK_SLUICE, "Oak Sluice");
         addBlock(BlocksRegistry.IRON_SLUICE, "Iron Sluice");

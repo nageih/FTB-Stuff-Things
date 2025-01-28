@@ -63,6 +63,7 @@ public class FTBStuffNThings {
         RecipesRegistry.init(modEventBus);
         ContentRegistry.init(modEventBus);
         ComponentsRegistry.init(modEventBus);
+        CriterionTriggerRegistry.init(modEventBus);
 
         modEventBus.addListener(this::registerCapabilities);
 
@@ -73,6 +74,7 @@ public class FTBStuffNThings {
     private void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             syncLootSummaries(serverPlayer);
+            CriterionTriggerRegistry.FTBSTUFF_ROOT.get().trigger(serverPlayer);
         }
     }
 

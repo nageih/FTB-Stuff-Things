@@ -1,0 +1,30 @@
+{
+  "parent": "ftbstuff:root",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "id": "ftbstuff:supercharged"
+      },
+      "trigger": "ftbstuff:supercharged"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/block/blue_concrete_powder.png",
+    "description": {
+      "translate": "ftbstuff.advancement.supercharged.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ftbstuff:pump"
+    },
+    "title": {
+      "translate": "ftbstuff.advancement.supercharged"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

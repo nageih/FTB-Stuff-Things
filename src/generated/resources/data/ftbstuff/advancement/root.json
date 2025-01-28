@@ -1,0 +1,31 @@
+{
+  "criteria": {
+    "0": {
+      "conditions": {
+        "id": "ftbstuff:root"
+      },
+      "trigger": "ftbstuff:root"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:textures/block/blue_concrete_powder.png",
+    "description": {
+      "translate": "ftbstuff.advancement.root.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "ftbstuff:crate"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "ftbstuff.advancement.root"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
