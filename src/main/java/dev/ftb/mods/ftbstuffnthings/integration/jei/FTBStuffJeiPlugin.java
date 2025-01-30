@@ -102,9 +102,6 @@ public class FTBStuffJeiPlugin implements IModPlugin {
         for (var block : BlocksRegistry.ALL_SLUICES) {
             registration.addRecipeCatalyst(block.toStack(), RecipeTypes.SLUICE);
         }
-        for (var item : ItemsRegistry.ALL_MESHES) {
-            registration.addRecipeCatalyst(item.toStack(), RecipeTypes.SLUICE);
-        }
 
 //        BlocksRegistry.waterStrainers().forEach(b -> registration.addRecipeCatalyst(b.toStack(), RecipeTypes.LOOT_SUMMARY));
     }
