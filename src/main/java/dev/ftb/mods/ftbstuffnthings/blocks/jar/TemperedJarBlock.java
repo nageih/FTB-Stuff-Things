@@ -99,7 +99,7 @@ public class TemperedJarBlock extends JarBlock {
 
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof TemperedJarBlockEntity jar) {
             if (!player.isShiftKeyDown()) {
-                if (!jar.onRightClick(player, hand, stack)) {
+                if (!jar.onRightClick(player, hand)) {
                     player.openMenu(jar, buf -> {
                         buf.writeBlockPos(pos);
                         buf.writeOptional(jar.getCurrentRecipeId(), FriendlyByteBuf::writeResourceLocation);
