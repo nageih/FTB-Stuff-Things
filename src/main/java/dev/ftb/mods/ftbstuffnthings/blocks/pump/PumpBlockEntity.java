@@ -1,5 +1,6 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.pump;
 
+import dev.ftb.mods.ftbstuffnthings.Config;
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlockEntity;
@@ -19,41 +20,39 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public class PumpBlockEntity extends AbstractMachineBlockEntity {
-    private static final int CHECK_INTERVAL = 50;
     private static final int TICK_RATE = 20;
 
-    public static final int MAX_PUMP_CHARGE = 6000;
-    public static final int PUMP_CHARGE_AMOUNT = 14;
+    // all but down
+    private static final List<Direction> OUTPUT_DIRS = List.of(Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
 
-    private int timeLeft= 0;
-    private int checkTimeout = CHECK_INTERVAL;
-    private boolean foundValidSluices = false;
+    private int timeLeft = 0;
     private int tickCounter = 0;
 
     public boolean creative = false;
     public Fluid creativeFluid = Fluids.WATER;
     public Item creativeItem = null;
 
-    private final Set<BlockPos> targetBlocks = new HashSet<>();
+    private final Map<Direction, BlockCapabilityCache<IFluidHandler, Direction>> capabilityCacheMap = new EnumMap<>(Direction.class);
 
     public PumpBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntitiesRegistry.PUMP.get(), pos, state);
@@ -72,12 +71,8 @@ public class PumpBlockEntity extends AbstractMachineBlockEntity {
             return;
         }
 
-        if (!foundValidSluices) {
-            maybeSearchForSluices();
-        } else if (creative) {
-            handleCreativeInsertion();
-        } else if (++tickCounter >= TICK_RATE) {
-            runOneCycle();
+        if (++tickCounter >= TICK_RATE) {
+            runOneCycle(serverLevel);
         }
     }
 
@@ -86,55 +81,24 @@ public class PumpBlockEntity extends AbstractMachineBlockEntity {
         return Optional.of(ParticleTypes.SPLASH);
     }
 
-    private void maybeSearchForSluices() {
-        if (checkTimeout++ > CHECK_INTERVAL) {
-            for (Direction direction : Direction.values()) {
-                BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(direction));
-                if (blockEntity instanceof SluiceBlockEntity) {
-                    targetBlocks.add(getBlockPos().relative(direction));
-                    foundValidSluices = true;
-                }
-            }
-            checkTimeout = 0;
-        }
-    }
-
-    private void handleCreativeInsertion() {
-        Set<BlockPos> invalidPos = new HashSet<>();
-        for (BlockPos pos : getTargetBlocks()) {
-            if (level.getBlockEntity(pos) instanceof SluiceBlockEntity sluice) {
-                provideFluidToSluice(sluice);
-                if (creativeItem != null) {
-                    IItemHandler handler = sluice.getItemHandler();
-                    if (handler != null && handler.getStackInSlot(0).isEmpty()) {
-                        handler.insertItem(0, new ItemStack(creativeItem), false);
-                    }
-                }
-            } else {
-                invalidPos.add(pos);
-            }
-        }
-        invalidPos.forEach(targetBlocks::remove);
-    }
-
-    private void runOneCycle() {
+    private void runOneCycle(ServerLevel serverLevel) {
         tickCounter = 0;
 
-        boolean didWork = false;
-        Set<BlockPos> invalidPos = new HashSet<>();
-        for (BlockPos pos : getTargetBlocks()) {
-            if (level.getBlockEntity(pos) instanceof SluiceBlockEntity sbe) {
-                if (provideFluidToSluice(sbe)) {
-                    didWork = true;
-                }
-            } else {
-                invalidPos.add(pos);
+        int totalFilled = 0;
+        for (Direction dir : OUTPUT_DIRS) {
+            var fluidCache = capabilityCacheMap.computeIfAbsent(dir, k -> BlockCapabilityCache.create(Capabilities.FluidHandler.BLOCK, serverLevel, getBlockPos().relative(dir), dir.getOpposite()));
+            IFluidHandler handler = fluidCache.getCapability();
+            if (handler != null) {
+                totalFilled += handler.fill(new FluidStack(Fluids.WATER, Config.PUMP_FLUID_TRANSFER.get()), IFluidHandler.FluidAction.EXECUTE);
+                handleCreateItemInsertion(handler);
             }
         }
-        invalidPos.forEach(targetBlocks::remove);
 
-        if (didWork) {
-            timeLeft = Math.max(0, timeLeft - 20);
+        if (totalFilled > 0) {
+            // one unit of pump charge transfers 50mB of water
+            if (!creative) {
+                timeLeft = Math.max(0, timeLeft - totalFilled / 50);
+            }
             updatePumpProgress();
             if (timeLeft == 0) {
                 level.setBlock(getBlockPos(), getBlockState()
@@ -144,26 +108,14 @@ public class PumpBlockEntity extends AbstractMachineBlockEntity {
         }
     }
 
-    public void scanForSluices() {
-        foundValidSluices = false;
-    }
-
-    private boolean provideFluidToSluice(SluiceBlockEntity sluice) {
-        boolean didWork = false;
-
-        FluidTank tank = sluice.getFluidTank();
-        if (tank.getFluidAmount() < tank.getCapacity()) {
-            int filled = tank.fill(new FluidStack(this.creative ? this.creativeFluid : Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
-            if (filled > 0) {
-                didWork = true;
+    private void handleCreateItemInsertion(IFluidHandler handler) {
+        if (creative && creativeItem != null && handler instanceof SluiceBlockEntity.SluiceFluidTank sluiceFluidTank) {
+            // null side bypasses item IO ability checking
+            ItemStackHandler itemHandler = sluiceFluidTank.getOwner().getItemHandler(null);
+            if (itemHandler != null) {
+                itemHandler.insertItem(0, creativeItem.getDefaultInstance(), false);
             }
         }
-
-        return didWork;
-    }
-
-    public Set<BlockPos> getTargetBlocks() {
-        return this.targetBlocks;
     }
 
     @Override
@@ -245,10 +197,12 @@ public class PumpBlockEntity extends AbstractMachineBlockEntity {
     }
 
     public boolean windUp() {
-        if (timeLeft >= MAX_PUMP_CHARGE) {
+        int maxCharge = Config.PUMP_MAX_CHARGE.get();
+
+        if (timeLeft >= maxCharge) {
             return false;
         }
-        timeLeft = Math.min(MAX_PUMP_CHARGE, timeLeft + PUMP_CHARGE_AMOUNT);
+        timeLeft = Math.min(maxCharge, timeLeft + Config.PUMP_CHARGEUP_AMOUNT.get());
 
         updatePumpProgress();
         setChanged();
@@ -276,6 +230,9 @@ public class PumpBlockEntity extends AbstractMachineBlockEntity {
     }
 
     private void setPumpProgress(PumpBlock.Progress progress) {
-        level.setBlock(getBlockPos(), getBlockState().setValue(AbstractMachineBlock.ACTIVE, true).setValue(PumpBlock.PROGRESS, progress), Block.UPDATE_ALL);
+        level.setBlock(getBlockPos(), getBlockState()
+                .setValue(AbstractMachineBlock.ACTIVE, true)
+                .setValue(PumpBlock.PROGRESS, progress),
+                Block.UPDATE_ALL);
     }
 }

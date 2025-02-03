@@ -79,6 +79,15 @@ public class Config {
     public static final StringValue STRAINER_LOOT_TABLE = WATER_STRAINER_CONFIG.addString("strainer_loot_table", FTBStuffNThings.MODID + ":custom/water_strainer_test")
             .comment("Location of the loot table used to generate strainer loot from");
 
+    private static final SNBTConfig PUMP_CONFIG = CONFIG.addGroup("pump");
+    public static final IntValue PUMP_MAX_CHARGE = PUMP_CONFIG.addInt("pump_max_charge", 6000, 1000, Integer.MAX_VALUE)
+            .comment("Maximum charge the Pump can have. 20 charge is consumed for every 1000mB of water pumped");
+    public static final IntValue PUMP_CHARGEUP_AMOUNT = PUMP_CONFIG.addInt("pump_chargeup_amount", 14, 1, Integer.MAX_VALUE)
+            .comment("Amount of charge to add each time the Pump is right-clicked by a player. 20 charge is consumed for every 1000mB of water pumped");
+    public static final IntValue PUMP_FLUID_TRANSFER = PUMP_CONFIG.addInt("pump_fluid_transfer", 1000, 1, Integer.MAX_VALUE)
+            .comment("Amount of water to transfer to each valid neighbouring fluid tank on each work cycle (every 20 ticks).");
+
+
     public static void init() {
         loadDefaulted(CONFIG, CONFIG_DIR, FTBStuffNThings.MODID, FTBStuffNThings.MODID + ".snbt");
     }

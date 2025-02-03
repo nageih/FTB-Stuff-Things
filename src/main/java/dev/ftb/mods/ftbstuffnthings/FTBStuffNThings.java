@@ -116,20 +116,8 @@ public class FTBStuffNThings {
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
-                BlockEntitiesRegistry.OAK_SLUICE.get(),
-                (blockEntity, side) -> blockEntity.getFluidHandler()
-        );
-
-        event.registerBlockEntity(
-                Capabilities.FluidHandler.BLOCK,
                 BlockEntitiesRegistry.JAR.get(),
                 (blockEntity, side) -> blockEntity.getFluidHandler()
-        );
-
-        event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
-                BlockEntitiesRegistry.WATER_STRAINER.get(),
-                WaterStrainerBlockEntity::getItemHandler
         );
 
         event.registerBlockEntity(
@@ -137,10 +125,17 @@ public class FTBStuffNThings {
                 BlockEntitiesRegistry.TEMPERED_JAR.get(),
                 TemperedJarBlockEntity::getInputItemHandler
         );
+
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 BlockEntitiesRegistry.TEMPERED_JAR.get(),
                 TemperedJarBlockEntity::getFluidHandler
+        );
+
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                BlockEntitiesRegistry.WATER_STRAINER.get(),
+                WaterStrainerBlockEntity::getItemHandler
         );
 
         List.of(BlockEntitiesRegistry.FUSING_MACHINE, BlockEntitiesRegistry.SUPER_COOLER).forEach(machine ->

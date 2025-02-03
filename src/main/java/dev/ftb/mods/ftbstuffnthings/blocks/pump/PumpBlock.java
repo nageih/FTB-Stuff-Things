@@ -1,7 +1,6 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.pump;
 
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
-import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.CriterionTriggerRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ModDamageSources;
 import dev.ftb.mods.ftbstuffnthings.util.VoxelShapeUtils;
@@ -200,13 +199,5 @@ public class PumpBlock extends AbstractMachineBlock implements EntityBlock {
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
         Direction dir = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
         return SHAPES.getOrDefault(dir, NORTH);
-    }
-
-    @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
-        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
-
-        level.getBlockEntity(pos, BlockEntitiesRegistry.PUMP.get())
-                .ifPresent(PumpBlockEntity::scanForSluices);
     }
 }

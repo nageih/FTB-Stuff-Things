@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.sluice;
 
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
+import dev.ftb.mods.ftbstuffnthings.blocks.pump.PumpBlock;
 import dev.ftb.mods.ftbstuffnthings.capabilities.EmittingEnergy;
 import dev.ftb.mods.ftbstuffnthings.capabilities.EmittingFluidTank;
 import dev.ftb.mods.ftbstuffnthings.crafting.NoInventory;
@@ -45,12 +46,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
     private static final float BASE_PROCESSING_TIME = 60; // 60 ticks or 3 seconds
 
     private final ItemStackHandler inputInventory = new SluiceItemHandler();
-    private final FluidTank fluidTank = new EmittingFluidTank(10_000, tank -> {
+    private final FluidTank fluidTank = new SluiceFluidTank(this, 10_000, tank -> {
         setChanged();
         fluidSyncNeeded = true;
     });
@@ -281,7 +283,8 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
 
     @Override
     public IFluidHandler getFluidHandler(@Nullable Direction dir) {
-        return dir == null || getProps().fluidIO().get() ? fluidTank : null;
+        // pumps can insert regardless of the sluice fluid IO ability
+        return dir == null || getProps().fluidIO().get() || level.getBlockState(getBlockPos().relative(dir)).getBlock() instanceof PumpBlock ? fluidTank : null;
     }
 
     @Override
@@ -408,6 +411,19 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
         @Override
         public int getSlotLimit(int slot) {
             return 1;
+        }
+    }
+
+    public static class SluiceFluidTank extends EmittingFluidTank {
+        private final SluiceBlockEntity owner;
+
+        public SluiceFluidTank(SluiceBlockEntity owner, int capacity, Consumer<EmittingFluidTank> onChange) {
+            super(capacity, onChange);
+            this.owner = owner;
+        }
+
+        public SluiceBlockEntity getOwner() {
+            return owner;
         }
     }
 }
