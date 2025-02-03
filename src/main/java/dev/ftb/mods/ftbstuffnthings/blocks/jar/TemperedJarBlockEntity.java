@@ -22,13 +22,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
@@ -85,6 +85,8 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
     private final Map<Direction, BlockCapabilityCache<IItemHandler, Direction>> itemOutputs = new EnumMap<>(Direction.class);
     private final Map<Direction, BlockCapabilityCache<IFluidHandler, Direction>> fluidOutputs = new EnumMap<>(Direction.class);
     private JarStatus status = JarStatus.NO_RECIPE;
+    private final List<ItemStack> itemBacklog = new ArrayList<>();
+    private final List<FluidStack> fluidBacklog = new ArrayList<>();
 
     public TemperedJarBlockEntity(BlockPos pos, BlockState blockState) {
         super(BlockEntitiesRegistry.TEMPERED_JAR.get(), pos, blockState);
@@ -97,6 +99,12 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         tag.put("Items", itemHandler.serializeNBT(registries));
         tag.put("Tanks", fluidHandler.serializeNBT(registries));
         tag.putInt("Remaining", remainingTime);
+        if (!itemBacklog.isEmpty()) {
+            tag.put("ItemBacklog", Util.make(new ListTag(), l -> itemBacklog.forEach(stack -> l.add(stack.save(registries)))));
+        }
+        if (!fluidBacklog.isEmpty()) {
+            tag.put("FluidBacklog", Util.make(new ListTag(), l -> fluidBacklog.forEach(stack -> l.add(stack.save(registries)))));
+        }
         if (currentRecipe != null) tag.putString("Recipe", currentRecipe.id().toString());
     }
 
@@ -108,6 +116,17 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         fluidHandler.deserializeNBT(registries, tag.getCompound("Tanks"));
         remainingTime = tag.getInt("Remaining");
         pendingRecipeId = tag.getString("Recipe");  // see onLoad() for recipe init
+
+        if (tag.contains("ItemBacklog", Tag.TAG_LIST)) {
+            itemBacklog.clear();
+            tag.getList("ItemBacklog", Tag.TAG_COMPOUND)
+                    .forEach(t -> ItemStack.parse(registries, t).ifPresent(itemBacklog::add));
+        }
+        if (tag.contains("FluidBacklog", Tag.TAG_LIST)) {
+            fluidBacklog.clear();
+            tag.getList("FluidBacklog", Tag.TAG_COMPOUND)
+                    .forEach(t -> FluidStack.parse(registries, t).ifPresent(fluidBacklog::add));
+        }
     }
 
     @Override
@@ -191,7 +210,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
                 SyncJarRecipePacket packet = new SyncJarRecipePacket(getBlockPos(), getCurrentRecipeId());
                 serverLevel.players().stream()
                         .filter(p -> p.containerMenu instanceof TemperedJarMenu menu && menu.getJar() == this)
-                        .forEach(p -> PacketDistributor.sendToPlayer((ServerPlayer) p, packet));
+                        .forEach(p -> PacketDistributor.sendToPlayer(p, packet));
 
                 inputResourceLocator.invalidate();
             } else {
@@ -202,18 +221,20 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
             needRecipeSearch = false;
         }
 
-        if (currentRecipe != null) {
+        if (!itemBacklog.isEmpty() || !fluidBacklog.isEmpty()) {
+            status = JarStatus.OUTPUT_FULL;
+            if (serverLevel.getGameTime() % 20 == 0 && tryProcessBacklog()) {
+                setRemainingTime(hasAutoProcessing() && processingTime > 0 ? processingTime : STOPPED);
+                status = JarStatus.READY;
+            }
+        } else if (currentRecipe != null) {
             if (inputResourceLocator.get().allInputsFound()) {
                 if (remainingTime == STOPPED) {
                     status = JarStatus.READY;
-                    if (hasAutoProcessing() && serverLevel.getGameTime() % 20 == 0) {
-                        // check periodically if we can start again
-                        runOneCycle(serverLevel, currentRecipe.value(), true);
-                    }
                 } else {
                     // run a cycle
                     status = JarStatus.CRAFTING;
-                    runOneCycle(serverLevel, currentRecipe.value(), false);
+                    runOneCycle(serverLevel, currentRecipe.value());
                 }
             } else {
                 status = JarStatus.NOT_ENOUGH_RESOURCES;
@@ -225,6 +246,40 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         boolean active = getBlockState().getValue(TemperedJarBlock.ACTIVE);
         if (active && status != JarStatus.CRAFTING || !active && status == JarStatus.CRAFTING) {
             serverLevel.setBlock(getBlockPos(), getBlockState().setValue(TemperedJarBlock.ACTIVE, status == JarStatus.CRAFTING), Block.UPDATE_CLIENTS);
+        }
+    }
+
+    private boolean tryProcessBacklog() {
+        if (!itemBacklog.isEmpty()) {
+            List<ItemStack> excess = distributeOutputItems(itemBacklog);
+            itemBacklog.clear();
+            itemBacklog.addAll(excess);
+            setChanged();
+        }
+        if (!fluidBacklog.isEmpty()) {
+            List<FluidStack> excess = distributeOutputFluids(fluidBacklog);
+            fluidBacklog.clear();
+            fluidBacklog.addAll(excess);
+            setChanged();
+        }
+
+        return itemBacklog.isEmpty() && fluidBacklog.isEmpty();
+    }
+
+    public void maybeClearBacklog(Direction dir) {
+        boolean cleared = false;
+        if (!itemBacklog.isEmpty()) {
+            itemBacklog.forEach(stack -> Block.popResource(level, getBlockPos().relative(dir), stack));
+            itemBacklog.clear();
+            cleared = true;
+        }
+        if (!fluidBacklog.isEmpty()) {
+            fluidBacklog.forEach(stack -> Block.popResource(level, getBlockPos().relative(dir), FluidCapsuleItem.of(stack)));
+            fluidBacklog.clear();
+            cleared = true;
+        }
+        if (cleared) {
+            setRemainingTime(hasAutoProcessing() && processingTime > 0 ? processingTime : STOPPED);
         }
     }
 
@@ -243,7 +298,11 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         }
     }
 
-    private void runOneCycle(ServerLevel serverLevel, JarRecipe recipe, boolean simulate) {
+    private void runOneCycle(ServerLevel serverLevel, JarRecipe recipe) {
+        if (!itemBacklog.isEmpty() || !fluidBacklog.isEmpty()) {
+            return;
+        }
+
         if (remainingTime > 0) {
             setRemainingTime(remainingTime - 1);
         }
@@ -252,27 +311,31 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
             int[] itemSlots = inputResourceLocator.get().itemSlots;
             int[] fluidSlots = inputResourceLocator.get().fluidSlots;
             for (int i = 0; i < recipe.getInputItems().size(); i++) {
-                getInputItemHandler().extractItem(itemSlots[i], recipe.getInputItems().get(i).count(), simulate);
+                getInputItemHandler().extractItem(itemSlots[i], recipe.getInputItems().get(i).count(), false);
             }
             for (int i = 0; i < recipe.getInputFluids().size(); i++) {
-                fluidHandler.tanks.get(fluidSlots[i]).drain(recipe.getInputFluids().get(i).amount(), simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE);
+                fluidHandler.tanks.get(fluidSlots[i]).drain(recipe.getInputFluids().get(i).amount(), FluidAction.EXECUTE);
             }
-            if (!simulate) {
-                syncNeeded = true;
-            }
+            syncNeeded = true;
 
             boolean outputsFull = false;
             // produce output
-            List<ItemStack> excessItems = distributeOutputItems(recipe, simulate);
+            List<ItemStack> excessItems = distributeOutputItems(recipe);
             if (!excessItems.isEmpty()) {
-                if (!simulate) {
+                if (hasAutoProcessing()) {
+                    itemBacklog.addAll(excessItems);
+                    setChanged();
+                } else {
                     excessItems.forEach(itemStack -> Block.popResource(serverLevel, getBlockPos(), itemStack));
                 }
                 outputsFull = true;
             }
-            List<FluidStack> excessFluids = distributeOutputFluids(recipe, simulate);
+            List<FluidStack> excessFluids = distributeOutputFluids(recipe);
             if (!excessFluids.isEmpty()) {
-                if (!simulate) {
+                if (hasAutoProcessing()) {
+                    fluidBacklog.addAll(excessFluids);
+                    setChanged();
+                } else {
                     excessFluids.forEach(fluidStack -> Block.popResource(serverLevel, getBlockPos(), FluidCapsuleItem.of(fluidStack)));
                 }
                 outputsFull = true;
@@ -282,8 +345,11 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         }
     }
 
-    private List<ItemStack> distributeOutputItems(JarRecipe recipe, boolean simulate) {
-        List<ItemStack> toDistribute = recipe.getOutputItems().stream().map(ItemStack::copy).toList();
+    private List<ItemStack> distributeOutputItems(JarRecipe recipe) {
+        return distributeOutputItems(recipe.getOutputItems().stream().map(ItemStack::copy).toList());
+    }
+
+    private List<ItemStack> distributeOutputItems(List<ItemStack> toDistribute) {
         List<ItemStack> excessList = new ArrayList<>();
         for (Direction dir : DirectionUtil.VALUES) {
             if (suitableOutputBlock(dir)) {
@@ -293,7 +359,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
                         .getCapability();
                 if (handler != null) {
                     for (ItemStack stack : toDistribute) {
-                        ItemStack excess = ItemHandlerHelper.insertItem(handler, stack, simulate);
+                        ItemStack excess = ItemHandlerHelper.insertItem(handler, stack, false);
                         if (!excess.isEmpty()) {
                             excessList.add(excess);
                         }
@@ -306,7 +372,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
                 }
             }
         }
-        return toDistribute;
+        return List.copyOf(toDistribute);
     }
 
     private boolean suitableOutputBlock(Direction dir) {
@@ -318,8 +384,11 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         return true;
     }
 
-    private List<FluidStack> distributeOutputFluids(JarRecipe recipe, boolean simulate) {
-        List<FluidStack> toDistribute = recipe.getOutputFluids().stream().map(FluidStack::copy).toList();
+    private List<FluidStack> distributeOutputFluids(JarRecipe recipe) {
+        return distributeOutputFluids(recipe.getOutputFluids().stream().map(FluidStack::copy).toList());
+    }
+
+    private List<FluidStack> distributeOutputFluids(List<FluidStack> toDistribute) {
         List<FluidStack> excessList = new ArrayList<>();
         for (Direction dir : DirectionUtil.VALUES) {
             IFluidHandler dest = fluidOutputs.computeIfAbsent(dir, k ->
@@ -327,7 +396,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
                     .getCapability();
             if (dest != null) {
                 for (FluidStack stack : toDistribute) {
-                    int filled = dest.fill(stack, simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE);
+                    int filled = dest.fill(stack, FluidAction.EXECUTE);
                     if (filled < stack.getAmount()) {
                         excessList.add(stack.copyWithAmount(stack.getAmount() - filled));
                     }
@@ -339,7 +408,7 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
                 excessList.clear();
             }
         }
-        return toDistribute;
+        return List.copyOf(toDistribute);
     }
 
     private List<RecipeHolder<JarRecipe>> searchForRecipe() {
@@ -723,7 +792,8 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
         READY("ready", ChatFormatting.DARK_GREEN),
         CRAFTING("crafting", ChatFormatting.GREEN),
         NO_RECIPE("no_recipe", ChatFormatting.GOLD),
-        NOT_ENOUGH_RESOURCES("not_enough_resources", ChatFormatting.YELLOW)
+        NOT_ENOUGH_RESOURCES("not_enough_resources", ChatFormatting.YELLOW),
+        OUTPUT_FULL("output_full", ChatFormatting.YELLOW)
         ;
 
         private final String id;

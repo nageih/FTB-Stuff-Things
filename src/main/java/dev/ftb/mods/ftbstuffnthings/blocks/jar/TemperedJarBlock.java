@@ -105,6 +105,8 @@ public class TemperedJarBlock extends JarBlock {
                         buf.writeOptional(jar.getCurrentRecipeId(), FriendlyByteBuf::writeResourceLocation);
                     });
                 }
+            } else {
+                jar.maybeClearBacklog(hitResult.getDirection());
             }
         }
 

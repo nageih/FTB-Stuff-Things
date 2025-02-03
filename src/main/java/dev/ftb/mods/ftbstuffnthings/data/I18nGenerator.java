@@ -42,6 +42,7 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.jar_status.ready", "Ready To Craft");
         add("ftbstuff.jar_status.no_recipe", "No Recipe");
         add("ftbstuff.jar_status.not_enough_resources", "Insufficient Resources");
+        add("ftbstuff.jar_status.output_full", "Output Full");
         add("ftbstuff.jar_status.crafting", "Crafting!");
         add("ftbstuff.making", "Making:");
         add("ftbstuff.dripper.chance", "Chance: %s%% / sec");

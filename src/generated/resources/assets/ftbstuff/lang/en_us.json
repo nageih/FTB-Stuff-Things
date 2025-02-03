@@ -111,6 +111,7 @@
   "ftbstuff.jar_status.crafting": "Crafting!",
   "ftbstuff.jar_status.no_recipe": "No Recipe",
   "ftbstuff.jar_status.not_enough_resources": "Insufficient Resources",
+  "ftbstuff.jar_status.output_full": "Output Full",
   "ftbstuff.jar_status.ready": "Ready To Craft",
   "ftbstuff.jei.loot_summary": "Loot Table Information",
   "ftbstuff.jei.loot_summary.pool": "Pool: %s",
