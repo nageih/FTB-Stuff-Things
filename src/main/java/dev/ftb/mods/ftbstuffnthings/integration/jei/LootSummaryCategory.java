@@ -29,7 +29,9 @@ public class LootSummaryCategory extends BaseStuffCategory<WrappedLootSummary> {
             ChatFormatting.LIGHT_PURPLE,
             ChatFormatting.GOLD,
     };
-    public static final int MAX_DISPLAYABLE = 35;
+    public static final int MAX_DISPLAYABLE_IDX = 34;  // 0-indexed, 5x7 entries
+
+    private int nItems;
 
     public LootSummaryCategory() {
         super(
@@ -42,36 +44,37 @@ public class LootSummaryCategory extends BaseStuffCategory<WrappedLootSummary> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, WrappedLootSummary recipe, IFocusGroup focuses) {
+        nItems = 0;
+
         builder.addSlot(RecipeIngredientRole.INPUT, 5, 5)
                 .addItemStack(recipe.inputStack().asItem().getDefaultInstance());
 
-        var entryMap = recipe.summary().entryMap();
-        int nPools = entryMap.keySet().size();
+        var poolMap = recipe.summary().entryMap();
+        int nPools = poolMap.keySet().size();
 
         Map<String,Integer> pool2idx = new HashMap<>();
         int n = 0;
-        for (Map.Entry<String, List<LootSummary.SummaryEntry>> e : entryMap.entrySet()) {
-            pool2idx.put(e.getKey(), n++);
+        for (var entry : poolMap.entrySet()) {
+            pool2idx.put(entry.getKey(), n++);
         }
 
-        int idx = 0;
         MutableInt poolIdx = new MutableInt(0);
-        for (Map.Entry<String, List<LootSummary.SummaryEntry>> e : entryMap.entrySet()) {
-            String pool = e.getKey();
-            for (LootSummary.SummaryEntry entry : e.getValue()) {
-                if (!entry.stack().isEmpty()) {
-                    builder.addSlot(RecipeIngredientRole.OUTPUT, 28 + (idx % 7 * 18), 5 + idx / 7 * 24)
-                            .addItemStack(entry.stack())
-                            .addRichTooltipCallback((recipeSlotView, tooltip) -> {
-                                if (nPools > 1) {
-                                    Component poolComp = Component.literal(pool).withStyle(poolColor(pool2idx.getOrDefault(pool, 0)));
-                                    tooltip.add(Component.translatable("ftbstuff.jei.loot_summary.pool", poolComp)
-                                            .withStyle(ChatFormatting.GRAY));
-                                }
-                            });
-                    if (idx++ >= MAX_DISPLAYABLE) {
-                        return;
+        for (var entry : poolMap.entrySet()) {
+            String poolName = entry.getKey();
+            for (LootSummary.SummaryEntry summaryEntry : entry.getValue()) {
+                if (!summaryEntry.stack().isEmpty()) {
+                    if (nItems < MAX_DISPLAYABLE_IDX) {
+                        builder.addSlot(RecipeIngredientRole.OUTPUT, 28 + (nItems % 7 * 18), 5 + nItems / 7 * 24)
+                                .addItemStack(summaryEntry.stack())
+                                .addRichTooltipCallback((recipeSlotView, tooltip) -> {
+                                    if (nPools > 1) {
+                                        Component poolComp = Component.literal(poolName).withStyle(poolColor(pool2idx.getOrDefault(poolName, 0)));
+                                        tooltip.add(Component.translatable("ftbstuff.jei.loot_summary.pool", poolComp)
+                                                .withStyle(ChatFormatting.GRAY));
+                                    }
+                                });
                     }
+                    nItems++;
                 }
             }
             poolIdx.increment();
@@ -92,33 +95,39 @@ public class LootSummaryCategory extends BaseStuffCategory<WrappedLootSummary> {
                 i++;
             }
         }
+        if (mouseX >= 5 && mouseX <= 21 && mouseY >= 110 && mouseY <= 126) {
+            tooltip.add(Component.translatable("ftbstuff.jei.loot_summary.too_many", (nItems - MAX_DISPLAYABLE_IDX) + 1));
+        }
     }
 
     @Override
     public void draw(WrappedLootSummary recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
 
-        Map<String, List<LootSummary.SummaryEntry>> poolMap = recipe.summary().entryMap();
+        var poolMap = recipe.summary().entryMap();
 
         if (poolMap.keySet().size() > 1) {
             // multiple pools
             guiGraphics.blit(ResourceLocation.parse("ftblibrary:textures/icons/info.png"), 5, 25, 0, 0, 16, 16, 16, 16);
         }
+        if (nItems >= MAX_DISPLAYABLE_IDX) {
+            guiGraphics.blit(ResourceLocation.withDefaultNamespace("textures/gui/sprites/icon/unseen_notification.png"), 5, 110, 0, 0, 16, 16, 16, 16);
+        }
 
         int idx = 0;
         int poolIdx = 0;
-        for (Map.Entry<String, List<LootSummary.SummaryEntry>> e : poolMap.entrySet()) {
-            for (LootSummary.SummaryEntry entry :  e.getValue()) {
-                if (!entry.stack().isEmpty()) {
+        for (var entryList : poolMap.values()) {
+            for (LootSummary.SummaryEntry summaryEntry : entryList) {
+                if (!summaryEntry.stack().isEmpty()) {
                     PoseStack stack = guiGraphics.pose();
                     stack.pushPose();
                     //noinspection IntegerDivisionInFloatingPointContext
                     stack.translate(36 + (idx % 7 * 18), 23.5f + (idx / 7 * 24), 100);  // int division is what we need here
                     stack.scale(.5F, .5F, 1F);
-                    String weightStr = String.format("%.2f%%", entry.weight() * 100f);
+                    String weightStr = String.format("%.2f%%", summaryEntry.weight() * 100f);
                     guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.literal(weightStr).withStyle(poolColor(poolIdx)), 0, 0, 0xFFFFFF);
                     stack.popPose();
-                    if (idx++ >= MAX_DISPLAYABLE) {
+                    if (idx++ >= MAX_DISPLAYABLE_IDX) {
                         return;
                     }
                 }

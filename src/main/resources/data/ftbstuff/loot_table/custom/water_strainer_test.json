@@ -52,6 +52,14 @@
         {
           "type": "minecraft:loot_table",
           "value": "minecraft:gameplay/fishing/fish"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "minecraft:gameplay/fishing/junk"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "minecraft:chests/ancient_city"
         }
       ]
     },
