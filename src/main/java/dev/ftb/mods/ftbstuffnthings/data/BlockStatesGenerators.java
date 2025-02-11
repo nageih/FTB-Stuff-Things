@@ -2,7 +2,6 @@ package dev.ftb.mods.ftbstuffnthings.data;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
-import dev.ftb.mods.ftbstuffnthings.blocks.jar.JarAutomaterBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.pump.PumpBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlock;
@@ -11,7 +10,6 @@ import dev.ftb.mods.ftbstuffnthings.client.model.TubeModel;
 import dev.ftb.mods.ftbstuffnthings.items.MeshType;
 import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
 import dev.ftb.mods.ftbstuffnthings.temperature.Temperature;
-import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
@@ -25,7 +23,6 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -170,22 +167,7 @@ public class BlockStatesGenerators extends BlockStateProvider {
         });
 
         // Jar auto processing block
-        EnumMap<Direction, IntIntPair> rots = Util.make(new EnumMap<>(Direction.class), map -> {
-            map.put(Direction.UP, IntIntPair.of(180, 0));
-            map.put(Direction.NORTH, IntIntPair.of(90, 180));
-            map.put(Direction.SOUTH, IntIntPair.of(90, 0));
-            map.put(Direction.WEST, IntIntPair.of(90, 90));
-            map.put(Direction.EAST, IntIntPair.of(90, 270));
-        });
-        MultiPartBlockStateBuilder apBuilder = getMultipartBuilder(BlocksRegistry.JAR_AUTOMATER.get());
-        apBuilder.part().modelFile(models().getExistingFile(modLoc("block/auto_processing_block"))).addModel();
-        JarAutomaterBlock.CONN_PROPS.forEach((dir, prop) -> {
-            apBuilder.part().modelFile(models().getExistingFile(modLoc("block/tube_base")))
-                    .rotationX(rots.get(dir).firstInt())
-                    .rotationY(rots.get(dir).secondInt())
-                    .addModel()
-                    .condition(prop, true);
-        });
+        simpleBlock(BlocksRegistry.JAR_AUTOMATER.get(), models().getExistingFile(modLoc("block/auto_processing_block")));
 
         // Crates & Barrels
         BlocksRegistry.BARRELS.forEach((block) -> {

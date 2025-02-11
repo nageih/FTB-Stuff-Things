@@ -2,8 +2,6 @@ package dev.ftb.mods.ftbstuffnthings.blocks.jar;
 
 import dev.ftb.mods.ftbstuffnthings.blocks.tube.ITubeConnectable;
 import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
-import dev.ftb.mods.ftbstuffnthings.util.DirectionUtil;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -17,7 +15,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
@@ -27,25 +24,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
-
 public class JarAutomaterBlock extends Block implements ITubeConnectable {
     public static final VoxelShape SHAPE = box(3, 0, 3, 13, 13, 13);
-
-    public static final EnumMap<Direction,BooleanProperty> CONN_PROPS = Util.make(new EnumMap<>(Direction.class), map -> {
-        for (Direction direction : DirectionUtil.VALUES) {
-            // note: no connection property for DOWN
-            if (direction != Direction.DOWN) {
-                map.put(direction, BooleanProperty.create(direction.getName().substring(0, 1)));
-            }
-        }
-    });
 
     public JarAutomaterBlock() {
         super(Properties.of().mapColor(MapColor.METAL).strength(5F, 6F).sound(SoundType.METAL));
 
         BlockState state = stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false);
-        CONN_PROPS.keySet().forEach(direction -> state.setValue(CONN_PROPS.get(direction), false));
         registerDefaultState(state);
     }
 
@@ -59,7 +44,6 @@ public class JarAutomaterBlock extends Block implements ITubeConnectable {
         super.createBlockStateDefinition(builder);
 
         builder.add(BlockStateProperties.WATERLOGGED);
-        CONN_PROPS.keySet().forEach(direction -> builder.add(CONN_PROPS.get(direction)));
     }
 
     @Override
@@ -73,23 +57,14 @@ public class JarAutomaterBlock extends Block implements ITubeConnectable {
             level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
 
-        return direction != Direction.DOWN && level instanceof Level l ?
-                state.setValue(CONN_PROPS.get(direction), ITubeConnectable.canConnect(l, neighborPos, direction.getOpposite())) :
-                state;
+        return state;
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        BlockState state = defaultBlockState();
-
-        for (Direction direction : CONN_PROPS.keySet()) {
-            state = state.setValue(CONN_PROPS.get(direction), ITubeConnectable.canConnect(level, pos.relative(direction), direction.getOpposite()));
-        }
-
-        return state.setValue(BlockStateProperties.WATERLOGGED, level.getFluidState(pos).getType() == Fluids.WATER);
+        return defaultBlockState().setValue(BlockStateProperties.WATERLOGGED,
+                context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
     }
 
     @Override

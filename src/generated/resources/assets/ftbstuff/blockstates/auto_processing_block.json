@@ -1,57 +1,7 @@
 {
-  "multipart": [
-    {
-      "apply": {
-        "model": "ftbstuff:block/auto_processing_block"
-      }
-    },
-    {
-      "apply": {
-        "model": "ftbstuff:block/tube_base",
-        "x": 180
-      },
-      "when": {
-        "u": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "ftbstuff:block/tube_base",
-        "x": 90,
-        "y": 180
-      },
-      "when": {
-        "n": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "ftbstuff:block/tube_base",
-        "x": 90
-      },
-      "when": {
-        "s": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "ftbstuff:block/tube_base",
-        "x": 90,
-        "y": 90
-      },
-      "when": {
-        "w": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "ftbstuff:block/tube_base",
-        "x": 90,
-        "y": 270
-      },
-      "when": {
-        "e": "true"
-      }
+  "variants": {
+    "": {
+      "model": "ftbstuff:block/auto_processing_block"
     }
-  ]
+  }
 }
