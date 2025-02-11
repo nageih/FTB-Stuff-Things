@@ -21,6 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -29,6 +30,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
@@ -44,6 +47,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -341,6 +345,11 @@ public class TemperedJarBlockEntity extends BlockEntity implements MenuProvider 
                 outputsFull = true;
             }
 
+            if (!hasAutoProcessing()) {
+                level.playSound(null, getBlockPos(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1f, 1.2f + level.random.nextFloat() * 0.4f);
+                Vec3 vec = Vec3.atBottomCenterOf(getBlockPos().above());
+                ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE, vec.x, vec.y + 0.2, vec.z, 5, 0, 0, 0, 0.01);
+            }
             setRemainingTime(!outputsFull && hasAutoProcessing() && recipe.canRepeat() ? processingTime : STOPPED);
         }
     }
