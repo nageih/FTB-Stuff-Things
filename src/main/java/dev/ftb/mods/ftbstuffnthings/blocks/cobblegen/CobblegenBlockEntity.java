@@ -95,16 +95,7 @@ public class CobblegenBlockEntity extends BlockEntity {
     }
 
     private boolean hasSpaceInInventory(IItemHandler inventory) {
-        for (int i = 0; i < inventory.getSlots(); i++) {
-            ItemStack stack = inventory.getStackInSlot(i);
-            if (stack.isEmpty()) {
-                return true;
-            }
-            if (inventory.getStackInSlot(i).is(Items.COBBLESTONE) && stack.getCount() < stack.getMaxStackSize()) {
-                return true;
-            }
-        }
-        return false;
+        return ItemHandlerHelper.insertItem(inventory, Items.COBBLESTONE.getDefaultInstance(), true).isEmpty();
     }
 
     @Override
