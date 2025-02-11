@@ -121,14 +121,15 @@ Makes lit campfires act as a hot temperature source.
 
 ## Support
 
-If you have any issues with this mod, please report them on our [Issue Tracker](https://go.ftb.team/support-mod-issues). We also accept feature requests on our issue tracker as well 🎉.
+- For **Modpack** issues, please go here: https://go.ftb.team/support-modpack
+- For **Mod** issues, please go here: https://go.ftb.team/support-mod-issues
+- Just got a question? Check out our Discord: https://go.ftb.team/discord
 
-## Contributing
+## Licence
 
-Although this mod is not a 'true' open source mod, we do still accept contributions as long as you are willing to sign a contributor agreement. The contributor agreement is a simple agreement that provides FTB ownership over the code you have contributed. This is to ensure that we can continue to provide this code in a 'visible-source' state as well as holding the rights to change the license in the future freely.
+All Rights Reserved to Feed The Beast Ltd. Source code is `visible source`, please see our [LICENSE.md](/LICENSE.md) for more information. Any Pull Requests made to this mod must have the CLA (Contributor Licence Agreement) signed and agreed to before the request will be considered.
 
-The contributor agreement is provided upon creating a pull request. If you have any questions, please contact us on our [Discord Server](https://go.ftb.team/discord) or via our email at `admin(at)feed-the-beast(dot)com`
+## Keep up to date
 
-## License
+[![](https://cdn.feed-the-beast.com/assets/socials/icons/social-discord.webp)](https://go.ftb.team/discord) [![](https://cdn.feed-the-beast.com/assets/socials/icons/social-github.webp)](https://go.ftb.team/github) [![](https://cdn.feed-the-beast.com/assets/socials/icons/social-twitter-x.webp)](https://go.ftb.team/twitter) [![](https://cdn.feed-the-beast.com/assets/socials/icons/social-youtube.webp)](https://go.ftb.team/youtube) [![](https://cdn.feed-the-beast.com/assets/socials/icons/social-twitch.webp)](https://go.ftb.team/twitch) [![](https://cdn.feed-the-beast.com/assets/socials/icons/social-instagram.webp)](https://go.ftb.team/instagram) [![](https://cdn.feed-the-beast.com/assets/socials/icons/social-facebook.webp)](https://go.ftb.team/facebook) [![](https://cdn.feed-the-beast.com/assets/socials/icons/social-tiktok.webp)](https://go.ftb.team/tiktok)
 
-All rights reserved. We provide this source code in an 'as-is', 'visible-source' state for transparency and educational purposes. You may not use this code in any way, shape or form without our explicit permission.
