@@ -288,6 +288,10 @@ public class AutoHammerBlockEntity extends BlockEntity {
         return maxTimeout;
     }
 
+    public void clearCapabilityCaches() {
+        inputCache = outputCache = null;
+    }
+
     public static class Iron extends AutoHammerBlockEntity {
         public Iron(BlockPos pos, BlockState blockState) {
             super(BlockEntitiesRegistry.IRON_HAMMER.get(), AutoHammerProperties.IRON, pos, blockState);
