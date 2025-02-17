@@ -72,7 +72,7 @@ public class AutoHammerBlockEntity extends BlockEntity {
     }
 
     public void tickClient() {
-        if (!processingStack.isEmpty() && level != null) {
+        if (!processingStack.isEmpty() && level != null && getBlockState().getValue(AbstractMachineBlock.ACTIVE)) {
             if (++displayProgress >= props.getHammerSpeed()) {
                 displayProgress = 0;
                 if (processingStack.getItem() instanceof BlockItem blockItem) {
@@ -201,6 +201,10 @@ public class AutoHammerBlockEntity extends BlockEntity {
                     overflow.addLast(excess);
                 }
             }
+        } else {
+            for (ItemStack output : outputs) {
+                overflow.addLast(output.copy());
+            }
         }
         return overflow.isEmpty();
     }
@@ -286,6 +290,10 @@ public class AutoHammerBlockEntity extends BlockEntity {
 
     public int getMaxTimeout() {
         return maxTimeout;
+    }
+
+    public void clearCapabilityCaches() {
+        inputCache = outputCache = null;
     }
 
     public static class Iron extends AutoHammerBlockEntity {

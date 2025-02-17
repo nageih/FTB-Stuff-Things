@@ -53,10 +53,15 @@ public class SluiceRecipe extends BaseRecipe<SluiceRecipe> {
         return fluid;
     }
 
-    public boolean testFluid(FluidStack toCheck, boolean checkAmount) {
-        return fluid.map(ingr ->
-                checkAmount ? ingr.test(toCheck) : ingr.ingredient().test(toCheck)
+    public boolean testFluid(FluidStack toCheck, boolean checkAmount, double fluidModifier) {
+        return fluid.map(ingr -> checkAmount ?
+                ingr.test(toCheck.copyWithAmount((int) (toCheck.getAmount() / fluidModifier))) :
+                ingr.ingredient().test(toCheck)
         ).orElse(true);
+    }
+
+    public boolean testFluid(FluidStack toCheck, boolean checkAmount) {
+        return testFluid(toCheck, checkAmount, 1.0);
     }
 
     public float getProcessingTimeMultiplier() {
