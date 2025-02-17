@@ -60,6 +60,7 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.jei.loot_summary", "Loot Table Information");
         add("ftbstuff.jei.loot_summary.pool", "Pool: %s");
         add("ftbstuff.jei.loot_summary.pool_header", "Loot table has %d loot pools:");
+        add("ftbstuff.jei.loot_summary.too_many", "%s more loot entries are not displayed");
         add("config.jade.plugin_ftbstuff.autohammer", "Autohammer");
         add("config.jade.plugin_ftbstuff.pump", "Pump");
         add("block.ftbstuff.fusing_machine.tooltip", "Used to fuse items together to produce new results");

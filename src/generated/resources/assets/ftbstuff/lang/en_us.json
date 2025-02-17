@@ -117,6 +117,7 @@
   "ftbstuff.jei.loot_summary": "Loot Table Information",
   "ftbstuff.jei.loot_summary.pool": "Pool: %s",
   "ftbstuff.jei.loot_summary.pool_header": "Loot table has %d loot pools:",
+  "ftbstuff.jei.loot_summary.too_many": "%s more loot entries are not displayed",
   "ftbstuff.making": "Making:",
   "ftbstuff.processing_time": "Processing time: %d sec",
   "ftbstuff.sluice": "Sluice",
