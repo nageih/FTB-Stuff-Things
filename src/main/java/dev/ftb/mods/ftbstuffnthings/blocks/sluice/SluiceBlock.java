@@ -9,6 +9,7 @@ import dev.ftb.mods.ftbstuffnthings.blocks.SerializableComponentsProvider;
 import dev.ftb.mods.ftbstuffnthings.items.MeshItem;
 import dev.ftb.mods.ftbstuffnthings.items.MeshType;
 import dev.ftb.mods.ftbstuffnthings.registry.ComponentsRegistry;
+import dev.ftb.mods.ftbstuffnthings.util.TextUtil;
 import dev.ftb.mods.ftbstuffnthings.util.VoxelShapeUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -292,11 +293,28 @@ public class SluiceBlock extends AbstractMachineBlock implements EntityBlock, Se
         boolean isShift = Screen.hasShiftDown();
 
         // TOOD: Translate
-        tooltip.add(Component.empty()
-                .append(Component.literal(" (Shift)").withStyle(isShift ? ChatFormatting.DARK_GRAY : ChatFormatting.GRAY))
-                .withStyle(ChatFormatting.BLUE));
+//        tooltip.add(Component.empty()
+//                .append(Component.literal(" (Shift)").withStyle(isShift ? ChatFormatting.DARK_GRAY : ChatFormatting.GRAY))
+//                .withStyle(ChatFormatting.BLUE));
 
         if (isShift) {
+            tooltip.add(Component.translatable("ftbstuff.sluice.props.processing_time",
+                    Component.literal(props.get().timeMod().get() + "").withStyle(TextUtil.COLOUR_HIGHLIGHT))
+                    .withStyle(ChatFormatting.GRAY)
+            );
+            tooltip.add(Component.translatable("ftbstuff.sluice.props.fluid_usage",
+                            Component.literal(props.get().fluidMod().get() + "").withStyle(TextUtil.COLOUR_HIGHLIGHT))
+                    .withStyle(ChatFormatting.GRAY)
+            );
+            tooltip.add(Component.translatable("ftbstuff.sluice.props.tank",
+                            Component.literal(props.get().tankCap().get() + "").withStyle(TextUtil.COLOUR_HIGHLIGHT))
+                    .withStyle(ChatFormatting.GRAY)
+            );
+            tooltip.add(Component.translatable("ftbstuff.sluice.props.auto",
+                    Component.translatable("ftbstuff.sluice.props.auto.item").withStyle(TextUtil.ofBoolean(props.get().itemIO().get())),
+                    Component.translatable("ftbstuff.sluice.props.auto.fluid").withStyle(TextUtil.ofBoolean(props.get().fluidIO().get()))
+            ).withStyle(ChatFormatting.GRAY));
+
 //            tooltip.add(Component.translatable("ftbsluice.properties.processing_time",
 //                    new TextComponent(props.timeMod.get() + "").withStyle(TextUtil.COLOUR_HIGHLIGHT)).withStyle(ChatFormatting.GRAY));
 //            tooltip.add(Component.translatable("ftbsluice.properties.fluid_usage",
@@ -313,7 +331,7 @@ public class SluiceBlock extends AbstractMachineBlock implements EntityBlock, Se
 //                tooltip.add(Component.translatable("ftbsluice.properties.upgradeable").withStyle(ChatFormatting.BLUE));
 //            }
         } else {
-//            tooltip.add(Component.translatable("ftbsluice.tooltip." + this.getName()).withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("ftbstuff.hold_shift").withStyle(ChatFormatting.GRAY));
         }
     }
 

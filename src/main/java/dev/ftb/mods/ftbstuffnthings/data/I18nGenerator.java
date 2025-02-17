@@ -69,6 +69,13 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.advancement.root.desc", "Just a collection of useful stuff... and things");
         add("ftbstuff.advancement.supercharged", "Supercharged");
         add("ftbstuff.advancement.supercharged.desc", "Over-wind a Pump and suffer the consequences");
+        add("ftbstuff.hold_shift", "Hold Shift for more info");
+        add("ftbstuff.sluice.props.processing_time", "Processing Time: %sx");
+        add("ftbstuff.sluice.props.fluid_usage", "Fluid Usage Multiplier: %sx");
+        add("ftbstuff.sluice.props.tank", "Fluid Tank Capacity: %smB");
+        add("ftbstuff.sluice.props.auto", "Allows automation of: %s | %s");
+        add("ftbstuff.sluice.props.auto.fluid", "Fluids");
+        add("ftbstuff.sluice.props.auto.item", "Items");
 
         addBlock(BlocksRegistry.OAK_SLUICE, "Oak Sluice");
         addBlock(BlocksRegistry.IRON_SLUICE, "Iron Sluice");
