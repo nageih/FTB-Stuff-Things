@@ -72,7 +72,7 @@ public class AutoHammerBlockEntity extends BlockEntity {
     }
 
     public void tickClient() {
-        if (!processingStack.isEmpty() && level != null) {
+        if (!processingStack.isEmpty() && level != null && getBlockState().getValue(AbstractMachineBlock.ACTIVE)) {
             if (++displayProgress >= props.getHammerSpeed()) {
                 displayProgress = 0;
                 if (processingStack.getItem() instanceof BlockItem blockItem) {
