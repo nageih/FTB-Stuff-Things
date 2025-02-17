@@ -112,7 +112,7 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
                         // TODO consumption upgrade
                         // This is safe to assume we have the fluid as you can only insert fluid to this tank,
                         //   and we checked it before starting the processing
-                        fluidTank.drain(fluid.amount(), IFluidHandler.FluidAction.EXECUTE);
+                        fluidTank.drain((int) (fluid.amount() * getProps().fluidMod().get()), IFluidHandler.FluidAction.EXECUTE);
                     });
 
                     energyStorage.extractEnergy(getProps().energyCost().get(), false);
@@ -132,7 +132,7 @@ public abstract class SluiceBlockEntity extends AbstractMachineBlockEntity {
                 getRecipeFor(inputStack).ifPresentOrElse(
                         recipe -> {
                             // Recipe found, but also make sure there's enough fluid and (possibly) energy in the sluice
-                            if (hasEnoughEnergy() && recipe.value().testFluid(fluidTank.getFluid(), true)) {
+                            if (hasEnoughEnergy() && recipe.value().testFluid(fluidTank.getFluid(), true, getProps().fluidMod().get())) {
                                 // TODO speed upgrade
                                 double time = BASE_PROCESSING_TIME * getProps().timeMod().get() * recipe.value().getProcessingTimeMultiplier();
                                 processingTime = Math.max(1, (int) time);
