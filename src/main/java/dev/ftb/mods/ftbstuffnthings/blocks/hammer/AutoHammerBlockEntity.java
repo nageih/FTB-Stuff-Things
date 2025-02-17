@@ -201,6 +201,10 @@ public class AutoHammerBlockEntity extends BlockEntity {
                     overflow.addLast(excess);
                 }
             }
+        } else {
+            for (ItemStack output : outputs) {
+                overflow.addLast(output.copy());
+            }
         }
         return overflow.isEmpty();
     }
