@@ -63,7 +63,7 @@ public class LootSummaryCategory extends BaseStuffCategory<WrappedLootSummary> {
             String poolName = entry.getKey();
             for (LootSummary.SummaryEntry summaryEntry : entry.getValue()) {
                 if (!summaryEntry.stack().isEmpty()) {
-                    if (nItems < MAX_DISPLAYABLE_IDX) {
+                    if (nItems <= MAX_DISPLAYABLE_IDX) {
                         builder.addSlot(RecipeIngredientRole.OUTPUT, 28 + (nItems % 7 * 18), 5 + nItems / 7 * 24)
                                 .addItemStack(summaryEntry.stack())
                                 .addRichTooltipCallback((recipeSlotView, tooltip) -> {

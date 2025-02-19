@@ -60,7 +60,7 @@ public class AutoHammerBlock extends Block implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return defaultBlockState()
-                .setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection())
                 .setValue(BlockStateProperties.ENABLED, true);
     }
 
@@ -115,7 +115,8 @@ public class AutoHammerBlock extends Block implements EntityBlock {
     @Override
     public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation direction) {
         if (level.getBlockEntity(pos) instanceof AutoHammerBlockEntity autoHammer) {
-            autoHammer.clearCapabilityCaches();
+            autoHammer.invalidateCapabilities();  // what other things know about our caps
+            autoHammer.clearCapabilityCaches();   // what we know about other things' caps
         }
         return state.setValue(BlockStateProperties.HORIZONTAL_FACING, direction.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
     }

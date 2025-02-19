@@ -77,6 +77,8 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.sluice.props.auto", "Allows automation of: %s | %s");
         add("ftbstuff.sluice.props.auto.fluid", "Fluids");
         add("ftbstuff.sluice.props.auto.item", "Items");
+        add("ftbstuff.autohammer.waiting", "Waiting...");
+        add("ftbstuff.autohammer.running", "Running");
 
         addBlock(BlocksRegistry.OAK_SLUICE, "Oak Sluice");
         addBlock(BlocksRegistry.IRON_SLUICE, "Iron Sluice");

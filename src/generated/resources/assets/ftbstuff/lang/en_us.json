@@ -99,6 +99,8 @@
   "ftbstuff.advancement.supercharged": "Supercharged",
   "ftbstuff.advancement.supercharged.desc": "Over-wind a Pump and suffer the consequences",
   "ftbstuff.any_block": "Any Block",
+  "ftbstuff.autohammer.running": "Running",
+  "ftbstuff.autohammer.waiting": "Waiting...",
   "ftbstuff.crook.limit": "Max drops per block broken: %s",
   "ftbstuff.dripper.chance": "Chance: %s%% / sec",
   "ftbstuff.dripper.consume_on_fail": "Fluid is consumed even on failed attempt",

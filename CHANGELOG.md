@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.6]
+
+### Fixed
+* Fixed loot table summary in JEI not drawing items in the last slot
+* Auto-Hammers can now output to other Auto-Hammers; an inventory in between is no longer required (but still works)
+* Reversed orientation when placing down Auto-Hammer blocks so input is to the left and output is to the right
+* Drippers now autofill themselves from a water source block placed directly above
+  * Note: only water works like this, not any other fluids
+
 ## [21.1.5]
 
 ### Fixed
