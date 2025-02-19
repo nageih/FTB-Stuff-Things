@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbstuffnthings;
 
 import com.mojang.logging.LogUtils;
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
+import dev.ftb.mods.ftbstuffnthings.blocks.hammer.AutoHammerBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.jar.TemperedJarBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.blocks.strainer.WaterStrainerBlockEntity;
@@ -144,6 +145,11 @@ public class FTBStuffNThings {
         List.of(BlockEntitiesRegistry.OAK_SLUICE, BlockEntitiesRegistry.IRON_SLUICE,
                 BlockEntitiesRegistry.DIAMOND_SLUICE, BlockEntitiesRegistry.NETHERITE_SLUICE).forEach(sluice -> {
             SluiceBlockEntity.registerCapabilities(event, sluice.get());
+        });
+
+        List.of(BlockEntitiesRegistry.IRON_HAMMER, BlockEntitiesRegistry.GOLD_HAMMER,
+                BlockEntitiesRegistry.DIAMOND_HAMMER, BlockEntitiesRegistry.NETHERITE_HAMMER).forEach(hammer -> {
+            AutoHammerBlockEntity.registerCapabilities(event, hammer.get());
         });
 
         event.registerItem(

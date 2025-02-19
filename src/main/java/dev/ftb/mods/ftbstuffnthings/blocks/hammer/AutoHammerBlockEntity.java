@@ -21,16 +21,21 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.ForwardingItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class AutoHammerBlockEntity extends BlockEntity {
     private final AutoHammerProperties props;
-    private final AutoHammerItemHandler inputHandler = new AutoHammerItemHandler();
+    private final AutoHammerItemHandler itemHandler = new AutoHammerItemHandler();
+    private final InputHandler inputHandler = new InputHandler(itemHandler);
 
     private boolean active;
     private int progress;
@@ -38,13 +43,29 @@ public class AutoHammerBlockEntity extends BlockEntity {
     private ItemStack processingStack = ItemStack.EMPTY;
     private int timeout = 0;
     private int maxTimeout;
-    private final Deque<ItemStack> overflow = new ArrayDeque<>(); // output items which won't fit into output inv
+    private final List<ItemStack> overflow = new ArrayList<>(); // output items which won't fit into output inv
+    private final OutputHandler outputHandler = new OutputHandler(overflow);
     private BlockCapabilityCache<IItemHandler, Direction> inputCache;
     private BlockCapabilityCache<IItemHandler, Direction> outputCache;
 
     protected AutoHammerBlockEntity(BlockEntityType<?> type, AutoHammerProperties props, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
         this.props = props;
+    }
+
+    public static void registerCapabilities(RegisterCapabilitiesEvent event, BlockEntityType<? extends AutoHammerBlockEntity> machine) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, machine, AutoHammerBlockEntity::getItemHandler);
+    }
+
+    private IItemHandler getItemHandler(Direction side) {
+        Direction dir = getInputDirection(getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING));
+        if (side == dir) {
+            return inputHandler;
+        } else if (side == dir.getOpposite()) {
+            return outputHandler;
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -87,12 +108,13 @@ public class AutoHammerBlockEntity extends BlockEntity {
             return;
         }
 
-        ItemStack inputStack = inputHandler.getStackInSlot(0);
+        ItemStack inputStack = itemHandler.getStackInSlot(0);
 
         ItemStack prevProcessingStack = processingStack.copy();
         if (timeout > 0) {
             // on cooldown
             timeout--;
+            if (timeout == 0) maxTimeout = 0;
         } else if (!overflow.isEmpty()) {
             // try to empty the overflow before doing anything else
             List<ItemStack> retry = new ArrayList<>(overflow);
@@ -108,20 +130,20 @@ public class AutoHammerBlockEntity extends BlockEntity {
                     // nothing in input, cool down for a bit before checking again
                     goOnTimeout(20);
                 } else {
-                    inputStack = inputHandler.getStackInSlot(0);
+                    inputStack = itemHandler.getStackInSlot(0);
                 }
             }
             if (!inputStack.isEmpty()) {
                 List<ItemStack> hammerDrops = ToolsRecipeCache.getHammerDrops(level, inputStack);
                 if (!hammerDrops.isEmpty()) {
-                    processingStack = inputHandler.extractItem(0, 1, false);
+                    processingStack = itemHandler.extractItem(0, 1, false);
                     progress = 1;
                     active = true;
                     setChanged();
                 } else {
                     // invalid item, shouldn't happen!
                     Block.popResource(getLevel(), getBlockPos().above(), inputStack);
-                    inputHandler.setStackInSlot(0, ItemStack.EMPTY);
+                    itemHandler.setStackInSlot(0, ItemStack.EMPTY);
                     goOnTimeout(20);
                 }
             }
@@ -132,14 +154,15 @@ public class AutoHammerBlockEntity extends BlockEntity {
             } else {
                 // completed one cycle, try to move output to adjacent inventory
                 List<ItemStack> hammerDrops = ToolsRecipeCache.getHammerDrops(level, processingStack);
+                progress = 0;
                 if (tryPushToOutput(hammerDrops)) {
                     // done!
-                    progress = 0;
                     setChanged();
                 } else {
                     // nowhere to send the outputs, stall for a bit and try again
                     goOnTimeout(30);
                 }
+                processingStack = ItemStack.EMPTY;
             }
         }
 
@@ -162,14 +185,15 @@ public class AutoHammerBlockEntity extends BlockEntity {
         }
 
         IItemHandler src = inputCache.getCapability();
-        if (src != null) {
+        // we don't pull from other auto-hammers, since they push output anyway
+        if (src != null && !(src instanceof OutputHandler)) {
             // TODO remember last slot successfully pulled from and try there first (optimisation)
             for (int i = 0; i < src.getSlots(); i++) {
                 ItemStack stack = src.getStackInSlot(i);
                 if (ToolsRecipeCache.hammerable(stack)) {
                     ItemStack in = src.extractItem(i, 1, true);
                     if (!in.isEmpty()) {
-                        if (inputHandler.insertItem(0, in, false).isEmpty()) {
+                        if (itemHandler.insertItem(0, in, false).isEmpty()) {
                             src.extractItem(i, 1, false);
                             return true;
                         }
@@ -222,7 +246,7 @@ public class AutoHammerBlockEntity extends BlockEntity {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
 
-        inputHandler.deserializeNBT(registries, tag.getCompound("Input"));
+        itemHandler.deserializeNBT(registries, tag.getCompound("Input"));
         active = tag.getBoolean("Active");
         progress = tag.getInt("Progress");
         processingStack = ItemStack.parseOptional(registries, tag.getCompound("ProcessingStack"));
@@ -240,21 +264,21 @@ public class AutoHammerBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
 
-        tag.put("Input", inputHandler.serializeNBT(registries));
+        tag.put("Input", itemHandler.serializeNBT(registries));
         if (active) tag.putBoolean("Active", true);
         if (progress != 0) tag.putInt("Progress", progress);
         if (!processingStack.isEmpty()) tag.put("ProcessingStack", processingStack.save(registries));
         if (!overflow.isEmpty()) {
             ItemStackHandler o = new ItemStackHandler(overflow.size());
             for (int i = 0; i < overflow.size(); i++) {
-                o.setStackInSlot(i, overflow.pollFirst());
+                o.setStackInSlot(i, overflow.get(i));
             }
             tag.put("Overflow", o.serializeNBT(registries));
         }
     }
 
     public void dropInventoryOnBreak() {
-        ItemStack stack = inputHandler.getStackInSlot(0);
+        ItemStack stack = itemHandler.getStackInSlot(0);
         if (!stack.isEmpty()) {
             Block.popResource(getLevel(), getBlockPos(), stack);
         }
@@ -338,6 +362,49 @@ public class AutoHammerBlockEntity extends BlockEntity {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
+        }
+    }
+
+    private static class InputHandler extends ForwardingItemHandler {
+        public InputHandler(IItemHandler delegate) {
+            super(delegate);
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            return ItemStack.EMPTY;
+        }
+    }
+
+    private record OutputHandler(List<ItemStack> overflow) implements IItemHandler {
+        @Override
+        public int getSlots() {
+            return overflow.size();
+        }
+
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            return overflow.get(slot);
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            return stack;
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            return overflow.isEmpty() ? ItemStack.EMPTY : (simulate ? overflow.getFirst() : overflow.removeFirst());
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return 64;
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return true;
         }
     }
 }

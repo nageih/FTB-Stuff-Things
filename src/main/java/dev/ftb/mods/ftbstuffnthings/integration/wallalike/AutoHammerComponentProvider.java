@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbstuffnthings.integration.wallalike;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.blocks.hammer.AutoHammerBlockEntity;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -25,6 +26,12 @@ enum AutoHammerComponentProvider implements IBlockComponentProvider, IServerData
 
     private static final ResourceLocation ID = FTBStuffNThings.id("autohammer");
 
+    private static final Component WAITING = Component.literal(" ")
+            .append(Component.translatable("ftbstuff.autohammer.waiting").withStyle(ChatFormatting.WHITE));
+    private static final Component RUNNING = Component.literal(" ")
+            .append(Component.translatable("ftbstuff.autohammer.running").withStyle(ChatFormatting.WHITE));
+
+
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
         CompoundTag serverData = blockAccessor.getServerData();
@@ -34,14 +41,14 @@ enum AutoHammerComponentProvider implements IBlockComponentProvider, IServerData
 
         var helper = IElementHelper.get();
         int timeout = serverData.getInt("timeout");
+        int maxTimeout = serverData.getInt("maxTimeout");
 
-        if (timeout == 0) {
+        if (maxTimeout == 0) {
             float progress = (float) serverData.getInt("progress") / (float) serverData.getInt("maxProgress");
-            iTooltip.add(helper.progress(progress, null, helper.progressStyle().color(0xAD00FF00), BoxStyle.getNestedBox(), false));
+            iTooltip.add(helper.progress(progress, RUNNING, helper.progressStyle().color(0xAD00FF00), BoxStyle.getNestedBox(), false));
         } else {
-            int maxTimeout = serverData.getInt("maxTimeout");
             float progress = (float) timeout / (float) maxTimeout;
-            iTooltip.add(helper.progress(progress, null, helper.progressStyle().color(0xADFF0000), BoxStyle.getNestedBox(), true));
+            iTooltip.add(helper.progress(progress, WAITING, helper.progressStyle().color(0xADFF0000), BoxStyle.getNestedBox(), true));
         }
 
         ItemStack processingStack = ItemStack.OPTIONAL_CODEC.parse(blockAccessor.nbtOps(), serverData.getCompound("processing")).result()
