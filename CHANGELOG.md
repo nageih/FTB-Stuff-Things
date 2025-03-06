@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * Added a Basalt Generator, similar to Cobblestone Generator
   * No recipe added for the block
+* Added ru_ru translation (thanks ~BazZziliuS)
 
 ### Fixed
 * Disabled wrench-rotation for Sluices, since they're a 2-part multiblock
