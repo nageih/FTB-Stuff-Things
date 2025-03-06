@@ -28,10 +28,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class CobblegenBlock extends Block implements EntityBlock {
+    private final IResourceGenProps props;
 
-    private final CobbleGenProperties props;
-
-    public CobblegenBlock(CobbleGenProperties props) {
+    public CobblegenBlock(IResourceGenProps props) {
         super(Properties.of().mapColor(MapColor.STONE).strength(1F, 1F).noOcclusion());
 
         this.props = props;
@@ -61,8 +60,8 @@ public class CobblegenBlock extends Block implements EntityBlock {
 
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof CobblegenBlockEntity cobbleGen && player.getMainHandItem().isEmpty()) {
-            ItemStack stack = cobbleGen.getInternalInventory().extractItem(0, 64, false);
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof BaseResourceGenBlockEntity baseGen && player.getMainHandItem().isEmpty()) {
+            ItemStack stack = baseGen.getInternalInventory().extractItem(0, 64, false);
             if (!stack.isEmpty()) {
                 player.addItem(stack);
                 player.level().playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.2f, 1f);
@@ -77,7 +76,7 @@ public class CobblegenBlock extends Block implements EntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, blockPos, blockState, t) -> {
-            if (t instanceof CobblegenBlockEntity tickable) {
+            if (t instanceof BaseResourceGenBlockEntity tickable) {
                 if (!level1.isClientSide()) {
                     tickable.tickServer();
                 }

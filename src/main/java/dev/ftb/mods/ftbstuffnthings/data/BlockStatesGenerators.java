@@ -25,6 +25,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -115,8 +116,8 @@ public class BlockStatesGenerators extends BlockStateProvider {
             }
         }
 
-        // Cobble generators
-        for (var block : List.of(BlocksRegistry.STONE_COBBLESTONE_GENERATOR, BlocksRegistry.IRON_COBBLESTONE_GENERATOR, BlocksRegistry.GOLD_COBBLESTONE_GENERATOR, BlocksRegistry.DIAMOND_COBBLESTONE_GENERATOR, BlocksRegistry.NETHERITE_COBBLESTONE_GENERATOR)) {
+        // Cobble & Basalt generators
+        Stream.concat(BlocksRegistry.COBBLEGENS.stream(), BlocksRegistry.BASALTGENS.stream()).forEach(block -> {
             MultiPartBlockStateBuilder b = getMultipartBuilder(block.get());
             String path = block.getId().getPath();
             for (DirRotation d : HORIZONTALS) {
@@ -124,8 +125,7 @@ public class BlockStatesGenerators extends BlockStateProvider {
                         .rotationY(d.rotation).addModel()
                         .condition(HORIZONTAL_FACING, d.direction);
             }
-        }
-
+        });
 
         // Fusing Machine & Super Cooler
         for (var block: List.of(BlocksRegistry.FUSING_MACHINE, BlocksRegistry.SUPER_COOLER)) {
