@@ -71,7 +71,7 @@ public class Config {
     public static final IntValue NETHERITE_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("netherite_cobblegen_amount", 64, 1, 1000)
             .comment("Amount of cobble the netherite cobblegen produces per tick");
 
-    private static final SNBTConfig BASALTGEN_CONFIG = CONFIG.addGroup("cobblegen");
+    private static final SNBTConfig BASALTGEN_CONFIG = CONFIG.addGroup("basaltgen");
     public static final IntValue BASALTGEN_TICK_RATE = BASALTGEN_CONFIG.addInt("basaltgen_tick_rate", 20, 1, Integer.MAX_VALUE)
             .comment("The delay between each cobble generation in ticks");
     public static final IntValue STONE_BASALTGEN_AMOUNT = BASALTGEN_CONFIG.addInt("stone_basaltgen_amount", 1, 1, 1000)
