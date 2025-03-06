@@ -43,11 +43,16 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.DIAMOND_HAMMER.get(), AutoHammerRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.NETHERITE_HAMMER.get(), AutoHammerRenderer::new);
 
-        event.registerBlockEntityRenderer(BlockEntitiesRegistry.STONE_COBBLEGEN.get(), CobblegenBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(BlockEntitiesRegistry.IRON_COBBLEGEN.get(), CobblegenBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(BlockEntitiesRegistry.GOLD_COBBLEGEN.get(), CobblegenBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(BlockEntitiesRegistry.DIAMOND_COBBLEGEN.get(), CobblegenBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(BlockEntitiesRegistry.NETHERITE_COBBLEGEN.get(), CobblegenBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.STONE_COBBLEGEN.get(), ResourcegenBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.IRON_COBBLEGEN.get(), ResourcegenBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.GOLD_COBBLEGEN.get(), ResourcegenBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.DIAMOND_COBBLEGEN.get(), ResourcegenBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.NETHERITE_COBBLEGEN.get(), ResourcegenBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.STONE_BASALT_GENERATOR.get(), ResourcegenBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.IRON_BASALT_GENERATOR.get(), ResourcegenBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.GOLD_BASALT_GENERATOR.get(), ResourcegenBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.DIAMOND_BASALT_GENERATOR.get(), ResourcegenBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.NETHERITE_BASALT_GENERATOR.get(), ResourcegenBlockEntityRenderer::new);
 
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.JAR.get(), JarBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.TEMPERED_JAR.get(), TemperedJarBlockEntityRenderer::new);

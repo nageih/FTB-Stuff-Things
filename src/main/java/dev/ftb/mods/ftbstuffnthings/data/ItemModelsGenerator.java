@@ -59,6 +59,11 @@ public class ItemModelsGenerator extends ItemModelProvider {
         withExistingParent("gold_cobblestone_generator", modLoc("block/gold_cobblestone_generator"));
         withExistingParent("diamond_cobblestone_generator", modLoc("block/diamond_cobblestone_generator"));
         withExistingParent("netherite_cobblestone_generator", modLoc("block/netherite_cobblestone_generator"));
+        withExistingParent("stone_basalt_generator", modLoc("block/stone_basalt_generator"));
+        withExistingParent("iron_basalt_generator", modLoc("block/iron_basalt_generator"));
+        withExistingParent("gold_basalt_generator", modLoc("block/gold_basalt_generator"));
+        withExistingParent("diamond_basalt_generator", modLoc("block/diamond_basalt_generator"));
+        withExistingParent("netherite_basalt_generator", modLoc("block/netherite_basalt_generator"));
 
         BlocksRegistry.waterStrainers().forEach(block -> {
             String type = block.get().getWoodType().name();

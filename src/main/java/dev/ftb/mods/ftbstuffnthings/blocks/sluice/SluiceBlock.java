@@ -31,10 +31,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -260,8 +257,10 @@ public class SluiceBlock extends AbstractMachineBlock implements EntityBlock, Se
         // If you break the funnel, reject and break the main block for the player
         if (state.getValue(PART) == Part.FUNNEL) {
             BlockPos endPos = pos.relative(direction.getOpposite());
-            level.destroyBlock(endPos, !level.isClientSide);
-            return false;
+            if (level.getBlockState(endPos).getBlock() instanceof SluiceBlock) {
+                level.destroyBlock(endPos, !level.isClientSide);
+                return false;
+            }
         }
 
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
@@ -340,6 +339,16 @@ public class SluiceBlock extends AbstractMachineBlock implements EntityBlock, Se
         if (getProps().energyCost().get() > 0) {
             list.add(ComponentsRegistry.STORED_ENERGY.get());
         }
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state;
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state;
     }
 
     public enum Part implements StringRepresentable {

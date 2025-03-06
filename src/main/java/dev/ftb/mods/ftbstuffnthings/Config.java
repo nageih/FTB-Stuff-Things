@@ -58,10 +58,8 @@ public class Config {
             .comment("Speed of the netherite auto-hammer as ticks taken to process a block");
 
     private static final SNBTConfig COBBLEGEN_CONFIG = CONFIG.addGroup("cobblegen");
-
-    public static final IntValue DELAY_PER_OPERATION = COBBLEGEN_CONFIG.addInt("cobblegen_tick_rate", 20, 1, Integer.MAX_VALUE)
+    public static final IntValue COBBLEGEN_TICK_RATE = COBBLEGEN_CONFIG.addInt("cobblegen_tick_rate", 20, 1, Integer.MAX_VALUE)
             .comment("The delay between each cobble generation in ticks");
-
     public static final IntValue STONE_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("stone_cobblegen_amount", 1, 1, 1000)
             .comment("Amount of cobble the stone cobblegen produces per tick");
     public static final IntValue IRON_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("iron_cobblegen_amount", 8, 1, 1000)
@@ -72,6 +70,20 @@ public class Config {
             .comment("Amount of cobble the diamond cobblegen produces per tick");
     public static final IntValue NETHERITE_COBBLEGEN_AMOUNT = COBBLEGEN_CONFIG.addInt("netherite_cobblegen_amount", 64, 1, 1000)
             .comment("Amount of cobble the netherite cobblegen produces per tick");
+
+    private static final SNBTConfig BASALTGEN_CONFIG = CONFIG.addGroup("cobblegen");
+    public static final IntValue BASALTGEN_TICK_RATE = BASALTGEN_CONFIG.addInt("basaltgen_tick_rate", 20, 1, Integer.MAX_VALUE)
+            .comment("The delay between each cobble generation in ticks");
+    public static final IntValue STONE_BASALTGEN_AMOUNT = BASALTGEN_CONFIG.addInt("stone_basaltgen_amount", 1, 1, 1000)
+            .comment("Amount of cobble the stone basaltgen produces per tick");
+    public static final IntValue IRON_BASALTGEN_AMOUNT = BASALTGEN_CONFIG.addInt("iron_basaltgen_amount", 8, 1, 1000)
+            .comment("Amount of cobble the iron basaltgen produces per tick");
+    public static final IntValue GOLD_BASALTGEN_AMOUNT = BASALTGEN_CONFIG.addInt("gold_basaltgen_amount", 16, 1, 1000)
+            .comment("Amount of cobble the gold basaltgen produces per tick");
+    public static final IntValue DIAMOND_BASALTGEN_AMOUNT = BASALTGEN_CONFIG.addInt("diamond_basaltgen_amount", 32, 1, 1000)
+            .comment("Amount of cobble the diamond basaltgen produces per tick");
+    public static final IntValue NETHERITE_BASALTGEN_AMOUNT = BASALTGEN_CONFIG.addInt("netherite_basaltgen_amount", 64, 1, 1000)
+            .comment("Amount of cobble the netherite basaltgen produces per tick");
 
     private static final SNBTConfig WATER_STRAINER_CONFIG = CONFIG.addGroup("water_strainer");
     public static final IntValue STRAINER_TICK_RATE = WATER_STRAINER_CONFIG.addInt("strainer_tick_rate", 20, 1, Integer.MAX_VALUE)
