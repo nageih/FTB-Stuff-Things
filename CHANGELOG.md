@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.9]
+
+### Added
+* More wooden Sluice types; there are now Sluices for every vanilla wood type
+
+### Changed
+* Cleaned up some block model JSONs, better block model re-use and more datagen (no player visible changes)
+
 ## [21.1.8]
 
 ### Fixed
