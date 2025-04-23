@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 * Cleaned up some block model JSONs, better block model re-use and more datagen (no player visible changes)
 
+### Fixed
+* Gracefully handle over-large itemstacks returned by attempting to insert into some modded storage blocks
+
 ## [21.1.8]
 
 ### Fixed
