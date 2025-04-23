@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 * More wooden Sluice types; there are now Sluices for every vanilla wood type
+* Added zh_cn translation (thanks @nageih)
 
 ### Changed
 * Cleaned up some block model JSONs, better block model re-use and more datagen (no player visible changes)
