@@ -222,7 +222,17 @@ public class AutoHammerBlockEntity extends BlockEntity {
                 //   https://github.com/FTBTesting/Testing-Issues/issues/2491
                 ItemStack excess = ItemHandlerHelper.insertItem(dest, stack.copy(), false);
                 if (!excess.isEmpty()) {
-                    overflow.addLast(excess);
+                    if (excess.getCount() > excess.getMaxStackSize()) {
+                        // thanks, Functional Storage! https://github.com/FTBTeam/FTB-Mods-Issues/issues/1603
+                        int nStacks = excess.getCount() / excess.getMaxStackSize();
+                        int remainder = excess.getCount() % excess.getMaxStackSize();
+                        for (int i = 0; i < nStacks; i++) {
+                            overflow.addLast(excess.copyWithCount(excess.getMaxStackSize()));
+                        }
+                        overflow.addLast(excess.copyWithCount(remainder));
+                    } else {
+                        overflow.addLast(excess);
+                    }
                 }
             }
         } else {
