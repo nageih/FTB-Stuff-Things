@@ -1,5 +1,6 @@
 package dev.ftb.mods.ftbstuffnthings.data;
 
+import dev.ftb.mods.ftblibrary.items.ModItems;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffTags;
 import dev.ftb.mods.ftbstuffnthings.blocks.hammer.AutoHammerBlock;
@@ -435,6 +436,20 @@ public class RecipesGenerator extends RecipeProvider {
                 new ItemStack(Blocks.GRAVEL, 64),
                 new ItemStack(Blocks.GRAVEL, 64)
         )).saveTest(output, FTBStuffNThings.id("gravel_from_deepslate"));
+        new HammerRecipeBuilder(Ingredient.of(BlocksRegistry.compressedBlocks("basalt").get(1)), List.of(
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 64),
+                new ItemStack(ItemsRegistry.CRUSHED_BASALT.get(), 25)
+        )).saveTest(output, FTBStuffNThings.id("crushed_basalt_2"));
     }
 
     private void fusingMachineRecipes(RecipeOutput output) {
