@@ -6,8 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [21.1.10]
 
+### Added
+* Added block tag support for Dripper recipe block inputs
+
 ### Changed
 * Mod archive file renamed for consistency. No functional changes.
+
+### Fixed
+* Dripper JEI recipe display now correctly shows output for fluid blocks (previously showed an empty slot)
 
 ## [21.1.9]
 
