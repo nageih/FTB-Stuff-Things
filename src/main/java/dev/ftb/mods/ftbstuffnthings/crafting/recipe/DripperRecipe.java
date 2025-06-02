@@ -3,31 +3,40 @@ package dev.ftb.mods.ftbstuffnthings.crafting.recipe;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.ftb.mods.ftbstuffnthings.crafting.BaseRecipe;
 import dev.ftb.mods.ftbstuffnthings.registry.RecipesRegistry;
 import dev.ftb.mods.ftbstuffnthings.util.MiscUtil;
+import net.minecraft.commands.arguments.blocks.BlockPredicateArgument;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DripperRecipe extends BaseRecipe<DripperRecipe> {
 	private final String inputStateStr;
-	private final Block inputBlock;
-	private final Map<Property<?>, Comparable<?>> inputProperties;
+	private final BlockPredicateArgument.Result inputPredicate;
 	private final String outputString;
 	private final BlockState outputState;
 	private final FluidStack fluid;
@@ -44,9 +53,7 @@ public class DripperRecipe extends BaseRecipe<DripperRecipe> {
 		this.consumeFluidOnFail = consumeFluidOnFail;
 
 		try {
-			BlockStateParser.BlockResult blockResult = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), new StringReader(inputStateStr), false);
-			inputBlock = blockResult.blockState().getBlock();
-			inputProperties = blockResult.properties();
+			inputPredicate = BlockPredicateArgument.parse(BuiltInRegistries.BLOCK.asLookup(), new StringReader(inputStateStr));
 		} catch (CommandSyntaxException e) {
 			throw new JsonSyntaxException(e);
 		}
@@ -67,12 +74,42 @@ public class DripperRecipe extends BaseRecipe<DripperRecipe> {
 		return outputString;
 	}
 
-	public ItemStack getInputItem() {
-		return inputBlock.asItem().getDefaultInstance();
+	private Set<Block> getInputBlocks() {
+		if (inputPredicate instanceof BlockPredicateArgument.BlockPredicate b) {
+			return Set.of(b.state.getBlock());
+		} else if (inputPredicate instanceof BlockPredicateArgument.TagPredicate t) {
+			return t.tag.stream().map(Holder::value).collect(Collectors.toSet());
+		}
+		return Set.of();
 	}
 
-	public ItemStack getOutputItem() {
-		return outputState.getBlock().asItem().getDefaultInstance();
+	public List<Either<ItemStack, Fluid>> getInputsForDisplay() {
+		Set<Block> blocks = getInputBlocks();
+		List<Either<ItemStack, Fluid>> res = new ArrayList<>();
+
+		for (Block b : blocks) {
+			if (b instanceof LiquidBlock l) {
+				if (l.fluid != Fluids.EMPTY) {
+					res.add(Either.right(l.fluid));
+				}
+			} else {
+				ItemStack s = b.asItem().getDefaultInstance();
+				if (!s.isEmpty()) {
+					res.add(Either.left(s));
+				}
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * {@return an item if the block has an item or a fluidstack if the block is a fluid block, otherwise empty item stack}
+	 */
+	public Either<ItemStack, Fluid> getOutputItemOrFluid() {
+		Block b = outputState.getBlock();
+        return b instanceof LiquidBlock l ?
+				Either.right(l.fluid) :
+				Either.left(b.asItem().getDefaultInstance());
 	}
 
 	public BlockState getOutputState() {
@@ -91,19 +128,10 @@ public class DripperRecipe extends BaseRecipe<DripperRecipe> {
 		return chance;
 	}
 
-	public boolean testInput(FluidStack fluidInDripper, BlockState belowState) {
+	public boolean testInput(FluidStack fluidInDripper, Level level, BlockPos pos) {
 		// note: just checking for a fluid match; not checking amount here
-		if (!FluidStack.isSameFluidSameComponents(fluidInDripper, this.fluid) || inputBlock == Blocks.AIR || inputBlock != belowState.getBlock()) {
-			return false;
-		}
-
-		for (Map.Entry<Property<?>, Comparable<?>> entry : inputProperties.entrySet()) {
-			if (!belowState.getValue(entry.getKey()).equals(entry.getValue())) {
-				return false;
-			}
-		}
-
-		return true;
+		return FluidStack.isSameFluidSameComponents(fluidInDripper, fluid)
+				&& inputPredicate.test(new BlockInWorld(level, pos, false));
 	}
 
 	public interface IFactory<T extends DripperRecipe> {
@@ -115,7 +143,7 @@ public class DripperRecipe extends BaseRecipe<DripperRecipe> {
 		private final StreamCodec<RegistryFriendlyByteBuf,T> streamCodec;
 
 		public Serializer(IFactory<T> factory) {
-			this.codec = RecordCodecBuilder.<T>mapCodec(builder -> builder.group(
+			this.codec = RecordCodecBuilder.mapCodec(builder -> builder.group(
 					Codec.STRING.fieldOf("input").forGetter(DripperRecipe::getInputStateStr),
 					Codec.STRING.fieldOf("output").forGetter(DripperRecipe::getOutputStateStr),
 					FluidStack.CODEC.fieldOf("fluid").forGetter(DripperRecipe::getFluid),

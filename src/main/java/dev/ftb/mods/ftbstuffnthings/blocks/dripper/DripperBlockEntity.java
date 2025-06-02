@@ -134,10 +134,10 @@ public class DripperBlockEntity extends BlockEntity {
 	}
 
 	private Optional<RecipeHolder<DripperRecipe>> searchForRecipe() {
-		BlockState blockBelow = getLevel().getBlockState(getBlockPos().below());
+//		BlockState blockBelow = getLevel().getBlockState(getBlockPos().below());
 
 		return level.getRecipeManager().getRecipesFor(RecipesRegistry.DRIP_TYPE.get(), NoInventory.INSTANCE, level).stream()
-				.filter(r -> r.value().testInput(tank.getFluid(), blockBelow))
+				.filter(r -> r.value().testInput(tank.getFluid(), getLevel(), getBlockPos().below()))
 				.findFirst();
 	}
 }
