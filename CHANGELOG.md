@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.10]
+
+### Added
+* Added block tag support for Dripper recipe block inputs
+* Added `ftbstuff:water_strainer` item tag for all water strainers
+* Water Strainers now support comparator output to indicate fullness
+
+### Changed
+* Mod archive file renamed for consistency. No functional changes.
+
+### Fixed
+* Dripper JEI recipe display now correctly shows output for fluid blocks (previously showed an empty slot)
+
 ## [21.1.9]
 
 ### Added

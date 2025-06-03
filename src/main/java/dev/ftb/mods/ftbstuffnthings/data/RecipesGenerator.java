@@ -388,6 +388,9 @@ public class RecipesGenerator extends RecipeProvider {
         new DripperRecipeBuilder("minecraft:campfire[lit=false]", "minecraft:campfire[lit=true]", new FluidStack(Fluids.LAVA, 250))
                 .withChance(0.5)
                 .saveTest(output, FTBStuffNThings.id("campfire_lighting"));
+        new DripperRecipeBuilder("#minecraft:leaves", stateStr(Blocks.WATER), new FluidStack(Fluids.WATER, 500))
+                .withChance(0.1)
+                .saveTest(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBStuffNThings.id("leaves_to_water"));
     }
 
     private void crookRecipes(RecipeOutput output) {

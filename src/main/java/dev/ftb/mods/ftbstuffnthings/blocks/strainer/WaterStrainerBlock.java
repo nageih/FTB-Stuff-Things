@@ -1,11 +1,13 @@
 package dev.ftb.mods.ftbstuffnthings.blocks.strainer;
 
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlock;
+import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import dev.ftb.mods.ftbstuffnthings.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -93,29 +95,15 @@ public class WaterStrainerBlock extends AbstractMachineBlock {
         return new WaterStrainerBlockEntity(pos, state);
     }
 
-//    @Override
-//    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-//        if (level.isClientSide) {
-//            return InteractionResult.SUCCESS;
-//        } else {
-//            boolean gotSomething = false;
-//            if (level.getBlockEntity(pos) instanceof WaterStrainerBlockEntity strainer) {
-//                IItemHandler handler = Objects.requireNonNull(strainer.getItemHandler());
-//                for (int i = 0; i < handler.getSlots(); i++) {
-//                    ItemStack stack = handler.getStackInSlot(i);
-//                    if (!stack.isEmpty()) {
-//                        ItemStack extracted = handler.extractItem(i, stack.getMaxStackSize(), false);
-//                        Block.popResource(level, pos.relative(hitResult.getDirection()), extracted);
-//                        gotSomething = true;
-//                        break;
-//                    }
-//                }
-//            }
-//            if (!gotSomething) {
-//                player.displayClientMessage(Component.translatable("ftbstuff.strainer.empty").withStyle(ChatFormatting.GOLD), true);
-//            }
-//
-//            return InteractionResult.CONSUME;
-//        }
-//    }
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return level.getBlockEntity(pos, BlockEntitiesRegistry.WATER_STRAINER.get())
+                .map(WaterStrainerBlockEntity::getComparatorLevel)
+                .orElse(0);
+    }
 }

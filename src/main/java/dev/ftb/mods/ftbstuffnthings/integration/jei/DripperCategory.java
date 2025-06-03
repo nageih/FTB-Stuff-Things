@@ -1,11 +1,13 @@
 package dev.ftb.mods.ftbstuffnthings.integration.jei;
 
-
 import dev.ftb.mods.ftbstuffnthings.crafting.recipe.DripperRecipe;
 import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ItemsRegistry;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -24,23 +26,38 @@ public class DripperCategory extends BaseStuffCategory<DripperRecipe> {
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, DripperRecipe recipe, IFocusGroup focuses) {
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 68, 7)
-				.addItemStack(recipe.getOutputItem());
+		IRecipeSlotBuilder outputBuilder = builder.addSlot(RecipeIngredientRole.OUTPUT, 68, 7);
+		recipe.getOutputItemOrFluid()
+				.ifLeft(outputBuilder::addItemStack)
+				.ifRight(outputBuilder::addFluidStack);
 
-		builder.addSlot(RecipeIngredientRole.INPUT, 23, 7)
-				.addIngredient(VanillaTypes.ITEM_STACK, recipe.getInputItem());
+		IRecipeSlotBuilder inputBuilder = builder.addSlot(RecipeIngredientRole.INPUT, 23, 7);
+		recipe.getInputsForDisplay().forEach(input ->
+				input.ifLeft(stack -> inputBuilder.addIngredient(VanillaTypes.ITEM_STACK, stack))
+						.ifRight(fluid -> inputBuilder.addFluidStack(fluid, 1000L))
+		);
 
 		builder.addSlot(RecipeIngredientRole.INPUT, 3, 7)
 				.addIngredient(NeoForgeTypes.FLUID_STACK, recipe.getFluid())
 				.setOverlay(new FluidAmountDrawable(recipe.getFluid().getAmount()), 0, 0)
-				.addRichTooltipCallback((recipeSlotView, tooltipBuilder) -> {
-					if (recipe.getChance() < 1D) {
-						String pct = String.format("%.0f", recipe.getChance() * 100d);
-						tooltipBuilder.add(Component.translatable("ftbstuff.dripper.chance", pct).withStyle(ChatFormatting.YELLOW));
-						if (recipe.consumeFluidOnFail()) {
-							tooltipBuilder.add(Component.translatable("ftbstuff.dripper.consume_on_fail").withStyle(ChatFormatting.GOLD));
-						}
-					}
-				});
+				.addRichTooltipCallback((recipeSlotView, tooltipBuilder) -> addTooltipInfo(recipe, tooltipBuilder));
+	}
+
+	@Override
+	public void getTooltip(ITooltipBuilder tooltip, DripperRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+		super.getTooltip(tooltip, recipe, recipeSlotsView, mouseX, mouseY);
+
+		if (mouseX > 42 && mouseX < 65) {
+			// over the arrow icon
+			addTooltipInfo(recipe, tooltip);
+		}
+	}
+
+	private void addTooltipInfo(DripperRecipe recipe, ITooltipBuilder tooltipBuilder) {
+		String pct = String.format("%.0f", recipe.getChance() * 100d);
+		tooltipBuilder.add(Component.translatable("ftbstuff.dripper.chance", pct).withStyle(ChatFormatting.YELLOW));
+		if (recipe.consumeFluidOnFail()) {
+			tooltipBuilder.add(Component.translatable("ftbstuff.dripper.consume_on_fail").withStyle(ChatFormatting.GOLD));
+		}
 	}
 }
