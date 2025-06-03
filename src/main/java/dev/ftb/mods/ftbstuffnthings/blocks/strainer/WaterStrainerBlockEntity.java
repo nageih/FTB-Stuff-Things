@@ -3,7 +3,7 @@ package dev.ftb.mods.ftbstuffnthings.blocks.strainer;
 import dev.ftb.mods.ftbstuffnthings.Config;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.blocks.AbstractMachineBlockEntity;
-import dev.ftb.mods.ftbstuffnthings.capabilities.EmittingStackHandler;
+import dev.ftb.mods.ftbstuffnthings.capabilities.ComparatorItemStackHandler;
 import dev.ftb.mods.ftbstuffnthings.registry.BlockEntitiesRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,11 +28,16 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class WaterStrainerBlockEntity extends AbstractMachineBlockEntity {
-    private final ItemStackHandler inventory = new EmittingStackHandler(27, h -> setChanged());
+    private final ComparatorItemStackHandler inventory = new ComparatorItemStackHandler(27) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+            setChanged();
+        }
+    };
     private final IItemHandler extractOnly = new ExtractOnlyHandlerWrapper(inventory);
 
     private static LootTable lootTable = null;
@@ -110,6 +115,10 @@ public class WaterStrainerBlockEntity extends AbstractMachineBlockEntity {
 
     public static void clearCachedLootTable() {
         lootTable = null;
+    }
+
+    public int getComparatorLevel() {
+        return inventory.getComparatorLevel();
     }
 
     public record ExtractOnlyHandlerWrapper(IItemHandler wrapped) implements IItemHandler {
