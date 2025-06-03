@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * Added block tag support for Dripper recipe block inputs
 * Added `ftbstuff:water_strainer` item tag for all water strainers
+* Water Strainers now support comparator output to indicate fullness
 
 ### Changed
 * Mod archive file renamed for consistency. No functional changes.
