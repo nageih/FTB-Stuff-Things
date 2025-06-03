@@ -50,6 +50,7 @@ public class FTBStuffTags {
         public static final TagKey<Item> HAMMERS = modTag("hammers");
         public static final TagKey<Item> CROOKS = modTag("crooks");
         public static final TagKey<Item> WOODEN_SLUICES = modTag("wooden_sluices");
+        public static final TagKey<Item> WATER_STRAINER = modTag("water_strainer");
 
         public static final TagKey<Item> MESHES = modTag("meshes");
 

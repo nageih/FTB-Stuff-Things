@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbstuffnthings.data;
 
 import dev.ftb.mods.ftbstuffnthings.FTBStuffNThings;
 import dev.ftb.mods.ftbstuffnthings.FTBStuffTags;
+import dev.ftb.mods.ftbstuffnthings.registry.BlocksRegistry;
 import dev.ftb.mods.ftbstuffnthings.registry.ItemsRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -32,24 +33,12 @@ public class ItemTagsGenerator extends ItemTagsProvider {
         addItemsToTag(FTBStuffTags.Items.INGOTS_CAST_IRON, ItemsRegistry.CAST_IRON_INGOT);
         addItemsToTag(FTBStuffTags.Items.GEARS, ItemsRegistry.CAST_IRON_GEAR);
 
-        addItemsToTag(FTBStuffTags.Items.HAMMERS,
-                ItemsRegistry.STONE_HAMMER, ItemsRegistry.IRON_HAMMER, ItemsRegistry.GOLD_HAMMER,
-                ItemsRegistry.DIAMOND_HAMMER, ItemsRegistry.NETHERITE_HAMMER
-        );
-
         addItemsToTag(FTBStuffTags.Items.CROOKS, ItemsRegistry.CROOK);
 
-        addItemsToTag(FTBStuffTags.Items.MESHES,
-                ItemsRegistry.CLOTH_MESH, ItemsRegistry.IRON_MESH, ItemsRegistry.GOLD_MESH,
-                ItemsRegistry.DIAMOND_MESH, ItemsRegistry.BLAZING_MESH
-        );
-
-        addItemsToTag(FTBStuffTags.Items.WOODEN_SLUICES,
-                ItemsRegistry.OAK_SLUICE, ItemsRegistry.SPRUCE_SLUICE, ItemsRegistry.BIRCH_SLUICE,
-                ItemsRegistry.JUNGLE_SLUICE, ItemsRegistry.ACACIA_SLUICE, ItemsRegistry.DARK_OAK_SLUICE,
-                ItemsRegistry.MANGROVE_SLUICE, ItemsRegistry.CHERRY_SLUICE, ItemsRegistry.PALE_OAK_SLUICE,
-                ItemsRegistry.CRIMSON_SLUICE, ItemsRegistry.WARPED_SLUICE, ItemsRegistry.BAMBOO_SLUICE
-        );
+        ItemsRegistry.ALL_HAMMERS.forEach(hammer -> addItemsToTag(FTBStuffTags.Items.HAMMERS, hammer));
+        ItemsRegistry.ALL_MESHES.forEach(mesh -> addItemsToTag(FTBStuffTags.Items.MESHES, mesh));
+        BlocksRegistry.WOODEN_SLUICE.forEach(sluice -> addItemsToTag(FTBStuffTags.Items.WOODEN_SLUICES, sluice));
+        BlocksRegistry.waterStrainers().forEach(strainer -> addItemsToTag(FTBStuffTags.Items.WATER_STRAINER, strainer));
     }
 
     @SafeVarargs
