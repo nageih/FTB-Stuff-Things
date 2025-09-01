@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [21.1.11]
 
 ### Added
+* Added Wooden Basin block
+  * Can be used to convert blocks into fluids by jumping or falling on them
+  * Any (living) entity can be used for this purpose
 * Added `hide_temperature_ingredients` config setting
 
 ## [21.1.10]
