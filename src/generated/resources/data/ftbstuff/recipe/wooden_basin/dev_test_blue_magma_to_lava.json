@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbstuff:dev_environment"
+    }
+  ],
+  "type": "ftbstuff:wooden_basin",
+  "block_consume_chance": 0.5,
+  "drop_items": true,
+  "fluid": {
+    "amount": 10,
+    "id": "minecraft:lava"
+  },
+  "input": "ftbstuff:blue_magma_block"
+}

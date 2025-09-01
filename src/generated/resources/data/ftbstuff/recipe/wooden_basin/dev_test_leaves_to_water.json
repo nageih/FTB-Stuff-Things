@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "ftbstuff:dev_environment"
+    }
+  ],
+  "type": "ftbstuff:wooden_basin",
+  "block_consume_chance": 0.1,
+  "fluid": {
+    "amount": 125,
+    "id": "minecraft:water"
+  },
+  "input": "#minecraft:leaves"
+}

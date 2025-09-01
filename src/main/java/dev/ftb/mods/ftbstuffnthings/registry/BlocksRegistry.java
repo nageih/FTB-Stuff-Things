@@ -23,6 +23,7 @@ import dev.ftb.mods.ftbstuffnthings.blocks.sluice.SluiceType;
 import dev.ftb.mods.ftbstuffnthings.blocks.strainer.WaterStrainerBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.supercooler.SuperCoolerBlock;
 import dev.ftb.mods.ftbstuffnthings.blocks.tube.TubeBlock;
+import dev.ftb.mods.ftbstuffnthings.blocks.woodbasin.WoodenBasinBlock;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.*;
@@ -129,6 +130,8 @@ public class BlocksRegistry {
             = BLOCKS.register("pump", PumpBlock::new);
     public static final DeferredBlock<DripperBlock> DRIPPER
             = BLOCKS.register("dripper", DripperBlock::new);
+    public static final DeferredBlock<WoodenBasinBlock> WOODEN_BASIN
+            = BLOCKS.register("wooden_basin", WoodenBasinBlock::new);
     public static final DeferredBlock<FusingMachineBlock> FUSING_MACHINE
             = BLOCKS.register("fusing_machine", FusingMachineBlock::new);
     public static final DeferredBlock<SuperCoolerBlock> SUPER_COOLER

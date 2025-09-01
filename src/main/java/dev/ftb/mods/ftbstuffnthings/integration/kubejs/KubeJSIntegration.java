@@ -14,6 +14,7 @@ public class KubeJSIntegration implements KubeJSPlugin {
 //        registry.register(FTBStuffNThings.id("fusing_machine"), FusingMachineRecipeSchema.SCHEMA);
 //        registry.register(FTBStuffNThings.id("supercooler"), SuperCoolerRecipeSchema.SCHEMA);
         registry.register(FTBStuffNThings.id("sluice"), SluiceRecipeSchema.SCHEMA);
+        registry.register(FTBStuffNThings.id("wooden_basin"), WoodenBasinSchema.SCHEMA);
 
         FTBStuffNThings.LOGGER.info("Registered KubeJS recipe schemas");
     }

@@ -10,6 +10,7 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 public interface RecipeCaches {
     RecipeMultiCache<JarRecipe> TEMPERED_JAR = new RecipeMultiCache<>();
     RecipeCache<DripperRecipe> DRIPPER = new RecipeCache<>();
+    RecipeCache<WoodenBasinRecipe> WOODEN_BASIN = new RecipeCache<>();
     RecipeCache<FusingMachineRecipe> FUSING_MACHINE = new RecipeCache<>();
     RecipeCache<SuperCoolerRecipe> SUPER_COOLER = new RecipeCache<>();
     RecipeCache<SluiceRecipe> SLUICE = new RecipeCache<>();
@@ -17,6 +18,7 @@ public interface RecipeCaches {
     static void clearAll() {
         TEMPERED_JAR.clear();
         DRIPPER.clear();
+        WOODEN_BASIN.clear();
         FUSING_MACHINE.clear();
         SUPER_COOLER.clear();
         SLUICE.clear();

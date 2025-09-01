@@ -36,7 +36,7 @@ public class TemperedJarBlockEntityRenderer implements BlockEntityRenderer<Tempe
                 fluidAmount += stack.getAmount();
                 FluidTank tank = new FluidTank(TemperedJarBlockEntity.TANK_CAPACITY * nTanks);
                 tank.setFluid(stack);
-                RenderUtil.renderFluid3d(tank, bufferSource, poseStack.last().pose(), packedLight, packedOverlay);
+                RenderUtil.renderFluid3d(JarBlockEntityRenderer.JAR_BOUNDS, tank, bufferSource, poseStack.last().pose(), packedLight, packedOverlay);
                 double yOff = (double) stack.getAmount() / tank.getCapacity();
                 poseStack.translate(0.0, yOff * (11.1F / 16F), 0.0);
             }

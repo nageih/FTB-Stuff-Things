@@ -203,6 +203,7 @@ public class RecipesGenerator extends RecipeProvider {
         temperedJarRecipes(output);
         temperatureSourceRecipes(output);
         dripperRecipes(output);
+        woodenBasinRecipes(output);
         crookRecipes(output);
         sluiceRecipes(output);
         hammerRecipes(output);
@@ -390,7 +391,18 @@ public class RecipesGenerator extends RecipeProvider {
                 .saveTest(output, FTBStuffNThings.id("campfire_lighting"));
         new DripperRecipeBuilder("#minecraft:leaves", stateStr(Blocks.WATER), new FluidStack(Fluids.WATER, 500))
                 .withChance(0.1)
-                .saveTest(output.withConditions(DevEnvironmentCondition.INSTANCE), FTBStuffNThings.id("leaves_to_water"));
+                .saveTest(output, FTBStuffNThings.id("leaves_to_water"));
+    }
+
+    private void woodenBasinRecipes(RecipeOutput output) {
+        new WoodenBasinRecipeBuilder("#minecraft:leaves", new FluidStack(Fluids.WATER, 125))
+                .withBlockConsumeChance(0.1f)
+                .saveTest(output, FTBStuffNThings.id("leaves_to_water"));
+
+        new WoodenBasinRecipeBuilder("ftbstuff:blue_magma_block", new FluidStack(Fluids.LAVA, 10))
+                .withBlockConsumeChance(0.5f)
+                .dropItems()
+                .saveTest(output, FTBStuffNThings.id("blue_magma_to_lava"));
     }
 
     private void crookRecipes(RecipeOutput output) {
