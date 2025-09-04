@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   * Any (living) entity can be used for this purpose
 * Added `hide_temperature_ingredients` config setting
 
+### Fixed
+* Fixed the SlowMelter and Super Cooler GUI's not showing the fluid in their tanks
+
 ## [21.1.10]
 
 ### Added
