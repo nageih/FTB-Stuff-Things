@@ -253,6 +253,11 @@ public class FusingMachineBlockEntity extends AbstractMachineBlockEntity impleme
         components.set(ComponentsRegistry.STORED_ENERGY, energyHandler.getEnergyStored());
     }
 
+    @Override
+    public void syncFluidFromServer(FluidStack fluidStack) {
+        fluidHandler.setFluid(fluidStack);
+    }
+
 //#endregion
 
 //#region Data Syncing helper methods

@@ -406,4 +406,9 @@ public class SuperCoolerBlockEntity extends AbstractMachineBlockEntity implement
     public ContainerData getContainerData() {
         return containerData;
     }
+
+    @Override
+    public void syncFluidFromServer(FluidStack fluidStack) {
+        fluidHandler.setFluid(fluidStack);
+    }
 }
