@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   * Can be used to convert blocks into fluids by jumping or falling on them
   * Any (living) entity can be used for this purpose
 * Added `hide_temperature_ingredients` config setting
+* Added `ja_jp` translation (thanks @twister716)
 
 ### Fixed
 * Fixed the SlowMelter and Super Cooler GUI's not showing the fluid in their tanks
