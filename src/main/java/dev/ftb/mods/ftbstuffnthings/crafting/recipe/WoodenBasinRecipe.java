@@ -29,16 +29,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//{
-//        "input_block": "<blockstate_or_tag_str>",
-//        "output_fluid": {
-//        "fluid": "minecraft:water",
-//        "amount": 100
-//        }
-//        "chance": 1.0,
-//        "consume_block_chance": 1.0
-//}
-
 public class WoodenBasinRecipe extends BaseRecipe<WoodenBasinRecipe> {
     private final String inputStateStr;
     private final FluidStack outputFluid;
