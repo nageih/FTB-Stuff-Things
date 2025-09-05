@@ -21,7 +21,8 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.joml.Matrix4f;
 
 public class RenderUtil {
-    public static void renderFluid3d(FluidTank tank, MultiBufferSource bufferSource, Matrix4f posMat, int packedLight, int packedOverlay) {
+
+    public static void renderFluid3d(FluidBounds fluidBounds, FluidTank tank, MultiBufferSource bufferSource, Matrix4f posMat, int packedLight, int packedOverlay) {
         if (tank.isEmpty()) {
             return;
         }
@@ -39,21 +40,21 @@ public class RenderUtil {
         float b = (color & 255) / 255F;
         float a = 1F;
 
-        float s0 = 3.2F / 16F;
+        float s0 = fluidBounds.horizontalInset();
         float s1 = 1F - s0;
 
-        float y0 = 0.9F / 16F;
-        float y1 = (1F + 11F * tank.getFluidAmount() / (float) tank.getCapacity()) / 16F;
+        float y0 = fluidBounds.minY();
+        float y1 = y0 + ((float) tank.getFluidAmount() / tank.getCapacity()) * fluidBounds.yHeight();
 
-        float u0 = sprite.getU(3 / 16F);
+        float u0 = sprite.getU(fluidBounds.horizontalInset());
         float v0 = sprite.getV0();
-        float u1 = sprite.getU(13 / 16F);
+        float u1 = sprite.getU((1f - fluidBounds.horizontalInset()));
         float v1 = sprite.getV(y1);
 
-        float u0top = sprite.getU(3 / 16F);
-        float v0top = sprite.getV(3 / 16F);
-        float u1top = sprite.getU(13 / 16F);
-        float v1top = sprite.getV(13 / 16F);
+        float u0top = sprite.getU(fluidBounds.horizontalInset());
+        float v0top = sprite.getV(fluidBounds.horizontalInset());
+        float u1top = sprite.getU(1f - fluidBounds.horizontalInset());
+        float v1top = sprite.getV(1f - fluidBounds.horizontalInset());
 
         // top
         builder.addVertex(posMat, s0, y1, s0).setColor(r, g, b, a).setUv(u0top, v0top).setOverlay(packedOverlay).setLight(packedLight).setNormal(0F, 1F, 0F);
@@ -106,4 +107,8 @@ public class RenderUtil {
             Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack, bufferSource1, combinedLightIn, combinedOverlayIn, ModelData.EMPTY, null);
         }
     }
+
+    public record FluidBounds(float horizontalInset, float minY, float yHeight) {
+    }
+
 }

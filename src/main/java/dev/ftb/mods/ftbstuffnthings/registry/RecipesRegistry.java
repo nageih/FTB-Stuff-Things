@@ -35,6 +35,11 @@ public class RecipesRegistry {
     public static final Supplier<RecipeSerializer<DripperRecipe>> DRIP_SERIALIZER
             = RECIPE_SERIALIZERS.register("dripper", () -> new DripperRecipe.Serializer<>(DripperRecipe::new));
 
+    public static final Supplier<RecipeType<WoodenBasinRecipe>> WOODEN_BASIN_TYPE
+            = registerType("wooden_basin", FTBStuffRecipeType::new);
+    public static final Supplier<RecipeSerializer<WoodenBasinRecipe>> WOODEN_BASIN_SERIALIZER
+            = RECIPE_SERIALIZERS.register("wooden_basin", () -> new WoodenBasinRecipe.Serializer<>(WoodenBasinRecipe::new));
+
     public static final Supplier<RecipeType<CrookRecipe>> CROOK_TYPE
             = registerType("crook", FTBStuffRecipeType::new);
     public static final Supplier<RecipeSerializer<CrookRecipe>> CROOK_SERIALIZER

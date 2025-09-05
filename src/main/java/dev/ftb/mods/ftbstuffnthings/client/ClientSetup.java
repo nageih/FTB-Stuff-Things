@@ -1,5 +1,6 @@
 package dev.ftb.mods.ftbstuffnthings.client;
 
+import dev.ftb.mods.ftbstuffnthings.blocks.woodbasin.WoodenBasinBlockEntity;
 import dev.ftb.mods.ftbstuffnthings.client.model.TubeModel;
 import dev.ftb.mods.ftbstuffnthings.client.renders.*;
 import dev.ftb.mods.ftbstuffnthings.client.screens.FusingMachineScreen;
@@ -67,6 +68,7 @@ public class ClientSetup {
 
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.JAR.get(), JarBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(BlockEntitiesRegistry.TEMPERED_JAR.get(), TemperedJarBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(BlockEntitiesRegistry.WOODEN_BASIN.get(), BasinBlockEntityRenderer::new);
     }
 
     private static void registerModelLoaders(ModelEvent.RegisterGeometryLoaders event) {

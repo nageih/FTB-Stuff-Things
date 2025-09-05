@@ -15,6 +15,7 @@ public class RecipeTypes {
     public static final RecipeType<FusingMachineRecipe> FUSING_MACHINE = register("fusing_machine", FusingMachineRecipe.class);
     public static final RecipeType<SuperCoolerRecipe> SUPER_COOLER = register("super_cooler_jei", SuperCoolerRecipe.class);
     public static final RecipeType<SluiceRecipe> SLUICE = register("sluice", SluiceRecipe.class);
+    public static final RecipeType<WoodenBasinRecipe> WOODEN_BASIN = register("wooden_basin", WoodenBasinRecipe.class);
 
     // special pseudo-recipe with its own recipe manager plugin
     public static final RecipeType<WrappedLootSummary> LOOT_SUMMARY = RecipeType.create(FTBStuffNThings.MODID, "loot_summary", WrappedLootSummary.class);

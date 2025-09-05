@@ -71,6 +71,8 @@ public class ItemModelsGenerator extends ItemModelProvider {
         withExistingParent("diamond_mesh", modLoc("block/diamond_mesh"));
         withExistingParent("blazing_mesh", modLoc("block/blazing_mesh"));
 
+        withExistingParent("wooden_basin", modLoc("block/wooden_basin"));
+
         BlocksRegistry.waterStrainers().forEach(block -> {
             String type = block.get().getWoodType().name();
             withExistingParent(type + "_water_strainer", modLoc("block/" + type + "_water_strainer"));

@@ -79,6 +79,10 @@ public class I18nGenerator extends LanguageProvider {
         add("ftbstuff.sluice.props.auto.item", "Items");
         add("ftbstuff.autohammer.waiting", "Waiting...");
         add("ftbstuff.autohammer.running", "Running");
+        add("ftbstuff.wooden_basin.full_tank", "No space in basin tank!");
+        add("ftbstuff.wooden_basin.produce_chance", "Chance to produce fluid: %s%%");
+        add("ftbstuff.wooden_basin.consume_chance", "Chance to destroy block: %s%%");
+        add("ftbstuff.jei.wooden_basin_info", "Place block on top of basin\nand fall or jump on it");
 
         addBlock(BlocksRegistry.OAK_SLUICE, "Oak Sluice");
         addBlock(BlocksRegistry.SPRUCE_SLUICE, "Spruce Sluice");
@@ -118,6 +122,8 @@ public class I18nGenerator extends LanguageProvider {
         addBlock(BlocksRegistry.PUMP, "Pump");
 
         addBlock(BlocksRegistry.DRIPPER, "Dripper");
+
+        addBlock(BlocksRegistry.WOODEN_BASIN, "Wooden Basin");
 
         addBlock(BlocksRegistry.ACACIA_STRAINER, "Acacia Water Strainer");
         addBlock(BlocksRegistry.BAMBOO_STRAINER, "Bamboo Water Strainer");

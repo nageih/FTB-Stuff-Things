@@ -23,6 +23,8 @@ public class Config {
     private static final SNBTConfig GENERAL_CONFIG = CONFIG.addGroup("general");
     public static final BooleanValue INCLUDE_DEV_RECIPES = GENERAL_CONFIG.addBoolean("include_dev_recipes", false)
             .comment("If true, dev/testing recipes will be available outside a development environment", "Leave this false unless actually testing the mod.");
+    public static final BooleanValue HIDE_TEMPERATURE_INGREDIENTS = GENERAL_CONFIG.addBoolean("hide_temperature_ingredients", false)
+            .comment("If true, the custom temperature ingredients will not be displayed");
 
     private static final SNBTConfig SLUICE_CONFIG = CONFIG.addGroup("sluice");
     private static final Map<SluiceType,SluiceProperties> SLUICE_PROPERTIES = Util.make(new EnumMap<>(SluiceType.class), map -> {

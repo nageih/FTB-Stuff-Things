@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.11]
+
+### Added
+* Added Wooden Basin block
+  * Can be used to convert blocks into fluids by jumping or falling on them
+  * Any (living) entity can be used for this purpose
+* Added `hide_temperature_ingredients` config setting
+* Added `ja_jp` translation (thanks @twister716)
+
+### Fixed
+* Fixed the SlowMelter and Super Cooler GUI's not showing the fluid in their tanks
+
 ## [21.1.10]
 
 ### Added

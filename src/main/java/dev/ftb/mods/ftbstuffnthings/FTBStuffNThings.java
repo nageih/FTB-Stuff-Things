@@ -167,6 +167,12 @@ public class FTBStuffNThings {
                 (stack, ctx) -> new WaterBowlItem.WaterBowlFluidHandler(stack),
                 ItemsRegistry.WATER_BOWL
         );
+
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                BlockEntitiesRegistry.WOODEN_BASIN.get(),
+                (blockEntity, side) -> blockEntity.getFluidHandler()
+        );
     }
 
     private void addReloadListeners(AddReloadListenerEvent event) {

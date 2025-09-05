@@ -2,9 +2,6 @@
   "neoforge:conditions": [
     {
       "type": "ftbstuff:dev_environment"
-    },
-    {
-      "type": "ftbstuff:dev_environment"
     }
   ],
   "type": "ftbstuff:dripper",

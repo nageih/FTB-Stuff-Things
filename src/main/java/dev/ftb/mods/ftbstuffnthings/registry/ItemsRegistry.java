@@ -84,6 +84,8 @@ public class ItemsRegistry {
 
     public static final DeferredItem<BlockItem> DRIPPER = blockItem("dripper", BlocksRegistry.DRIPPER);
 
+    public static final DeferredItem<BlockItem> WOODEN_BASIN = blockItem("wooden_basin", BlocksRegistry.WOODEN_BASIN);
+
     public static final DeferredItem<BlockItem> FUSING_MACHINE = blockItem("fusing_machine", BlocksRegistry.FUSING_MACHINE);
     public static final DeferredItem<BlockItem> SUPER_COOLER = blockItem("super_cooler", BlocksRegistry.SUPER_COOLER);
 

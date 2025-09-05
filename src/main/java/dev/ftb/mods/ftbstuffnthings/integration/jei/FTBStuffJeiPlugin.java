@@ -66,7 +66,8 @@ public class FTBStuffJeiPlugin implements IModPlugin {
                 new SuperCoolerCategory(),
                 new CrookCategory(),
                 new SluiceCategory(),
-                new LootSummaryCategory()
+                new LootSummaryCategory(),
+                new WoodenBasinCategory()
         );
     }
 
@@ -80,6 +81,7 @@ public class FTBStuffJeiPlugin implements IModPlugin {
         addRecipeType(registration, RecipesRegistry.FUSING_MACHINE_TYPE.get(), RecipeTypes.FUSING_MACHINE);
         addRecipeType(registration, RecipesRegistry.SUPER_COOLER_TYPE.get(), RecipeTypes.SUPER_COOLER);
         addRecipeType(registration, RecipesRegistry.SLUICE_TYPE.get(), RecipeTypes.SLUICE);
+        addRecipeType(registration, RecipesRegistry.WOODEN_BASIN_TYPE.get(), RecipeTypes.WOODEN_BASIN);
     }
 
     @Override
@@ -92,6 +94,7 @@ public class FTBStuffJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(ItemsRegistry.DRIPPER.toStack(), RecipeTypes.DRIPPER);
         registration.addRecipeCatalyst(ItemsRegistry.FUSING_MACHINE.toStack(), RecipeTypes.FUSING_MACHINE);
         registration.addRecipeCatalyst(ItemsRegistry.SUPER_COOLER.toStack(), RecipeTypes.SUPER_COOLER);
+        registration.addRecipeCatalyst(ItemsRegistry.WOODEN_BASIN.toStack(), RecipeTypes.WOODEN_BASIN);
 
         for (var item : ItemsRegistry.ALL_HAMMERS) {
             registration.addRecipeCatalyst(item.toStack(), RecipeTypes.HAMMER);
